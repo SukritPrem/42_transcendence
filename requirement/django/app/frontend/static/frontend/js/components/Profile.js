@@ -10,6 +10,7 @@ export class Profile extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/profile.css">
 			
 			<div id="container">
@@ -51,7 +52,7 @@ export class Profile extends HTMLElement {
 				<div id="offline-pong">
 					<span><i class="uil uil-question-circle"></i></span>
 					<div id="content">
-						<h3>Need Practice?</h3>
+						<h3 class="d-flex d-md-none d-xl-flex">Need Practice?</h3>
 						<small>Play OFFLINE with friend!</small>
 					</div>
 					<button class="btn">Play OFFLINE</button>

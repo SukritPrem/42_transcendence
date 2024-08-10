@@ -11,24 +11,24 @@ export class FirstPage extends HTMLElement {
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="./static/frontend/js/components/FirstPage.css">
 			
-			<div id="nav" class="d-flex align-items-center justify-content-center container-fluid h-8 position-relative">
-				<div id="bg" class="d-flex align-items-center justify-content-center container-fluid h-5">
-					<div id="textJoin" class="d-flex align-items-center">
+			<div id="nav" class="d-flex align-items-center justify-content-center container-fluid position-relative">
+				<div id="ืnavBg" class="d-flex align-items-center justify-content-center container-fluid h-5">
+					<div id="navTextJoin" class="d-flex align-items-center">
 						<button id="signInBtn" class="btn btn-light">SIGN IN</button>
 						<p class="text-light d-none d-sm-flex">to join the TOURNAMENT !</p>
 					</div>
-					<div id="textOr" class="d-flex align-items-center ms-3">
+					<div class="d-flex align-items-center ms-0">
 						<p class="text-light d-none d-sm-flex mb-0">or</p>
-						<button id="signUpBtn" class="btn btn-light ms-2">SIGN UP</button>
+						<button id="signUpBtn" class="btn btn-light ms-3">SIGN UP</button>
 					</div>
 				</div>
 			</div>
 			
-			<div id="gameTag" class="container-fluid h-89 mb-0">
+			<div id="gameTag" class="container-fluid mb-0">
 				<p>Game</p>
 			</div>
 			
-			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid h-3 position-fixed bottom-0 start-0">
+			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0 bg-transparent">
 				<p>
 					@ 2024, Made with 
 					<i class="uil uil-heart-alt"></i> 
