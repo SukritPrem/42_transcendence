@@ -36,20 +36,20 @@ export class DashBoardPage extends HTMLElement {
 				</div>
 			</div>
 
-			<div id="div-content">
-				<profile-component id="profileComponent"></profile-component>
-				<div id="div-middle">
-					<public-pong-component id="pongPublic"></public-pong-component>
-					<div id="mainFrame">
-						<!--notification-component></notification-component-->
-					</div>
+			<div id="body" class="d-flex bg-default">
+			<profile-component id="profileComponent" class="body-left"></profile-component>
+			<div id="bodyMiddle" class="bg-default">
+				<public-pong-component id="pongPublic"></public-pong-component>
+				<div id="mainFrame">
+					<!--notification-component></notification-component-->
+				</div>
 
-				</div>
-				<div id="bodyRight" class="bg-default">
-					<friends-component id="friendsComponent"></friends-component>
-					<live-chat-component id="liveChatComponent"></live-chat-component>
-				</div>
 			</div>
+			<div id="bodyRight" class="bg-default">
+				<friends-component id="friendsComponent"></friends-component>
+				<live-chat-component id="liveChatComponent"></live-chat-component>
+			</div>
+		</div>
 
 			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0 bg-transparent">
 				<p class="light-gray fs-8 m-0">

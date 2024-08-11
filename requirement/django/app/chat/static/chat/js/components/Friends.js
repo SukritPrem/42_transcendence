@@ -54,7 +54,7 @@ export class Friends extends HTMLElement {
 		liveChat.remove()
 		liveChat = document.createElement('live-chat-component')
 		liveChat.setAttribute("id", "liveChatComponent")
-		dashBoardComponent.shadowRoot.getElementById("div-right").appendChild(liveChat)
+		dashBoardComponent.shadowRoot.getElementById("bodyRight").appendChild(liveChat)
 	};
 
 	appendFriend = (id, username, avatar) => {
