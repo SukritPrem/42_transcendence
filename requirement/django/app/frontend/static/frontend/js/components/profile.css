@@ -1,156 +1,74 @@
-#container {
-	/* background: pink; */
-	padding: 0 2vw; /* Top/Bottom padding is 1.5, Left/Right padding is 2vw */
+:host {
+	height: 92vh;
+	padding: 3vh 2vw; 
+	backdrop-filter: blur(12px);
+	overflow-y: auto;
 }
 
-#profile-photo-big {
-	margin-top: 3vh;
-	width: 100%;              /* Make the div fill the width of its container */
-	padding-top: 100%;        /* Set height equal to width, creating a square */
-	position: relative;       /* Set position relative to contain absolutely positioned children */
-	border-radius: 0.75rem; 
-	overflow: hidden;         /* Hide overflow content */
+.dark-text {
+	color: var(--dark-text-color);
 }
 
-#profile-photo-big img {
-	position: absolute;       /* Position image absolutely */
-	top: 0;                   /* Align image to the top of the container */
-	left: 0;                  /* Align image to the left of the container */
-	width: 100%;              /* Make the image fill the width of the container */
-	height: 100%;             /* Make the image fill the height of the container */
-	object-fit: cover;        /* Ensure the image covers the container */
+.fs-7 {
+	font-size: 0.9rem;
 }
 
-#profile-name {
-	padding: 0.5rem;
-	background: white;
-	border-radius: 0.75rem;
+.fs-8 {
+	font-size: 0.7rem;
+}
+
+#avatarCon {
+	padding-top: 100%;
+	border-radius: var(--border-radius); 
+	overflow: hidden;
+}
+
+#profileImg {
+	object-fit: cover;
+}
+
+#profileName {
+	text-decoration: none;
+	box-shadow: var(--box-shadow);
+	border-radius: var(--border-radius);
+}
+
+.sidebar-item {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin-top: 1rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); /* Adding shadow */
-}
-
-#profile-name h4 {
-	font-size: 1rem;
-	margin-top: 0;
-	margin-bottom: 0;
-	color: #2D3748;
-}
-
-#side-bar {
-	margin-top: 1rem;
-}
-
-#side-bar .menu-item {
-	display: flex;
-	align-items: center;
 	height: 2.5rem;
 	cursor: pointer;
+	align-items: center;
+	text-decoration: none;
 }
 
-#side-bar i {
-	font-size: 1.4rem;
-	color: #4FD1C5;
-	margin-left: 0.5rem;
-	position: relative;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
+.sidebar-icon {
 	width: 2.0rem; 
 	height: 2.0rem; 
-	border-radius: 0.75rem; 
-	background-color: white;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); 
-}
-
-#side-bar .menu-item h3 {
-	margin-left: 0.5rem;
-	font-size: 0.8rem;
-	color: #2D3748;
-}
-
-#offline-pong {
-	background-color: #4FD1C5;
-	margin-top: 1rem;
-	padding: 1rem;
-	border-radius: 0.75rem;
-	align-items: center;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); /* Adding shadow */
-}
-
-#offline-pong i {
-	font-size: 1.4rem;
-	background-color: white;
-	color: #4FD1C5;
 	position: relative;
 	display: inline-flex;
-	justify-content: center;
 	align-items: center;
-	width: 2.0rem; 
-	height: 2.0rem; 
-	border-radius: 0.75rem; 
-}
-
-#offline-pong #content {
-	margin-top: 0.5rem;
-	margin-bottom: 0.5rem;
-}
-
-#offline-pong #content h3 {
-	color:white;
-	font-size: 0.9rem;
-	margin-top: 0.5rem;
-	margin-bottom: -0.2rem;
-}
-
-#offline-pong #content small {
-	color:white;
-	font-size: 0.7rem;
-}
-
-#offline-pong .btn {
-	margin-top: 0rem;
-	width: 100%;
-	height: 2rem;
-	text-align: center;
-	border-radius: 0.75rem;
-	padding: 1rem 1;
+	justify-content: center;
 	background-color: white;
-	border-color: white;
-	font-size: 0.7rem;
+	font-size: var(--icon-size);
+	color: var(--primary-color);
+	border-radius: var(--border-radius);
+	box-shadow: var(--box-shadow);
 }
 
-@media screen and (max-width: 740px) {
-	#profile-photo-big {
-		display: none;
-	}
-	#profile-name {
-		display: none;
-	}
-	#side-bar {
-		margin-top: 0;
-	}
-	#offline-pong {
-		margin-top: 0;
-		margin-left: 1rem;
-		margin-right: 1rem;
-		display: flex;
-		padding: 0.5rem;
-		margin-bottom: 1rem;
-	}
-	#offline-pong #content {
-		width: 100%;
-		margin-left: 1rem;
-	}
-	#offline-pong .btn {
-		width: 10rem;
-		margin-right: 1rem;
-	}
-	#offline-pong i {
-		margin-left: 1rem;
-	}
-	
+.sidebar-text {
+	margin: 0; 
+	align-items: center;
+	font-size: var(--font-size);
+	color: var(--dark-text-color);
 }
 
+#offlinePong {
+	box-shadow: var(--box-shadow);
+	border-radius: var(--border-radius);
+	background-color: var(--primary-color);
+}
+
+#offlinePong button {
+	font-size: var(--font-size);
+	border-radius: var(--border-radius);
+}

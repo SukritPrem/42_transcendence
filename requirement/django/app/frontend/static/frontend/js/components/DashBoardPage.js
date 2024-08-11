@@ -15,7 +15,7 @@ export class DashBoardPage extends HTMLElement {
 				
 			<div id="nav" class="d-flex justify-content-between align-items-center w-100 position-relative ps-3 pe-3 bg-default">
 				<div class="d-flex align-items-center">
-					<div id="navMenu" class="rounded-0 d-flex align-items-center justify-content-center d-flex d-xl-none me-3">
+					<div id="navMenu" class="rounded-0 align-items-center justify-content-center d-flex d-xl-none me-3">
 						<i class="uil uil-bars fs-4 light-gray"></i>
 					</div>
 					<div id="navLogo" class="d-none d-xl-flex align-items-center">
@@ -66,7 +66,7 @@ export class DashBoardPage extends HTMLElement {
 	toggleProfileVisibility = () => {
 		const profile = this.shadowRoot.getElementById('profileComponent');
 		if (profile) {
-			profile.style.display = profile.style.display === 'none' ? 'block' : 'none';
+			profile.style.display = profile.style.display === 'block' ? 'none' : 'block';
 		}
 	}
 

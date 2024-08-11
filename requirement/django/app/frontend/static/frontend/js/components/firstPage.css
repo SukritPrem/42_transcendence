@@ -48,6 +48,8 @@
 
 modal-login-component, modal-sign-up-component {
 	display: none;
+	max-height: 75vh;
+	overflow-y: auto;
 	max-width: 30rem;
 	border-radius: var(--border-radius); 
 }

@@ -7,7 +7,7 @@
 }
 
 .primary-color {
-	color:var(--primary-color);
+	color: var(--primary-color);
 }
 
 .dark-text {
@@ -53,10 +53,6 @@
 	height: 93vh;
 }
 
-.body-left {
-	width: 15vw;
-}
-
 #bodyMiddle {
 	margin-top: 3vh;
 	margin-right: 2vw;
@@ -72,12 +68,16 @@
 /* MD, LG */
 @media screen and (max-width: 1199px) {
 	#bodyMiddle {
-		width: 60%;
+		width: 60vw;
 		margin-left: 2vw;
-		margin-right: 1vw;
 	}
 	#bodyRight {
-		width: 40%; 
+		width: 40vw; 
+	}
+	.body-left {
+		display: none;
+		position: fixed;
+		z-index: 10;
 	}
 }
 /* --, SM */
@@ -86,16 +86,15 @@
 		flex-direction: column; 
 		align-items: stretch; 
 	}
-	.body-left, #bodyMiddle {
+
+	#bodyMiddle {
 		width: 100%;
 		margin-left: 0;
 		margin-right: 0;
 	}
+
 	#bodyRight {
 		display: block; 
 		width: 100%;
-	}
-	#footer {
-		display: none;
 	}
 }
