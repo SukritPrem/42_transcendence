@@ -39,11 +39,13 @@ class PrivateMessageRoom(PrivateMessage):
 	channel_name: str
 	game_data: GameData
 
-	def __init__(self, inviter: str, invited: str):
+	def __init__(self, inviter: str, invited: str, ch=None):
 		super().__init__(action='inviter')
 		self.inviter = Player(name=inviter)
 		self.invited = Player(name=invited)
-		self.channel_name = f'{self.type}_{self.inviter.name}_{self.invited.name}'
+		if not ch:
+			ch = f'{self.type}_{self.inviter.name}_{self.invited.name}'
+		self.channel_name = ch
 		self.game_data = GameData()
 
 	def get_player(self, username: str):

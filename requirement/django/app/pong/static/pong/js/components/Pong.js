@@ -8,6 +8,7 @@ export class Pong extends HTMLElement {
 		this.attachShadow({mode: 'open'})
 		this.shadowRoot.innerHTML = this.template()
 		this.keyDownHandler = this.keyDownHandler.bind(this)
+		this.pongPublic = getPongPublic()
 	}
 
 	template() {
@@ -139,6 +140,7 @@ export class Pong extends HTMLElement {
 	}
 
 	keyDownHandler(e){
+		console.log(e.key)
 		switch(e.key){
 			case "a":
 			case "w":
@@ -156,15 +158,25 @@ export class Pong extends HTMLElement {
 		}
 	}
 
-	connectedCallback(){
+	sendMoveMent(direction){
+		this.datas.action = 'sendkey'
+		this.datas.direction = direction
+		this.pongPublic.socket.send(JSON.stringify(this.datas))
+	}
 
+	connectedCallback(){
+		if(this.user == this.dataset.player1 || this.user == this.dataset.player2)
+			document.addEventListener('keydown', this.keyDownHandler)
 	}
 
 	disconnectedCallback() {
+		if(this.user == this.dataset.player1 || this.user == this.dataset.player2)
+				document.removeEventListener('keydown', this.keyDownHandler)
+		
 		if (this.datas) {
 			this.datas.action = 'quit'
-			const pongPublic = getPongPublic()
-			pongPublic.socket.send(JSON.stringify(this.datas))
+			// const pongPublic = getPongPublic()
+			this.pongPublic.socket.send(JSON.stringify(this.datas))
 		}
 	}
 }

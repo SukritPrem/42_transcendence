@@ -57,7 +57,7 @@ export class PublicPong extends HTMLElement {
 						const pongPrivateMatch = mainFrame.querySelector("#pongPrivateMatch")
 						pongPrivateMatch.update(data)
 						console.log("beginpong")
-						mainFrame.innerHTML = '<pong-component id="pongComponent"></pong-component>'
+						mainFrame.innerHTML = `<pong-component id="pongComponent" data-player1="${data.game_data.player_one.name}" data-player2="${data.game_data.player_two.name}"></pong-component>`
 						
 						// console.log(data)
 

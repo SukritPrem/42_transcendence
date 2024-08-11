@@ -59,6 +59,8 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			await self.private_update(data)
 		elif data['action'] == 'playpong':
 			await self.private_playpong(data)
+		elif data['action'] == 'sendkey':
+			await self.private_sendkey(data)
 		elif data['action'] == 'quit':
 			await self.private_quit(data)
 
@@ -164,6 +166,16 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			room.action = 'playpong'
 			if room.channel_name not in self.tasks:
 				self.tasks[room.channel_name] = asyncio.create_task(self.send_game_data(room))
+
+	async def private_sendkey(self, data: dict):
+		# print(data, file=sys.stderr)
+		username: str = self.scope['user'].username
+		room: PrivateMessageRoom = self.private_rooms.get(data['channel_name'])
+		if room:
+			player = room.game_data.select_player(username)
+			if player:
+				player.set_move(data['direction'])
+		pass
 
 
 ################## play pong ############################
