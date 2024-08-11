@@ -41,23 +41,29 @@ class ChatroomConsumer(WebsocketConsumer):
 
 	def receive(self, text_data):
 		text_data_json = json.loads(text_data)
-		body = text_data_json['body']
-
-		message = GroupMessage.objects.create(
-			body = body,
-			author = self.user,
-			group = self.chatroom
-		)
-		# message.save()
-
-		event = {
-			'type': 'message_handler',
-			'message_id': message.id,
-		}
-
+		type = text_data_json['type']
+		event = {}
+		if type == "message":	
+			body = text_data_json['body']
+			message = GroupMessage.objects.create(
+				body = body,
+				author = self.user,
+				group = self.chatroom
+			)
+			event['message_id'] = message.id
+			event['type'] = 'message_handler'
+		
+		if type == "invite_private_pong":
+			event['type'] = 'invite_private_pong_handler'
+			event['inviter'] = text_data_json['inviter']
+			event['invited'] = text_data_json['invited']
+			
 		async_to_sync(self.channel_layer.group_send)(
 			self.chatroom_name, event
 		)
+
+	def invite_private_pong_handler(self, event):
+		self.send(text_data=json.dumps(event))	
 
 	def message_handler(self, event):
 		message_id = event['message_id']
@@ -85,6 +91,4 @@ class ChatroomConsumer(WebsocketConsumer):
 		async_to_sync(self.channel_layer.group_send)(self.chatroom_name, event)
 
 	def online_count_handler(self, event):
-		# online_count = event['online_count']
-		#html = render_to_string('a_rtchat/partials/online_count.html', {'online_count': online_count})
 		self.send(text_data=json.dumps(event))

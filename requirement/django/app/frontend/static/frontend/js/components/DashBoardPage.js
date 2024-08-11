@@ -36,11 +36,10 @@ export class DashBoardPage extends HTMLElement {
 				</div>
 			</div>
 
-
-			<div id="body" class="d-flex bg-default">
-				<profile-component id="profileComponent" class="body-left"></profile-component>
-				<div id="bodyMiddle" class="bg-default">
-					<tournament-component></tournament-component>
+			<div id="div-content">
+				<profile-component id="profileComponent"></profile-component>
+				<div id="div-middle">
+					<public-pong-component id="pongPublic"></public-pong-component>
 					<div id="mainFrame">
 						<!--notification-component></notification-component-->
 					</div>

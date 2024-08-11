@@ -1,4 +1,4 @@
-import { getUserId, addNavigate, fetchJson } from "./utils.js";
+import { getUserId, addNavigate, fetchJson } from "/static/frontend/js/components/utils.js";
 
 export class Friends extends HTMLElement {
 	constructor() {
@@ -11,7 +11,7 @@ export class Friends extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/Friends.css">
+			<link rel="stylesheet" href="${window.location.origin}/static/chat/js/components/Friends.css">
 			
 			<div id="Friends">
 				<div id="header">

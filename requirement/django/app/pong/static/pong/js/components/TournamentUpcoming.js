@@ -4,11 +4,12 @@ export class TournamentUpcoming extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: "open" });
+		this.shadowRoot.innerHTML = this.template();
 	}
 
 	template = () => {
 	return `
-			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/TournamentUpcoming.css">
+			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/TournamentUpcoming.css">
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
 			
 			<div id="tour-upcomimg">
@@ -25,7 +26,7 @@ export class TournamentUpcoming extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.shadowRoot.innerHTML = this.template();
+		
 		
 		// Add event listener to button after template is rendered
 		const button = this.shadowRoot.querySelector('.btn');

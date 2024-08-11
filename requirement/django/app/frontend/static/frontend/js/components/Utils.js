@@ -129,3 +129,9 @@ export function getMainFrame() {
 	const mainFrame = dashBoardComponent.shadowRoot.getElementById("mainFrame")
 	return mainFrame
 }
+
+export function getPongPublic(){
+	const dashBoardComponent = document.getElementById("dashBoardComponent")
+	const pongPublic = dashBoardComponent.shadowRoot.getElementById("pongPublic")
+	return pongPublic
+}
