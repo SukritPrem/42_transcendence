@@ -11,12 +11,13 @@ export class Friends extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/chat/js/components/Friends.css">
 			
-			<div id="Friends">
+			<div class="bg-white overflow-auto custom-bg">
 				<div id="header">
-					<h4>Friends</h4>
-					<button id="friendRecommendBtn" data-url="recommend-friend" data-title="Baby cadet friend recommend">
+					<p id="headerText">Friends</p>
+					<button id="friendRecommendBtn" data-url="recommend-friend" data-title="Baby cadet friend recommend" class="d-flex align-items-center justify-content-center gap-1 border-0">
 						<i class="uil uil-user-plus"></i> Find Friends
 					</button>
 				</div>
@@ -31,13 +32,12 @@ export class Friends extends HTMLElement {
 	generateRows(friends) {
 		return friends.map(
 			(friend) => `
-			<friend-component 
-				id="${friend.username}"
-				data-username="${friend.username}" 
-				data-id="${friend.id}"
-				data-avatar="${friend.avatar}"
-			>
-			</friend-component>
+				<friend-component 
+					id="${friend.username}" class="d-flex"
+					data-username="${friend.username}" 
+					data-id="${friend.id}"
+					data-avatar="${friend.avatar}">
+				</friend-component>
 		`).join('');
 	}
 

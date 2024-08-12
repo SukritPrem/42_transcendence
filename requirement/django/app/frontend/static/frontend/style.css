@@ -3,15 +3,28 @@
 	--primary-color-dark: #49b4a9;
 	--primary-color-darker: #3b9087;
 
+	--red-color: #E53E3E;
+	--red-color-dark: #ae2e2e;
+	--red-color-darker: #902020;
+
+	--offline-gray-color: #CBD5E0;
+	--online-green-color: #48BB78;
+
 	--dark-text-color: #2D3748;
 	--light-gray-color: #C4C4C4;
-	--default-bg-color: #F8F9FA;;
-	--nav-line-color: #D8DBDD;
+	--default-bg-color: #F8F9FA;
 	
-	--font-size: 0.9rem;
 	--icon-size: 1.4rem;
+	--font-size: 0.9rem;
+	--header-font-size: 1rem;
+	--small-avatar-size: 40px;
+	
+	--table-height: 3rem;
+	--table-line: 1px solid rgba(132, 139, 200, 0.18);
+	
 	--border-radius: 0.75rem;
 	--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); 
+	--nav-line: linear-gradient(to right, var(--default-bg-color), #D8DBDD, var(--default-bg-color));
 }
 
 body {

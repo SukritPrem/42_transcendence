@@ -1,107 +1,54 @@
-#friends {
+.custom-bg {
 	height: 37vh;
-	min-height: 20rem;
-	background-color: white;
-	border-radius: 0.75rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-	/* background-color: rgb(106, 106, 199); */
+	min-height: 15rem;
+	box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
 }
 
 #header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-	padding-left: 20px;
-    padding-right: 20px; 
+	display: flex;
+	padding-left: 2vw;
+	padding-right: 2vw; 
+	align-items: center; 
+	justify-content: space-between;
 }
 
-#header h4 {
-	padding-top: 1px;
-	color: #4FD1C5;
+#headerText{
+	padding-top: 2vh;
+	font-weight: bold;
+	color: var(--primary-color);
+	font-size: var(--header-font-size);
 }
 
 table {
-	width: 100%;
-	border-radius: 0.75rem;
-	padding: 0 1rem 1rem 1rem;
-	text-align: center;
+	width: 95%;
+	margin: 0 auto;
+	border-radius:var(--border-radius);
 }
 
-table tbody td {
-	font-size: 0.8rem;
-	height: 2.8rem;
-	/* border-bottom: 1px solid rgba(132, 139, 200, 0.18); */
-	color: #677483;
-	padding-left: 1vw; 
-}
-
-.profile {
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-}
-
-.profile .profile-photo {
-	width: 2.7rem;
-	height: 2.7rem;
-	border-radius: 0.75rem;
-	overflow: hidden; 
-	position: relative; 
-}
-
-.profile .profile-photo img {
-	display: block; /* Remove default inline spacing */
-	width: 100%; 
-	height: 100%; 
-	object-fit: cover; /* Ensure the image covers the container */
-	object-position: center; /* Center the image */
-}
-
-button {
+#friendRecommendBtn {
 	margin-top: 0rem;
 	width: 8rem;
 	height: 2rem;
-	text-align: center;
-	border-radius: 0.75rem;
-	padding: 1rem 1;
-	background-color: #4FD1C5;
-	border-color: #4FD1C5;
-	font-size: 0.9rem;
 	color: white;
+	font-size: var(--font-size);
+	border-radius: var(--border-radius);
+	background-color: var(--primary-color);
+}
+
+#friendRecommendBtn:hover {
+	background-color: var(--primary-color-dark); 
+}
+
+#friendRecommendBtn:active {
+	background-color: var(--primary-color-darker);
 }
 
 #friendRecommendBtn i {
-	font-size: 1.2rem;
 	color: white;
+	font-size: var(--icon-size);
 }
 
-#icon i {
-	font-size: 1.2rem;
-	color: #2D3748;
-}
-
-.status-online {
-	color: white;
-	width: 3.5rem;
-	margin: 0;
-	padding: 2px;
-	background: #48BB78;
-	border-radius: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-}
-
-.status-offline {
-	color: white;
-	width: 3.5rem;
-	margin: 0;
-	padding: 2px;
-	background: #CBD5E0;
-	border-radius: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+friend-component {
+	border-bottom: var(--table-line);
 }

@@ -1,4 +1,6 @@
 :host {
+	width: 15vw;
+	min-width: 14rem;
 	height: 92vh;
 	padding: 3vh 2vw; 
 	backdrop-filter: blur(12px);
@@ -18,9 +20,9 @@
 }
 
 #avatarCon {
+	overflow: hidden;
 	padding-top: 100%;
 	border-radius: var(--border-radius); 
-	overflow: hidden;
 }
 
 #profileImg {

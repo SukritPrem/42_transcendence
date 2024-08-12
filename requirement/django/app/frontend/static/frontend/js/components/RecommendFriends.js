@@ -9,11 +9,12 @@ export class RecommendFriends extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/RecommendFriends.css">
 			
-			<div id="recommend-friend">
-				<div id="header">
-					<h4>Recommend Friends</h4>
+			<div class="bg-white overflow-auto custom-bg">
+				<div id="header" class="fw-bold">
+					<p>Recommend Friends</p>
 				</div>
 				<table>
 					<tbody id="recommendFriendsTableBody">
@@ -27,18 +28,16 @@ export class RecommendFriends extends HTMLElement {
 		return users.map(user => `
 			<tr>
 				<td>
-					<div id="profile">
-						<div id="profile-photo">
-							<img src="${user.avatar}" alt="Profile Photo" 
+					<div class="d-flex align-items-center ms-0 ms-sm-3">
+						<img src="${user.avatar}" 
+							alt="Profile Photo" id="friendImg"
+							class="rounded"
 							onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
-						</div>
-						<div id="profile-name">
-							<p id="profileName">${user.username}</p>
-						</div>
+						<p id="profileName" class="my-0 ms-2 ms-sm-3">${user.username}</p>
 					</div>
 				</td>
-				<td>
-					<button id="${user.username}FriendRequest" data-user="${user.id}">
+				<td >
+					<button id="${user.username}FriendRequest" data-user="${user.id}" class="d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-plus"></i> Send Request
 					</button>
 				</td>
