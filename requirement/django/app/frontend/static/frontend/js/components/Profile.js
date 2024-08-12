@@ -17,9 +17,9 @@ export class Profile extends HTMLElement {
 				<img id="profileImg" src="${window.location.origin+getUserAvatar()}" alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"
 					onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
 			</div>
-			<a id="profileName" class="d-none d-md-flex p-2 bg-white rounded-3 d-flex align-items-center justify-content-center m-3">
+			<div id="profileName" class="d-none d-md-flex position-relative p-2 bg-white rounded-3 align-items-center justify-content-center my-3 w-100">
 				<h4 class="fs-6 mt-0 mb-0 dark-text">${getUserName()}</h4>
-			</a>
+			</div>
 			<div id="sideBar" class="d-block mb-4">
 				<div class="sidebar-item link-target" id="accountManagementLink" data-url="account-management" data-title="Baby cadet acount management">
 					<span><i class="uil uil-user sidebar-icon my-0 mx-2"></i></span>

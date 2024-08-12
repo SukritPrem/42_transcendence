@@ -11,33 +11,30 @@ export class Friend extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/chat/js/components/Friend.css">
 			
-				<td>
-					<div class="profile">
-						<div id="avatar" class="profile-photo">
-							<img src="${this.dataset.avatar}" alt="Profile Photo" 
-							onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
-						</div>
-						<div class="profile-name">
-							${this.dataset.username}
-						</div>
+			<td>
+				<div class="d-flex align-items-center ms-0 ms-lg-3 gap-2">
+					<div id="avatar" class="profile-photo">
+						<img src="${this.dataset.avatar}" alt="Profile Photo" id="friendImg" class="rounded"
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
-				</td>
-				<td>
-					<p id="status" class='status-offline'>
-						Offline
-					</p>
-				</td>
-				<td>
-					<div>
-						<i id="profileBtn" class="uil uil-user"
-							data-url="friend-profile" data-title="baby cadet ${this.dataset.username}"
-							data-user="${this.dataset.id}"></i>
-						<i id="chatBtn" class="uil uil-comment-dots"></i>
-						<i id="pongBtn" class="uil uil-upload"></i>
-					</div>
-				</td>
+					<p id="profileName" class="my-0">${this.dataset.username}</p>
+				</div>
+			</td>
+			<td>
+				<p id="status" class="status-offline"> Offline</p>
+			</td>
+			<td>
+				<div class="all-btn">
+					<i id="profileBtn" class="uil uil-user"
+						data-url="friend-profile" data-title="baby cadet ${this.dataset.username}"
+						data-user="${this.dataset.id}"></i>
+					<i id="chatBtn" class="uil uil-comment-dots"></i>
+					<i id="pongBtn" class="uil uil-upload"></i>
+				</div>
+			</td>
 		`
 	}
 

@@ -11,7 +11,7 @@
 	bottom: 0;
 	width: 100%;
 	height: 4px;
-	background: linear-gradient(to right, var(--default-bg-color), var(--nav-line-color), var(--default-bg-color)); 
+	background: var(--nav-line);
 }
 
 #ืnavBg {

@@ -1,3 +1,89 @@
-/* div{
-    background-color: rgb(154, 123, 182);
-} */
+.custom-bg {
+	height: 70vh;
+	min-height: 15rem;
+	margin-top: 2vh;
+	box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
+}
+
+#header {
+	padding-top: 2vh;
+	padding-left: 2vw;
+	color: var(--primary-color);
+	font-size: var(--header-font-size);
+}
+
+table {
+	width: 95%;
+	margin: 0 auto;
+	border-radius:var(--border-radius);
+}
+
+table tbody td {
+	height: var(--table-height);
+	font-size: var(--font-size);
+	color: var(--dark-text-color);
+	border-bottom: var(--table-line);
+}
+
+table tbody tr:first-child td {
+	border-top: var(--table-line);
+}
+
+#friendImg {
+	object-fit: cover;
+	width: var(--small-avatar-size);
+	height: var(--small-avatar-size);
+}
+
+.accept-btn {
+	margin-top: 0rem;
+	width: 6rem;
+	height: 2rem;
+	color: white;
+	font-size: var(--font-size);
+	border-radius: var(--border-radius);
+	background-color: var(--primary-color);
+}
+
+.accept-btn:hover {
+	background-color: var(--primary-color-dark); 
+}
+
+.accept-btn:active {
+	background-color: var(--primary-color-darker);
+}
+
+.decline-btn {
+	margin-top: 0rem;
+	width: 6rem;
+	height: 2rem;
+	color: white;
+	font-size: var(--font-size);
+	border-radius: var(--border-radius);
+	background-color: var(--red-color); 
+}
+
+.decline-btn:hover {
+	background-color: var(--red-color-dark); 
+}
+
+.decline-btn:active {
+	background-color: var(--red-color-darker);
+}
+
+i {
+	color: white;
+	font-size: var(--icon-size);
+}
+
+
+/* XS */
+@media screen and (max-width: 575px) {
+	table tbody td {
+		height: 4.5rem;
+	}
+	#text {
+		max-width: 11.25rem;
+	}
+}

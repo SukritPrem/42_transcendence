@@ -10,11 +10,12 @@ export class BlockedList extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/BlockedList.css">
 			
-			<div id="blocked-list">
-				<div id="header">
-					<h4>Blocked List</h4>
+			<div class="bg-white overflow-auto custom-bg">
+				<div id="header" class="fw-bold">
+					<p>Blocked List</p>
 				</div>
 				<table>
 					<tbody id="blockedListTableBody">
@@ -28,18 +29,16 @@ export class BlockedList extends HTMLElement {
 		return users.map(user => `
 			<tr id="${user.username}">
 				<td>
-					<div id="profile">
-						<div id="profile-photo">
-						<img src="${user.avatar}" alt="Profile Photo" 
+					<div class="d-flex align-items-center ms-0 ms-sm-3">
+						<img src="${user.avatar}"
+							alt="Profile Photo" id="friendImg"
+							class="rounded"
 							onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
-						</div>
-						<div id="profile-name">
-							${user.username}
-						</div>
+						<p id="profileName" class="my-0 ms-2 ms-sm-3">${user.username}</p>
 					</div>
 				</td>
 				<td>
-					<button id="${user.username}UnBlockBtn" data-userid="${user.id}">
+					<button id="${user.username}UnBlockBtn" data-userid="${user.id}"class="d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-check"></i> Unblock
 					</button>
 				</td>

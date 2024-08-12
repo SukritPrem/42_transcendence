@@ -9,12 +9,18 @@ export class Notification extends HTMLElement{
 
 	template = () => {
 		return `
+			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/Notification.css" >
-			<div>
-				<div>notification</div>
+
+			<div class="bg-white overflow-auto custom-bg">
+				<div id="header" class="fw-bold">
+					<p>Notification</p>
+				</div>
 				<table>
-					<tboby id="notificationTableBody"></tbody>
-				<table>
+					<tbody id="notificationTableBody">
+					</tbody>
+				</table>
 			</div>
 		`
 	}
@@ -23,29 +29,25 @@ export class Notification extends HTMLElement{
 		return users.map(user => `
 			<tr>
 				<td>
-					<div id="profile">
-						<div id="profile-photo">
-							<img src="${user.avatar}" alt="Profile Photo" 
+					<div class="d-flex align-items-center ms-0 ms-sm-3">
+						<img src="${user.avatar}"
+							alt="Profile Photo" id="friendImg"
+							class="rounded"
 							onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
-						</div>
-						<div id="profile-name">
-							<p id="profileName">${user.username}</p>
-						</div>
+						<p id="text" class="my-0 ms-2 ms-sm-3 gap-1"> <b id="profileName">${user.username}</b> send you a friend request</p>
 					</div>
 				</td>
-				<td>
-					<button id="${user.username}FriendAccept" 
-						data-userid="${user.user_id}" 
-						data-avatar="${user.avatar}"
-						data-username="${user.username}">
+				<td class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-0 gap-sm-2">
+					<button id="${user.username}FriendAccept" data-userid="${user.user_id}" 
+						data-avatar="${user.avatar}" data-username="${user.username}"
+						class="accept-btn d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-plus"></i> Accept
 					</button>
+					<button id="${user.username}FriendDecline" data-userid="${user.user_id}"
+						class="decline-btn d-flex align-items-center justify-content-center gap-2 border-0">
+						<i class="uil uil-user-plus"></i> Decline
+					</button>
 				</td>
-				<td>
-				<button id="${user.username}FriendDecline" data-userid="${user.user_id}">
-					<i class="uil uil-user-plus"></i> Decline
-				</button>
-			</td>
 			</tr>
 		`).join('');
 	}
@@ -110,5 +112,9 @@ export class Notification extends HTMLElement{
 
 	connectedCallback(){
 		this.fetchNotification()
+	}
+
+	disconnectedCallback() {
+		console.log("delete notification components");
 	}
 }
