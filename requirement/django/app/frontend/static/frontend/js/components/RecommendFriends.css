@@ -22,7 +22,7 @@ table {
 table tbody td {
 	height: var(--table-height);
 	font-size: var(--font-size);
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 	border-bottom: var(--table-line);
 }
 
@@ -48,11 +48,11 @@ button {
 }
 
 button:hover {
-    background-color: var(--primary-color-dark); 
+	background-color: var(--primary-color-dark); 
 }
 
 button:active {
-    background-color: var(--primary-color-darker);
+	background-color: var(--primary-color-darker);
 }
 
 i {

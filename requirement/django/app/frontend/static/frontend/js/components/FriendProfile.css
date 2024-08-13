@@ -1,129 +1,105 @@
-#friendProfile {
-	margin-top: 2vh;
+.custom-bg {
 	height: 70vh;
-	min-height: 38rem;
-	background-color: white;
-	border-radius: 0.75rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-	/* background-color: rgb(129, 206, 234); */
-
+	margin-top: 2vh;
+	min-height: 18rem;
+	box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
 }
 
 #header {
-	padding-top: 1px;
-	padding-left: 20px;
-	color: #4FD1C5;
+	padding-top: 2vh;
+	padding-left: 2vw;
+	color: var(--primary-color);
+	font-size: var(--header-font-size);
 }
 
-#name {
-	color: #4FD1C5;
-}
-
-#topic {
-	padding-left: 60px;
-	color: #2D3748;
+#username {
+	font-weight: bold;
+	color: var(--gray-color-medium);
+	font-size: var(--header-font-size);
 }
 
 #content {
-	display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    border: 2px solid #4FD1C5;
-    padding: 10px;
-    border-radius: 0.75rem;
+	gap: 20px;
 	margin: 0 4vw;
+	padding: 10px;
+	border: var(--border-green);
+	border-radius: var(--border-radius);
 }
-
-#loginButton {
-	margin-top: 0rem;
-	width: 8rem;
-	height: 2rem;
-	text-align: center;
-	border-radius: 0.75rem;
-	padding: 1rem 1;
-	background-color: white;
-	border-color: #C4C4C4;
-	font-size: 0.7rem;
-}
-
 
 #photo {
 	width: 10rem;
 	height: 10rem;
-	position: relative;       /* Set position relative to contain absolutely positioned children */
-	border-radius: 0.75rem; 
-	overflow: hidden;         /* Hide overflow content */
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--border-radius);
 }
 
 #photo img {
-	position: absolute;       /* Position image absolutely */
-	top: 0;                   /* Align image to the top of the container */
-	left: 0;                  /* Align image to the left of the container */
-	width: 100%;              /* Make the image fill the width of the container */
-	height: 100%;             /* Make the image fill the height of the container */
-	object-fit: cover;        /* Ensure the image covers the container */
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
-/* -------------- */
-
-
-#detail .menu-item {
-	display: flex;
-	align-items: center;
+.detail-height {
 	height: 2.5rem;
 }
 
 #detail i {
-    font-size: 1.4rem;
-    color: #4FD1C5;
-    margin-left: 0.5rem;
-    position: relative;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.0rem; 
-    height: 2.0rem; 
-    border-radius: 0.75rem; 
-    background-color: #F8F9FA;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-    border: 2px solid #4FD1C5; /* Add border with specific color */
-}
-
-
-#detail .menu-item h3 {
+	width: 2.0rem; 
+	height: 2.0rem; 
 	margin-left: 0.5rem;
-	font-size: 0.8rem;
-	/* color: #2D3748; */
-	color: #4FD1C5;
-}
-#detail .menu-item p {
-	margin-left: 0.5rem;
-	font-size: 0.9rem;
-	color: #677483;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--icon-size);
+	border: var(--border-green);
+	color: var(--primary-color);
+	box-shadow: var(--box-shadow);
+	border-radius: var(--border-radius);
+	background-color: var(--gray-color-bg);
 }
 
-#button-block {
-	margin-top: 1rem;
-	display: flex;
-    justify-content: center;
-    align-items: center;
+#detail a {
+	text-decoration: none;
+}
+
+#detail h3 {
+	margin-bottom: 0;
+	margin-left: 0.5rem;
+	font-size: var(--font-size);
+	color: var(--primary-color);
+}
+#detail p {
+	margin-bottom: 0;
+	margin-left: 0.5rem;
+	font-size: var(--font-size);
+	color: var(--gray-color-medium);
 }
 
 #blockBtn {
 	margin-top: 0rem;
 	width: 6rem;
 	height: 2rem;
-	text-align: center;
-	border-radius: 0.75rem;
-	padding: 1rem 1;
-	background-color: #E53E3E;
-	border-color: #E53E3E;
-	font-size: 0.9rem;
 	color: white;
+	font-size: var(--font-size);
+	background-color: var(--red-color);
+	border-radius: var(--border-radius);
+}
+
+#blockBtn:hover {
+	background-color: var(--red-color-dark); 
+}
+
+#blockBtn:active {
+	background-color: var(--red-color-darker);
 }
 
 #blockBtn i {
-	font-size: 1.2rem;
 	color: white;
+	font-size: var(--icon-size);
 }

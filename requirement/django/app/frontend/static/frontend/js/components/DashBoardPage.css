@@ -1,9 +1,9 @@
 .bg-default {
-	background-color: var(--default-bg-color);
+	background-color: var(--gray-color-bg);
 }
 
-.light-gray {
-	color: var(--light-gray-color);
+.medium-gray {
+	color: var(--gray-color-medium);
 }
 
 .primary-color {
@@ -11,7 +11,7 @@
 }
 
 .dark-text {
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 }
 
 .fs-7 {
@@ -40,7 +40,7 @@
 #navMenu {
 	width: 30px;
 	height: 30px;
-	border: 2px solid var(--light-gray-color);
+	border: 2px solid var(--gray-color-light);
 }
 
 #profileImg {

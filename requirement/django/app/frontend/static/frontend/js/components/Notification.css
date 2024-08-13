@@ -22,7 +22,7 @@ table {
 table tbody td {
 	height: var(--table-height);
 	font-size: var(--font-size);
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 	border-bottom: var(--table-line);
 }
 

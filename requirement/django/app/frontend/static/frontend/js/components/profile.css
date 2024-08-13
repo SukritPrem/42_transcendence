@@ -8,7 +8,7 @@
 }
 
 .dark-text {
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 }
 
 .fs-7 {
@@ -61,7 +61,7 @@
 	margin: 0; 
 	align-items: center;
 	font-size: var(--font-size);
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 }
 
 #offlinePong {
