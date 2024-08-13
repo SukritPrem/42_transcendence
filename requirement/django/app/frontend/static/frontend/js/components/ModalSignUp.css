@@ -1,6 +1,6 @@
 :host {
-    display: block;
-    position: fixed;
+	display: block;
+	position: fixed;
 }
 
 #textSignUp {
@@ -9,14 +9,14 @@
 }
 
 .text-gray {
-	font-size: 0.9rem;
-	color: var(--light-gray-color);
+	font-size: var(--font-size);
+	color: var(--gray-color-light);
 }
 
 label {
-	font-size: 0.9rem;
 	font-weight: bold;
 	margin-right: 0.5rem;
+	font-size: var(--font-size);
 	color: var(--primary-color);
 }
 
@@ -25,23 +25,23 @@ label {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	width: 10rem;
-	font-size: 0.9rem;
 	padding: 0.6rem 1rem;
-	color: var(--dark-text-color);
-	background: var(--default-bg-color);
+	border: var(--border-green);
+	font-size: var(--font-size);
+	color: var(--gray-color-dark);
+	background: var(--gray-color-bg);
 	border-radius: var(--border-radius);
-	border: 2px solid var(--primary-color);
 }
 
 .input-css::placeholder {
-	color: var(--light-gray-color);
+	color: var(--gray-color-light);
 }
 
 .input-img {
 	margin-bottom: 5px;
 	width: 12rem;
 	font-size: var(--font-size);
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 }
 
 #avatarCon {
@@ -68,16 +68,16 @@ label {
 	max-width: 20rem;
 	padding: 1rem 1;
 	color: white;
-	font-size: 0.9rem;
 	font-weight: bold;
+	font-size: var(--font-size);
 	border-radius: var(--border-radius);
 	background-color: var(--primary-color);
 }
 
 #signUpBtn:hover {
-    background-color: var(--primary-color-dark); 
+	background-color: var(--primary-color-dark); 
 }
 
 #signUpBtn:active {
-    background-color: var(--primary-color-darker);
+	background-color: var(--primary-color-darker);
 }

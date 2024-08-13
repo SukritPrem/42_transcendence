@@ -1,7 +1,7 @@
 #nav {
 	height: 7vh;
 	min-height: 50px;
-	background-color: var(--default-bg-color);
+	background-color: var(--gray-color-bg);
 }
 
 #nav::after {
@@ -26,19 +26,19 @@
 }
 
 #navTextJoin p {
-	color: var(--light-gray-color);
+	color: var(--gray-color-light);
 	margin: 0 1vw; 
 }
 
 #gameTag {
 	height: 93vh;
 	min-height: 48rem;
-	background-color: var(--default-bg-color);
+	background-color: var(--gray-color-bg);
 }
 
 #footer p {
 	font-size: var(--font-size);
-	color: var(--light-gray-color);
+	color: var(--gray-color-light);
 	margin: 0;
 }
 

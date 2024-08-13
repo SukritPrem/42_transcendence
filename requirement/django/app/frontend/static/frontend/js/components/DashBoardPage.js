@@ -16,7 +16,7 @@ export class DashBoardPage extends HTMLElement {
 			<div id="nav" class="d-flex justify-content-between align-items-center w-100 position-relative ps-3 pe-3 bg-default">
 				<div class="d-flex align-items-center">
 					<div id="navMenu" class="rounded-0 align-items-center justify-content-center d-flex d-xl-none me-3">
-						<i class="uil uil-bars fs-4 light-gray"></i>
+						<i class="uil uil-bars fs-4 medium-gray"></i>
 					</div>
 					<div id="navLogo" class="d-none d-xl-flex align-items-center">
 						<i class="uil uil-window-grid dark-text fs-4"></i>
@@ -24,7 +24,7 @@ export class DashBoardPage extends HTMLElement {
 					</div>
 				</div>
 				<div id="navProfile" class="d-flex align-items-center">
-					<div id="navProfileName" class="me-2 fw-bold fs-7 light-gray ">
+					<div id="navProfileName" class="me-2 fw-bold fs-7 medium-gray ">
 						${getUserName()}
 					</div>
 					<div id="navProfileAvatar">
@@ -52,7 +52,7 @@ export class DashBoardPage extends HTMLElement {
 			</div>
 
 			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0">
-				<p class="light-gray fs-8 m-0">
+				<p class="medium-gray fs-8 m-0">
 					@ 2024, Made with 
 					<i class="uil uil-heart-alt"></i> 
 					by 

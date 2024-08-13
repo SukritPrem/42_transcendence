@@ -2,7 +2,7 @@
 	display: flex;
 	height: var(--table-height);
 	font-size: var(--font-size);
-	color: var(--dark-text-color);
+	color: var(--gray-color-dark);
 	justify-content: space-between;
 	align-items: center; 
 }
@@ -30,7 +30,7 @@
 	justify-content: center;
 	box-shadow: var(--box-shadow);
 	border-radius: var(--border-radius);
-	background: var(--online-green-color);
+	background: var(--primary-color-online);
 }
 
 .status-offline {
@@ -43,7 +43,7 @@
 	justify-content: center;
 	box-shadow: var(--box-shadow);
 	border-radius: var(--border-radius);
-	background: var(--offline-gray-color);
+	background: var(--gray-color-medium);
 }
 
 .new-message {

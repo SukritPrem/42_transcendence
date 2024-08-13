@@ -11,39 +11,39 @@ export class FriendProfile extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/FriendProfile.css">
 			
-			<div id="friendProfile">
-				<div id="header">
-					<h4>Friend Profile</h4>
+			<div class="bg-white overflow-auto custom-bg">
+				<div id="header" class="fw-bold">
+					<p>Friend Profile</p>
 				</div>
-				<div id="content">
-					<div id="photo">
-						
+				<div id="content" class="d-flex align-items-center justify-content-center">
+					<div id="photo" class="d-flex position-relative">
 					</div>
 					<div id="detail">
 						<div id="username">
 							Unknow
 						</div>
-						<a class="menu-item">
+						<a class="d-flex align-items-center detail-height">
 							<span><i class="uil uil-globe"></i></span>
 							<h3>RANK</h3>
 							<p>11</p>
 						</a>
-						<a class="menu-item">
+						<a class="d-flex align-items-center detail-height">
 							<span><i class="uil uil-arrow-growth"></i></span>
 							<h3>WIN</h3>
 							<p>5</p>
 						</a>
-						<a class="menu-item">
+						<a class="d-flex align-items-center detail-height">
 							<span><i class="uil uil-chart-down"></i></span>
 							<h3>LOSE</h3>
 							<p>2</p>
 						</a>
 					</div>
 				</div>
-				<div id="button-block">
-					<button id="blockBtn">
+				<div class="mt-3 d-flex justify-content-center">
+					<button id="blockBtn" class="d-flex align-items-center justify-content-center gap-2 border-0">
 							<i class="uil uil-user-times"></i> Block
 					</button>
 				</div>
