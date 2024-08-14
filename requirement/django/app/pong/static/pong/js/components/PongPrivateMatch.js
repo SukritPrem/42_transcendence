@@ -17,15 +17,11 @@ export class PongPrivateMatch extends HTMLElement {
 	templatePlayers = (players) => {
 		return players.map((player, index) => {
 			return `
-				<div class="player">
-					<div class="player-name">${player.name}</div>
-					<div>
-						<img class="player-avatar" src="${player.avatar}"/>
-					</div>
-					<div>
-						<button id="${player.name}" data-index="${index}" class="player-status" disabled>${player.status}</button>
-					</div>
-				</div>
+				<pong-player-component data-index="${index}" 
+					data-name="${player.name}"
+					data-avatar="${player.avatar}"
+					data-status="${player.status}">
+				</pong-player-component>
 			`
 		}).join("")
 	}
@@ -50,7 +46,8 @@ export class PongPrivateMatch extends HTMLElement {
 		if (this.data.action == 'update') {
 			const players = [this.data.inviter, this.data.invited]
 			this.shadowRoot.getElementById("waitRoom").innerHTML = this.templatePlayers(players)
-			const btn = this.shadowRoot.getElementById(getUserName())
+			const player = this.shadowRoot.querySelector(`[data-name=${getUserName()}]`)
+			const btn = player.shadowRoot.querySelector("button")
 			btn.disabled = false
 			btn.addEventListener("click", this.btnClick)
 		} else {

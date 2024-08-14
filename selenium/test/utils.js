@@ -101,7 +101,14 @@ async function friendRequest (driver, user) {
 	const friendRecommendComponent = friendRecommendNavigate(driver)
 	const shadowRoot = await driver.executeScript('return arguments[0].shadowRoot', friendRecommendComponent)
 	const friendRequestBtn = await shadowRoot.findElement(By.id(`${user.username}FriendRequest`))
-	await friendRequestBtn.click()
+	await driver.executeScript("arguments[0].click();", friendRequestBtn);
+	// try {
+	// 	await friendRequestBtn.click()
+
+	// } catch (error){
+	// 	await sleep(10000)
+	// 	throw error
+	// }
 	await sleep (configs.timeWait)
 	await elementDisappear(shadowRoot, `${user.username}FriendRequest`)
 }

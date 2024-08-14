@@ -140,7 +140,7 @@ export class Pong extends HTMLElement {
 	}
 
 	keyDownHandler(e){
-		console.log(e.key)
+		// console.log(e.key)
 		switch(e.key){
 			case "a":
 			case "w":

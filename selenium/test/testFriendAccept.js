@@ -10,6 +10,7 @@ friendAccept = async (driver, user) => {
 	const acceptBtn = await notificationShadowRoot
 		.findElement(By.id(`${user.username}FriendAccept`))
 	await acceptBtn.click()
+
 	await sleep(configs.timeWait)
 	await elementDisappear(notificationShadowRoot, `${user.username}FriendAccept`)
 

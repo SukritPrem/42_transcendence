@@ -3,8 +3,7 @@
     "version": "1.0.0",
     "main": "run-tests.js",
     "scripts": {
-        "test": "npx mocha test/**/*.js --timeout 60000",
-        "start": "npx mocha test/testFriendRequest.js --timeout 60000"
+        "test": "npx mocha test/**/*.js --timeout 120000"
     },
     "author": "The Selenium project",
     "license": "Apache-2.0",

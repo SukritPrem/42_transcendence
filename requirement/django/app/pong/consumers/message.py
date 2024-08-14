@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from .game_data import *
+import random
 
 @dataclass
 class Message:
@@ -25,12 +26,14 @@ class PrivateMessageError(PrivateMessage):
 @dataclass
 class Player():
 	name: str
+	nickname: str
 	status: str
 	avatar: str = ''
 
 	def __init__(self, name: str):
 		self.name = name
 		self.status = 'wait'
+		self.nickname = None
 
 @dataclass
 class PrivateMessageRoom(PrivateMessage):
@@ -58,3 +61,45 @@ class PrivateMessageRoom(PrivateMessage):
 	
 	def get_another(self, player: Player):
 		return self.invited if self.inviter is player else self.inviter
+
+@dataclass
+class TournamentMessage(Message):
+	players: list # {nickname: Player()}
+	game_datas: list
+	match_index: int
+	channel_name: str
+	# nicknames: str
+
+	def __init__(self):
+		super().__init__(type='tournament', action='update')
+		self.players: Player = []
+		self.game_datas: GameData = []
+		# self.nicknames: str = []
+		self.match_index = 0
+		self.channel_name = 'tournament_channel'
+
+	def is_nickname_exist(self, nickname: str):
+		for player in self.players:
+			if player.nickname == nickname:
+				return True
+		return False
+
+	def find_player(self, username: str):
+		for player in self.players:
+			if player.name == username:
+				return player
+		return None
+
+	def is_all_ready(self):
+		for player in self.players:
+			if player.status != 'ready':
+				return False
+		return True
+
+	def shuffle_player(self):
+		random.shuffle(self.players)
+
+
+
+		
+

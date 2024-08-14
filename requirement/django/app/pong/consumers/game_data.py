@@ -4,6 +4,7 @@ from dataclasses import dataclass, asdict
 @dataclass
 class GamePlayer():
 	name: str
+	nickname: str
 	x: int
 	y: int
 	move: str
@@ -11,6 +12,7 @@ class GamePlayer():
 
 	def __init__(self, x: int, y: int):
 		self.name = None
+		self.nickname = None
 		self.x = x
 		self.y = y
 		self.move = "idle"
@@ -18,6 +20,9 @@ class GamePlayer():
 
 	def set_name(self, name: str):
 		self.name = name
+
+	def set_nickname(self, nickname: str):
+		self.nickname = nickname
 
 	def set_move(self, move: str):
 		self.move = move

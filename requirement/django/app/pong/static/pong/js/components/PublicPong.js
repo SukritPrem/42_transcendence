@@ -6,26 +6,43 @@ export class PublicPong extends HTMLElement {
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.innerHTML = this.template();
 		this.username = getUserName()
+		this.mainFrame = getMainFrame()
+		this.tourBoardcast = this.shadowRoot.querySelector("toutnament-broadcast-component")
 	}
 
 	template = () => {
 		return `
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/PublicPong.css">
-			<tournament-upcomming-component></tournament-upcomming-component>
+			<toutnament-broadcast-component></toutnament-broadcast-component>
 		`;
 	};
+
+	// publicUpdatePlayers = (data) => {
+	// 	const tour = this.shadowRoot.querySelector("toutnament-broadcast-component")
+	// 	tour.publicUpdatePlayers(Object.keys(data.players).length)
+	// }
 
 	setupWebsocket = () => {
 		this.socket = new WebSocket(`${window.location.origin}/ws/pong/public`)
 
 		this.socket.addEventListener("message", (ws)=>{
 			const {type, data} = JSON.parse(ws.data)
+			
+			/** debug */
 			// console.log({type, data})
+
+			this.data = data
 
 			if (type == "pong_private_message") {
 				if (data.type == "private") {
 					if (data.action == "error") {
 						alert(data.message)
+					}
+				}
+				else{
+					// console.log(data)
+					if (data.type == "tournament" && data.action == "update") {
+						this.tourBoardcast.update()
 					}
 				}
 			}
@@ -40,46 +57,77 @@ export class PublicPong extends HTMLElement {
 					}
 					else if (data.action == 'quit') {
 						console.log(`recieve quit message`)
-						const mainFrame = getMainFrame()
-						mainFrame.innerHTML = ""
+						this.mainFrame.innerHTML = ""
 					}
 					else if (data.action == 'update') {
-						const mainFrame = getMainFrame()
-						let pongPrivateMatch = mainFrame.querySelector("#pongPrivateMatch")
+						let pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
 						if (!pongPrivateMatch) {
-							mainFrame.innerHTML = '<pong-private-match-component id="pongPrivateMatch"></pong-private-match-component>'
-							pongPrivateMatch = mainFrame.querySelector("#pongPrivateMatch")
+							this.mainFrame.innerHTML = '<pong-private-match-component id="pongPrivateMatch"></pong-private-match-component>'
+							pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
 						}
 						pongPrivateMatch.update(data)
 					}
 					else if (data.action == 'beginpong') {
-						const mainFrame = getMainFrame()
-						const pongPrivateMatch = mainFrame.querySelector("#pongPrivateMatch")
+						const pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
 						pongPrivateMatch.update(data)
 						console.log("beginpong")
-						mainFrame.innerHTML = `<pong-component id="pongComponent" data-player1="${data.game_data.player_one.name}" data-player2="${data.game_data.player_two.name}"></pong-component>`
-						
-						// console.log(data)
-
+						this.mainFrame.innerHTML = `
+							<pong-component id="pongComponent" 
+								data-player1="${data.game_data.player_one.name}" 
+								data-player2="${data.game_data.player_two.name}">
+							</pong-component>`
 						data.action = 'playpong'
-						// console.log(data)
 						this.socket.send(JSON.stringify(data))
-						// const pongComponent = mainFrame.querySelector("#pongComponent")
-						// pongComponent.draw(data.game_data)
 					}
 					else if (data.action == 'playpong') {
-						const mainFrame = getMainFrame()
-						const pongComponent = mainFrame.querySelector("#pongComponent")
+						const pongComponent = this.mainFrame.querySelector("#pongComponent")
 						pongComponent.draw(data)
 					}
 					else if (data.action == 'finish') {
-						const mainFrame = getMainFrame()
-						const pongComponent = mainFrame.querySelector("#pongComponent")
+						const pongComponent = this.mainFrame.querySelector("#pongComponent")
 						pongComponent.remove()
 					}
 					else {
 						console.log(data)
 					}
+				}
+				else if(data.type == 'tournament'){
+					if (data.action == 'update') {
+						this.tourBoardcast.update()
+						const players = this.data.players
+						// console.log(players)
+						for (const player of players) {
+							if (player.name == getUserName()) {
+								// console.log("I am in tournament")
+								let pongTourMatch = this.mainFrame.querySelector("#pongTourMatch")
+								if (!pongTourMatch) {
+									this.mainFrame.innerHTML = '<pong-tour-match-component id="pongTourMatch"></pong-tour-match-component>'
+									pongTourMatch = this.mainFrame.querySelector("#pongTourMatch")
+								}
+								pongTourMatch.update()
+							}
+						}
+					}
+					else if (data.action == 'waitmatch') {
+						const players = Object.values(data.players)
+						for (const player of players) {
+							if (player.name == getUserName()) {
+								// console.log("I am in tournament")
+								let pongTourMatch = this.mainFrame.querySelector("#waitMatch")
+								if (!pongTourMatch) {
+									this.mainFrame.innerHTML = '<wait-match-component id="waitMatch"></wait-match-component>'
+									pongTourMatch = this.mainFrame.querySelector("#waitMatch")
+								}
+								// pongTourMatch.update(data)
+							}
+						}
+					}
+					else {
+						console.log(data)
+					}
+				}
+				else {
+					console.log(data)
 				}
 			}
 		})
@@ -87,7 +135,7 @@ export class PublicPong extends HTMLElement {
 
 	connectedCallback() {
 		this.setupWebsocket()
-		console.log("tournament was connected")
+		// console.log("tournament was connected")
 	}
 
 	disconnectedCallback() {

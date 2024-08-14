@@ -9,24 +9,32 @@ import asyncio
 
 User = get_user_model()
 
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
+
 class PublicConsumer(AsyncWebsocketConsumer):
 
 	available: str = [] # keep username
 	private_rooms: PrivateMessageRoom = {} # keep PrivateMessageRoom
 	channel_public: str = 'pong_public_message'
 	tasks: asyncio.Task = {}
+	tournament: TournamentMessage = TournamentMessage()
 
 	async def connect(self):
 		self.username: str = self.scope['user'].username
 		self.available.append(self.username)
 		await self.accept()
 		await self.channel_layer.group_add(self.channel_public, self.channel_name)
-		# await self.pong_private_message(self.available)
+		await self.pong_private_message(self.tournament.to_dict())
 
 	async def disconnect(self, close_code):
 		self.username = self.scope['user'].username
 		if self.username not in self.available:
 			await self.private_quit()
+			await self.tour_quit()
 		await self.channel_layer.group_discard(self.channel_public, self.channel_name)
 		if self.username in self.available:
 			self.available.remove(self.username)
@@ -34,9 +42,12 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		self.username = self.scope['user'].username
 		data = json.loads(text_data)
-		# print (data, file=sys.stderr)
 		if data['type'] == 'private':
 			await self.private(data)
+		elif data['type'] == 'tournament':
+			await self.tour(data)
+		else:
+			print (data, file=sys.stderr)
 
 	async def pong_public_message(self, event: dict):
 		await self.send(text_data=json.dumps(event))
@@ -89,7 +100,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		if room:
 
 			#debug
-			print (f"username: data['invited']['name'] join {room.channel_name}", file=sys.stderr)
+			# print (f"username: data['invited']['name'] join {room.channel_name}", file=sys.stderr)
 			
 			#set avatar avatar
 			inviter = await self.get_user(data['inviter']['name'])
@@ -102,7 +113,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 
 	async def private_quit(self, data: dict=None):
 		username: str = self.scope['user'].username
-		room: PrivateMessageRoom
+		room: PrivateMessageRoom = None
 		if data:
 			room = self.private_rooms.get(data['channel_name'])
 		else:
@@ -111,12 +122,10 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					or self.private_rooms[channel_name].invited.name == username:
 					room = self.private_rooms[channel_name]
 					break
-				else:
-					room = None
 		if room:
 
 			#debug
-			print (f'username: {username} quit {room.channel_name}', file=sys.stderr)
+			# print (f'username: {username} quit {room.channel_name}', file=sys.stderr)
 
 			room.action = 'quit'
 			channel_name = room.channel_name
@@ -135,7 +144,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				# it sure the game was started, del game task and save match to database
 				if channel_name in self.tasks:
 					#debug
-					print (f'{room.channel_name} should save on this stage', file=sys.stderr)
+					# print (f'{room.channel_name} should save on this stage', file=sys.stderr)
 					
 					if not room.game_data.winner:
 						room.game_data.winner = room.game_data.player_one.name \
@@ -143,7 +152,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					
 					self.tasks[channel_name].cancel()
 
-					print (f'the winner is {room.game_data.winner.name}', file=sys.stderr)
+					# print (f'the winner is {room.game_data.winner.name}', file=sys.stderr)
 					del self.tasks[channel_name]
 
 			await self.channel_layer.group_discard(channel_name, self.channel_name)
@@ -177,6 +186,109 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				player.set_move(data['direction'])
 		pass
 
+################## tournament ###########################
+	async def tour(self, data):
+		if data["action"] == 'join':
+			await self.tour_join(data)
+		elif data["action"] == 'quit':
+			await self.tour_quit(data)
+		elif data["action"] == 'update':
+			await self.tour_update(data)
+		else:
+			print(data, file=sys.stderr)
+	
+	async def tour_join(self, data: dict):
+		user: str = self.scope['user']
+		if user.username not in self.available:
+			await self.pong_private_message(PrivateMessageError("User unavailable").to_dict())
+		elif self.tournament.is_nickname_exist(data["nickname"]):
+			await self.pong_private_message(PrivateMessageError("Nickname exist").to_dict())
+		elif len(self.tournament.players) >= 4:
+			await self.pong_private_message(PrivateMessageError("Tournament is full").to_dict())
+		else:
+			self.available.remove(user.username)
+			player = Player(user.username)
+			player.nickname = data["nickname"]
+			player.avatar = user.avatar.url
+			self.tournament.players.append(player)
+
+
+			# add user to channel layer
+			await self.channel_layer.group_add(self.tournament.channel_name, self.channel_name)
+			
+			await self.channel_layer.group_send(
+				self.channel_public,
+				{
+					'type': self.channel_public,
+					'data': self.tournament.to_dict()
+				}
+			)
+			#debug
+			# print(self.tournament, file=sys.stderr)
+
+	async def tour_update(self, data: dict):
+		username: str = self.scope['user'].username
+
+		pyr = None
+		for p in data['players']:
+			if p['name']== username:
+				pyr = p
+	
+		player = self.tournament.find_player(username)
+		if player:
+			player.status = pyr['status']
+			await self.channel_layer.group_send(self.tournament.channel_name, {
+				'type': self.channel_public,
+				'data': self.tournament.to_dict()
+			})
+
+			# it sure last player ready call tour_create_match only one time
+			if self.tournament.is_all_ready():
+				print(f"{RED}all player are ready, should start tournament{RESET}", file=sys.stderr)
+				self.tournament.shuffle_player()
+				print(self.tournament.players, file=sys.stderr)
+				self.tournament.action = 'waitmatch'
+				await self.tour_create_match(data)
+
+	async def tour_create_match(self, data: dict):
+		if self.tournament.match_index < 2:
+			game_data = GameData()
+			self.tournament.game_datas.append(game_data)
+			index = self.tournament.match_index
+			game_data.player_one.set_name(self.tournament.players[index].name)
+			game_data.player_one.set_nickname(self.tournament.players[index].nickname)
+			game_data.player_two.set_name(self.tournament.players[index + 2].name)
+			game_data.player_two.set_nickname(self.tournament.players[index + 2].nickname)
+			self.tournament.match_index += 1
+
+
+		#for update pongPublic
+		await self.channel_layer.group_send(
+			self.channel_public,
+			{
+				'type': self.channel_public,
+				'data': self.tournament.to_dict()
+			}
+		)
+
+
+	async def tour_quit(self, data: dict=None):
+		# print(self.tournament, file=sys.stderr)
+		username: str = self.scope['user'].username
+		if self.tournament.action == 'update':
+			nickname = self.tournament.find_nickname(username)
+			if nickname is not None:
+				del self.tournament.players[nickname]
+				self.available.append(username)
+				await self.channel_layer.group_send(
+					self.channel_public,
+					{
+						'type': self.channel_public,
+						'data': self.tournament.to_dict()
+					}
+				)
+			
+			await self.channel_layer.group_discard(self.tournament.channel_name, self.channel_name)
 
 ################## play pong ############################
 	async def send_game_data(self, room: PrivateMessageRoom):
