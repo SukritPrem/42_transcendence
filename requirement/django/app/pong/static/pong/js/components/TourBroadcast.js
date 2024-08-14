@@ -25,7 +25,7 @@ export class TourBroadcast extends HTMLElement {
 			</span>
 			<div id="content">
 				<h4>TOURNAMENT is upcoming ...</h4>
-				<small id="registry">registered member (${number}/4)</small>
+				<small>registered member (<span id="amountPlayer" style="display: inline;">${number}</span>/4)</small>
 			</div>
 			<button class="btn" id="joinBtn">JOIN TOURNAMENT</button>
 		`

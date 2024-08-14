@@ -13,7 +13,7 @@ export class PublicPong extends HTMLElement {
 	template = () => {
 		return `
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/PublicPong.css">
-			<toutnament-broadcast-component></toutnament-broadcast-component>
+			<toutnament-broadcast-component id="tourBoardcast"></toutnament-broadcast-component>
 		`;
 	};
 
