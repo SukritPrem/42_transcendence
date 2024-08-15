@@ -275,20 +275,24 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	async def tour_quit(self, data: dict=None):
 		# print(self.tournament, file=sys.stderr)
 		username: str = self.scope['user'].username
-		if self.tournament.action == 'update':
-			nickname = self.tournament.find_nickname(username)
-			if nickname is not None:
-				del self.tournament.players[nickname]
-				self.available.append(username)
-				await self.channel_layer.group_send(
-					self.channel_public,
-					{
-						'type': self.channel_public,
-						'data': self.tournament.to_dict()
-					}
-				)
-			
-			await self.channel_layer.group_discard(self.tournament.channel_name, self.channel_name)
+		player: Player = self.tournament.find_player(username)
+		if player is not None:
+			if self.tournament.action == 'update':
+				self.tournament.players.remove(player)
+			else:
+				player.status = 'quit'
+				self.tournament.set_another_player_win(username)
+				# self.tournament.game_datas.winner
+
+		self.available.append(username)
+		await self.channel_layer.group_send(
+			self.channel_public,
+			{
+				'type': self.channel_public,
+				'data': self.tournament.to_dict()
+			}
+		)
+		await self.channel_layer.group_discard(self.tournament.channel_name, self.channel_name)
 
 ################## play pong ############################
 	async def send_game_data(self, room: PrivateMessageRoom):

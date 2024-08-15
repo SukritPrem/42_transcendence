@@ -90,6 +90,11 @@ class TournamentMessage(Message):
 				return player
 		return None
 
+	def set_another_player_win(self, username: str):
+		game_data: GameData = self.game_datas[self.match_index]
+		another_player = game_data.player_one if game_data.player_one.name == username else game_data.player_two
+		game_data.winner = another_player
+
 	def is_all_ready(self):
 		for player in self.players:
 			if player.status != 'ready':
