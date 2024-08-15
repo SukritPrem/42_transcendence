@@ -1,83 +1,75 @@
 #tourBroadcast {
 	height: 14vh; 
 	min-height: 7rem;
-	display: flex; 
-	align-items: center;
-	justify-content: space-between;
-	border-radius: 0.75rem;
-	background-color: #4FD1C5;
+	padding-left: 2vw;
+	padding-right: 2vw;
+	box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
+	background-color: var(--primary-color);
 }
 
-#tourBroadcast span {
-	display: flex;
-	align-items: center;
+#amountPlayer {
+	display: inline;
 }
 
-#tourBroadcast #content {
-	display: flex;
-	flex-direction: column;
-	justify-content: center; 
-	margin-right: auto;
-	margin-left: 2vw;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); /* Adding shadow */
+#joinBtn {
+	width: auto;
+	font-size: var(--font-size);
+	color: var(--gray-color-dark);
+	border-radius:var(--border-radius);
 }
 
-.btn {
-	margin-top: 0;
+#icon {
 	margin-right: 2vw;
-	width: 10rem;
-	height: 2rem;
-	text-align: center;
-	border-radius: 0.75rem;
-	padding: 1rem 1;
-	background-color: white;
-	border-color: white;
-	font-size: 0.7rem;
 }
 
-#tourBroadcast i {
-	margin-left: 2vw;
-	font-size: 2.5rem; 
-	background-color: white;
-	color: #4FD1C5;
-	position: relative;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
+i {
 	width: 3rem; 
 	height: 3rem; 
-	border-radius: 0.75rem;
+	font-size: 2.5rem; 
+	background-color: white;
+	color: var(--primary-color);
+	border-radius:var(--border-radius);
 }
 
-#tourBroadcast #content h4 {
-	margin: 0;
-	color: white;
-	font-size: 1.5rem;
+h4 {
+	font-size: 1.25rem;
 }
 
-#tourBroadcast #content small {
+small {
 	color: white;
 	font-size: 0.7rem;
 }
 
-@media screen and (max-width: 740px) {
+@media screen and (max-width: 767px) {
 	#tourBroadcast {
 		display: flex;
 		flex-direction: column;
 		align-items: center; 
 		justify-content: center;
 	}
-	#tourBroadcast span {
-		display: none;
-	}
 	#tourBroadcast #content {
 		width: 100%;
 		text-align: center;
 		margin-bottom: 1vh;
 	}
-	#tourBroadcast #content h4 {
-		margin: 0;
-		color: white;
+	h4 {
 		font-size: 1rem;
+	}
+
+	#joinBtn {
+		font-size: 0.7rem;
+	}
+}
+
+@media screen and (min-width: 1400px) {
+	h4 {
+		font-size: 1.5rem;
+	}
+}
+
+@media screen and (min-width: 1500px) {
+	h4 {
+		font-size: 1.75rem;
 	}
 }
