@@ -13,32 +13,45 @@ export class LiveChat extends HTMLElement {
 
 	template = () => {
 		return `
+			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/chat/js/components/LiveChat.css">
 			
 			<div id="liveChat">
 				<div id="header">
-					<div>
-						<h4>Live Chat</h4>
-						<div id="avatar">
-							
-						</div>
-					</div>
-					<div id="chatroom"></div>
+					<p>Live Chat</p>
 				</div>
+				<div id="chatroom"></div>
 			</div>
 		`;
 	}
 
 	chatroomTemplate = (messages) => {
 		return `
+			<div id="chatHeader">
+				<div class="d-flex align-items-center">
+					<div id="avatar"></div>
+					<p id="chatName">${this.dataset.username}</p>
+				</div>
+				<div class="all-btn">
+					<i id="profileBtn" class="uil uil-user"></i>
+					<i id="pongBtn" class="uil uil-upload"></i>
+					<i id="exitBtn" class="uil uil-multiply"></i>
+				</div>
+			</div>
+			<div id="chatAnnouncement">
+				<p>TOURNAMENT is upcoming ...</p>
+			</div>
 			<div id="chatMessages">
-			${messages.map(mes=>{
-				return this.messageTemplate(mes.fields.author, mes.fields.body)
-			}).join("")}
+				${messages.map(mes=>{
+					return this.messageTemplate(mes.fields.author, mes.fields.body)
+				}).join("")}
 			</div>
 			<form id="messageForm">
-				<input id="inputMessage" type="text" >
-				<button id="sendMessageBtn" type="submit">Send</button>
+				<input id="inputMessage" type="text" placeholder="Type a message...">
+				<button id="sendMessageBtn" type="submit" class="d-flex align-items-center justify-content-center btn">
+					<i class="uil uil-message"></i>
+				</button>
 			</form>
 		`
 	}
@@ -49,17 +62,21 @@ export class LiveChat extends HTMLElement {
 	messageTemplate = (author, message) => {
 		if (author == this.dataset.userid) {
 			return `
-				<div class="other-user-message"">
-					<div class="message">${message}</div>
-					<div class="username">@${this.dataset.username}</div>
+				<div class="other-user-message">
+					<div class="username">${this.dataset.username}</div>
+					<div class="message">
+						<p class="messasge-line message-gray">${message}</p>
+					</div>
 				</div>
 			`
 		}
 		else {
 			return `
 				<div class="owner-message">
-					<div class="message">${message}</div>
-					<div class="username">@${getUserName()}</div>
+					<div class="username">${getUserName()}</div>
+					<div class="message">
+						<p class="messasge-line message-dark">${message}</p>
+					</div>
 				</div>
 			`
 		}
