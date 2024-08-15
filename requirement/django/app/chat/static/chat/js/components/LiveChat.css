@@ -67,7 +67,7 @@
 
 .other-user-message .username {
 	margin-bottom: 0;
-	font-size: var(--font-size);
+	font-size: 0.7rem;
 	color: var(--gray-color-medium);
 }
 
@@ -81,14 +81,11 @@
 	justify-content: end;
 }
 
-.owner-message .username{
-	display: flex;
-	justify-content: end;
-}
-
 .owner-message .username {
+	display: flex;
 	margin-bottom: 0;
-	font-size: var(--font-size);
+	font-size: 0.7rem;
+	justify-content: end;
 	color: var(--gray-color-dark);
 }
 
