@@ -1,4 +1,5 @@
 :root {
+	--primary-color-light: #7de7dc;
 	--primary-color: #4FD1C5;
 	--primary-color-dark: #49B4A9;
 	--primary-color-darker: #3B9087;
@@ -22,6 +23,7 @@
 	--table-line: 1px solid rgba(132, 139, 200, 0.18);
 	
 	--border-radius: 0.75rem;
+	--border-chatroom: 3px solid white;
 	--border-green:  2px solid var(--primary-color);
 
 	--box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02); 
