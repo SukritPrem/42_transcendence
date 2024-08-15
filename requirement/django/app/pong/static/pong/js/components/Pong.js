@@ -115,7 +115,16 @@ export class Pong extends HTMLElement {
 
 	draw(datas) {
 		this.datas = datas
-		const data = datas.game_data
+		// console.log(datas)
+		let data
+		if (datas.type == 'private') {
+			data = datas.game_data
+		}
+		else if (datas.type == 'tournament') {
+			data = datas.game_datas[datas.match_index]
+			// console.log(datas)
+			// console.log(data)
+		}
 		const canvas = this.shadowRoot.getElementById("canvas")
 		canvas.width = canvas.offsetWidth
 		canvas.height = canvas.offsetHeight
@@ -173,10 +182,18 @@ export class Pong extends HTMLElement {
 		if(this.user == this.dataset.player1 || this.user == this.dataset.player2)
 				document.removeEventListener('keydown', this.keyDownHandler)
 		
-		if (this.datas) {
-			this.datas.action = 'quit'
+		if (this.pongPublic.data.type == 'private') {
+			this.pongPublic.data.action = 'quit'
 			// const pongPublic = getPongPublic()
-			this.pongPublic.socket.send(JSON.stringify(this.datas))
+			this.pongPublic.socket.send(JSON.stringify(this.pongPublic.data))
+		}
+		else if (this.pongPublic.data.type == 'tournament') {
+			if (this.pongPublic.data.action != 'finish') {
+				console.log(this.pongPublic.data)
+				this.pongPublic.data.action = 'quit'
+			}
+			this.pongPublic.socket.send(JSON.stringify(this.pongPublic.data))
+			console.log(this.pongPublic.data)
 		}
 	}
 }

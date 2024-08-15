@@ -79,7 +79,7 @@ class GameData():
 		self.player_radius = 10 #percent paddle/table_height
 		self.ball_radius = 4
 		self.player_speed = 2
-		self.max_score = 5
+		self.max_score = 3
 		self.game_loop = False
 		self.winner = None
 

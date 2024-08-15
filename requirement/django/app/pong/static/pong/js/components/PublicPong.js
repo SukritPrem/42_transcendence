@@ -109,18 +109,38 @@ export class PublicPong extends HTMLElement {
 						}
 					}
 					else if (data.action == 'waitmatch') {
-						const players = Object.values(data.players)
-						for (const player of players) {
+						// const players = Object.values(data.players)
+						this.tourBoardcast.update()
+						for (const player of data.players) {
 							if (player.name == getUserName()) {
-								// console.log("I am in tournament")
 								let pongTourMatch = this.mainFrame.querySelector("#waitMatch")
 								if (!pongTourMatch) {
 									this.mainFrame.innerHTML = '<wait-match-component id="waitMatch"></wait-match-component>'
 									pongTourMatch = this.mainFrame.querySelector("#waitMatch")
 								}
-								// pongTourMatch.update(data)
 							}
 						}
+					}
+					else if (data.action == 'beginpong') {
+						console.log("beginpong")
+						console.log(data)
+						this.mainFrame.innerHTML = `
+							<pong-component id="pongComponent" 
+								data-player1="${data.game_datas[data.match_index].player_one.name}" 
+								data-player2="${data.game_datas[data.match_index].player_two.name}">
+							</pong-component>`
+						data.action = 'playpong'
+						this.socket.send(JSON.stringify(data))
+					}
+					else if (data.action == 'playpong') {
+						const pongComponent = this.mainFrame.querySelector("#pongComponent")
+						pongComponent.draw(data)
+					}
+					else if (data.action == 'finish') {
+						console.log("game finish should remove pong component")
+						// const pongComponent = this.mainFrame.querySelector("#pongComponent")
+						// pongComponent.remove()
+						this.mainFrame.innerHTML = ""
 					}
 					else {
 						console.log(data)

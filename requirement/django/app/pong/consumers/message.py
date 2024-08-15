@@ -74,8 +74,7 @@ class TournamentMessage(Message):
 		super().__init__(type='tournament', action='update')
 		self.players: Player = []
 		self.game_datas: GameData = []
-		# self.nicknames: str = []
-		self.match_index = 0
+		self.match_index = -1
 		self.channel_name = 'tournament_channel'
 
 	def is_nickname_exist(self, nickname: str):
@@ -95,6 +94,10 @@ class TournamentMessage(Message):
 		another_player = game_data.player_one if game_data.player_one.name == username else game_data.player_two
 		game_data.winner = another_player
 
+	def is_player_in_match(self, username: str):
+		game_data: GameData = self.game_datas[self.match_index]
+		return game_data.player_one.name == username or game_data.player_two.name == username
+
 	def is_all_ready(self):
 		for player in self.players:
 			if player.status != 'ready':
@@ -104,7 +107,13 @@ class TournamentMessage(Message):
 	def shuffle_player(self):
 		random.shuffle(self.players)
 
+	def cleanup(self):
+		self.actioin = 'update'
+		self.players: Player = []
+		self.game_datas: GameData = []
+		self.match_index = -1
 
+		
 
 		
 

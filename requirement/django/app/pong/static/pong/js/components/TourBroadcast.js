@@ -31,11 +31,23 @@ export class TourBroadcast extends HTMLElement {
 		`
 	}
 
+	waitmatchTemplate = () => {
+		const game_data = this.pongPublic.data.game_datas[this.pongPublic.data.match_index]
+		return `
+			<div id="content">
+				<h4>${game_data.player_one.nickname} VS ${game_data.player_two.nickname}</h4>
+			</div>
+		`
+	}
+
 	update = () => {
 		if (this.pongPublic.data.action == 'update') {
 			this.boardCast.innerHTML = this.joinTourTemplate(this.pongPublic.data.players.length)
 			const joinBtn = this.shadowRoot.getElementById('joinBtn');
 			joinBtn.addEventListener('click', this.joinTour);
+		}
+		else if (this.pongPublic.data.action == "waitmatch") {
+			this.boardCast.innerHTML = this.waitmatchTemplate()
 		}
 	}
 
