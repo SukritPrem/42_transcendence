@@ -65,6 +65,12 @@
 	justify-content: start;
 }
 
+.other-user-message .username {
+	margin-bottom: 0;
+	font-size: var(--font-size);
+	color: var(--gray-color-medium);
+}
+
 .owner-message{
 	margin-top: 10px;
 }
@@ -80,7 +86,7 @@
 	justify-content: end;
 }
 
-.username {
+.owner-message .username {
 	margin-bottom: 0;
 	font-size: var(--font-size);
 	color: var(--gray-color-dark);
