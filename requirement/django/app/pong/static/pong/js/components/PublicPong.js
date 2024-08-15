@@ -1,4 +1,4 @@
-import { getMainFrame, getUserName } from "/static/frontend/js/components/utils.js";
+import { getMainFrame, getUserName } from "/static/frontend/js/components/Utils.js";
 
 export class PublicPong extends HTMLElement {
 	constructor() {

@@ -1,7 +1,7 @@
 // want props "data-chatroom, data-username, data-userid"
 // to find chatroom name in database
 
-import { fetchJson, getUserName } from "/static/frontend/js/components/utils.js";
+import { fetchJson, getUserName } from "/static/frontend/js/components/Utils.js";
 
 export class LiveChat extends HTMLElement {
 	static observedAttributes = ["data-chatroom"];

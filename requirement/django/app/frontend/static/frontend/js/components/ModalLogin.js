@@ -1,4 +1,4 @@
-import { fetchJson, getCSRFToken } from "./utils.js";
+import { fetchJson, getCSRFToken } from "./Utils.js";
 
 export class ModalLogin extends HTMLElement {
 

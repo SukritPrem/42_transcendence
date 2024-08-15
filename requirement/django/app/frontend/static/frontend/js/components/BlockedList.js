@@ -1,4 +1,4 @@
-import { fetchJson, getUserId } from "./utils.js";
+import { fetchJson, getUserId } from "./Utils.js";
 
 export class BlockedList extends HTMLElement {
 	constructor() {

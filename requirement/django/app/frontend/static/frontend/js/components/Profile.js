@@ -1,4 +1,4 @@
-import { addNavigate, fetchJson, getUserAvatar, getUserName } from "./utils.js";
+import { addNavigate, fetchJson, getUserAvatar, getUserName } from "./Utils.js";
 
 export class Profile extends HTMLElement {
 	constructor() {
@@ -11,7 +11,7 @@ export class Profile extends HTMLElement {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/Profile.css">
+			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/profile.css">
 			
 			<div id="avatarCon" class="d-none d-md-flex position-relative w-100">
 				<img id="profileImg" src="${window.location.origin+getUserAvatar()}" alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"

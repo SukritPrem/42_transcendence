@@ -1,4 +1,4 @@
-import { getUserAvatar, getUserName } from "./utils.js"
+import { getUserAvatar, getUserName } from "./Utils.js"
 
 export class DashBoardPage extends HTMLElement {
 	constructor() {

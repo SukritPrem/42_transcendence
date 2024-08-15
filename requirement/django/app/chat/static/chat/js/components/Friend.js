@@ -1,4 +1,4 @@
-import { addNavigate, fetchJson, getMainFrame, getUserName, getPongPublic } from "/static/frontend/js/components/utils.js"
+import { addNavigate, fetchJson, getMainFrame, getUserName, getPongPublic } from "/static/frontend/js/components/Utils.js"
 
 export class Friend extends HTMLElement {
 
@@ -68,8 +68,11 @@ export class Friend extends HTMLElement {
 					if (liveChat.dataset.username == this.dataset.username)
 						liveChat.updateChatRoom(obj)
 					else {
-						const avatar = this.shadowRoot.getElementById("avatar")
-						avatar.classList.add('new-message')
+						// const avatar = this.shadowRoot.getElementById("avatar")
+						// avatar.classList.add('new-message')
+						// console.log("new message")
+						const a = this.shadowRoot.getElementById("chatBtn")
+						a.classList.add('new-message')
 						console.log("new message")
 					}
 				} catch(error) {
@@ -107,8 +110,10 @@ export class Friend extends HTMLElement {
 				liveChatComponent.setAttribute("data-chatroom", result.chatroom)
 
 				// remove new-message
-				const avatar = this.shadowRoot.getElementById("avatar")
-				avatar.classList.remove('new-message')
+				// const avatar = this.shadowRoot.getElementById("avatar")
+				// avatar.classList.remove('new-message')
+				const a = this.shadowRoot.getElementById("chatBtn")
+				a.classList.remove('new-message')
 			})
 		}
 	}

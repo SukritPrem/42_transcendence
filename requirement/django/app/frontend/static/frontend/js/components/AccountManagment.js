@@ -1,4 +1,4 @@
-import { getUserAvatar } from "./utils.js";
+import { getUserAvatar } from "./Utils.js";
 export class AccountManagment extends HTMLElement {
 	constructor() {
 		super();
