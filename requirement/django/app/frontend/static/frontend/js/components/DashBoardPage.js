@@ -16,15 +16,15 @@ export class DashBoardPage extends HTMLElement {
 			<div id="nav" class="d-flex justify-content-between align-items-center w-100 position-relative ps-3 pe-3 bg-default">
 				<div class="d-flex align-items-center">
 					<div id="navMenu" class="rounded-0 align-items-center justify-content-center d-flex d-xl-none me-3">
-						<i class="uil uil-bars fs-4 medium-gray"></i>
+						<i class="uil uil-bars fs-4 dark-gray"></i>
 					</div>
 					<div id="navLogo" class="d-none d-xl-flex align-items-center">
-						<i class="uil uil-window-grid dark-text fs-4"></i>
-						<p class="mb-0 ms-2 fw-bold fs-6 dark-text">DASHBOARD</p>
+						<i class="uil uil-window-grid dark-gray fs-4"></i>
+						<p class="mb-0 ms-2 fw-bold fs-6 dark-gray">DASHBOARD</p>
 					</div>
 				</div>
 				<div id="navProfile" class="d-flex align-items-center">
-					<div id="navProfileName" class="me-2 fw-bold fs-7 medium-gray ">
+					<div id="navProfileName" class="me-2 fw-bold fs-7 dark-gray ">
 						${getUserName()}
 					</div>
 					<div id="navProfileAvatar">
