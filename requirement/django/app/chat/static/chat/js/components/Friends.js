@@ -1,4 +1,4 @@
-import { getUserId, addNavigate, fetchJson } from "/static/frontend/js/components/utils.js";
+import { getUserId, addNavigate, fetchJson } from "/static/frontend/js/components/Utils.js";
 
 export class Friends extends HTMLElement {
 	constructor() {

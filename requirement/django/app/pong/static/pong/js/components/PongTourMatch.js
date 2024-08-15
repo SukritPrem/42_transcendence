@@ -1,4 +1,4 @@
-import { getPongPublic, getUserName } from "/static/frontend/js/components/utils.js"
+import { getPongPublic, getUserName } from "/static/frontend/js/components/Utils.js"
 
 export class PongTourMatch extends HTMLElement {
 	constructor () {

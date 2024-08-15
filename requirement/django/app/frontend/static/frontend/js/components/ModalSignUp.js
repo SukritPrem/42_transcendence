@@ -1,4 +1,4 @@
-import { getCSRFToken } from "./utils.js"
+import { getCSRFToken } from "./Utils.js"
 
 export class ModalSignUp extends HTMLElement {
 	constructor() {

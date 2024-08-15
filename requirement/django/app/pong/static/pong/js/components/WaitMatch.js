@@ -1,4 +1,4 @@
-import { getPongPublic } from "/static/frontend/js/components/utils.js"
+import { getPongPublic } from "/static/frontend/js/components/Utils.js"
 
 export class WaitMatch extends HTMLElement {
 	constructor() {

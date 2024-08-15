@@ -1,4 +1,4 @@
-import { getUserId, fetchJson } from "./utils.js";
+import { getUserId, fetchJson } from "./Utils.js";
 export class RecommendFriends extends HTMLElement {
 	constructor() {
 		super();
