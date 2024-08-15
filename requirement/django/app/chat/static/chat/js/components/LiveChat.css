@@ -30,6 +30,7 @@
 	align-items: center;
 	font-size: var(--font-size);
 	justify-content: space-between;
+	border-bottom: var(--border-chatroom);
 	background-color: var(--gray-color-bg);
 }
 
@@ -37,7 +38,7 @@
 	margin-left: 5px;
 	margin-bottom: 0;
 	font-weight: bold;
-	color: var(--gray-color-dark);
+	color: var(--gray-color-medium);
 }
 
 #avatar img {
@@ -45,30 +46,6 @@
 	object-fit: cover;
 	width: 30px;
 	height: 30px;
-}
-
-.all-btn {
-	margin-left: 3px;
-	color: var(--gray-color-dark);
-}
-
-#exitBtn {
-	padding: 2px;
-	color: white;
-	margin-left: 5px;
-	border-radius: 0.25rem;
-	background-color: var(--primary-color);
-}
-
-#chatAnnouncement p{
-	padding: 5px;
-	color: white;
-	margin-bottom: 0;
-	padding-left: 10px;
-	font-size: var(--font-size);
-	border-top: var(--border-chatroom);
-	border-bottom: var(--border-chatroom);
-	background-color: var(--primary-color);
 }
 
 #chatMessages {
