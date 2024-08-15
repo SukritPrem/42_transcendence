@@ -33,14 +33,6 @@ export class LiveChat extends HTMLElement {
 					<div id="avatar"></div>
 					<p id="chatName">${this.dataset.username}</p>
 				</div>
-				<div class="all-btn">
-					<i id="profileBtn" class="uil uil-user"></i>
-					<i id="pongBtn" class="uil uil-upload"></i>
-					<i id="exitBtn" class="uil uil-multiply"></i>
-				</div>
-			</div>
-			<div id="chatAnnouncement">
-				<p>TOURNAMENT is upcoming ...</p>
 			</div>
 			<div id="chatMessages">
 				${messages.map(mes=>{
