@@ -45,11 +45,12 @@ export class MatchHistory extends HTMLElement {
 
 	template = () => {
 		return `
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/MatchHistory.css">
 			
-			<div id="match-hx">
-				<div id="header">
-					<h4>Match History</h4>
+			<div class="bg-white overflow-auto custom-bg">
+				<div id="header" class="fw-bold">
+					<p>Match History</p>
 				</div>
 				<table>
 					<thead>
@@ -60,7 +61,7 @@ export class MatchHistory extends HTMLElement {
 							<th>Outcome</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="matchHistoryTableBody">
 					</tbody>
 				</table>
 			</div>
@@ -89,10 +90,3 @@ export class MatchHistory extends HTMLElement {
 		console.log("delete match history components");
 	}
 }
-
-	// <tr>
-	// <td>Tournament</td>
-	// <td>7 Jun 2024</td>
-	// <td>Sarah</td>
-	// <td>lose</td>
-	// </tr> 

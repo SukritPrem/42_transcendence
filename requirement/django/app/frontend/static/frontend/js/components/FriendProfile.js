@@ -25,21 +25,21 @@ export class FriendProfile extends HTMLElement {
 						<div id="username">
 							Unknow
 						</div>
-						<a class="d-flex align-items-center detail-height">
-							<span><i class="uil uil-globe"></i></span>
-							<h3>RANK</h3>
-							<p>11</p>
-						</a>
-						<a class="d-flex align-items-center detail-height">
-							<span><i class="uil uil-arrow-growth"></i></span>
-							<h3>WIN</h3>
-							<p>5</p>
-						</a>
-						<a class="d-flex align-items-center detail-height">
-							<span><i class="uil uil-chart-down"></i></span>
-							<h3>LOSE</h3>
-							<p>2</p>
-						</a>
+						<div class="d-flex align-items-center detail-height">
+							<i class="uil uil-globe"></i>
+							<p class="text">RANK</p>
+							<p class="amount">11</p>
+						</div>
+						<div class="d-flex align-items-center detail-height">
+							<i class="uil uil-arrow-growth"></i>
+							<p class="text">WIN</p>
+							<p class="amount">5</p>
+						</div>
+						<div class="d-flex align-items-center detail-height">
+							<i class="uil uil-chart-down"></i>
+							<p class="text">LOSE</p>
+							<p class="amount">2</p>
+						</div>
 					</div>
 				</div>
 				<div class="mt-3 d-flex justify-content-center">

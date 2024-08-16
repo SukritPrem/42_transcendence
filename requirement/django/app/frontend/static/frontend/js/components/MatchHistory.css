@@ -1,40 +1,51 @@
-#match-hx {
-	margin-top: 2vh;
+.custom-bg {
 	height: 70vh;
-	min-height: 38rem;
-	background-color: white;
-	border-radius: 0.75rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
-	/* background-color: rgb(106, 106, 199); */
+	min-height: 15rem;
+	margin-top: 2vh;
+	box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
 }
 
 #header {
-	padding-top: 1px;
-	padding-left: 20px;
-	color: #4FD1C5;
+	padding-top: 2vh;
+	padding-left: 2vw;
+	color: var(--primary-color);
+	font-size: var(--header-font-size);
 }
 
 table {
-	width: 100%;
-	border-radius: 0.75rem;
-	padding: 0 1rem 1rem 1rem;
+	width: 95%;
+	margin: 0 auto;
 	text-align: center;
+	padding: 0 1rem 1rem 1rem;
+	border-radius:var(--border-radius);
 }
 
 
 table thead th {
-	font-size: 0.9rem;
-	color: #677483;
+	font-size: var(--font-size);
+	color: var(--gray-color-dark);
 }
 
-
 table tbody td {
-	font-size: 0.8rem;
 	height: 2.8rem;
-	border-bottom: 1px solid rgba(132, 139, 200, 0.18);
-	color: #677483;
+	font-size: var(--font-size);
+	color: var(--gray-color-dark);
+	border-bottom: var(--table-line);
 }
 
 table tbody tr:first-child td {
-	border-top: 1px solid rgba(132, 139, 200, 0.18);
+	border-top: var(--table-line);
+}
+
+/* XS */
+@media screen and (max-width: 575px) {
+	table thead th {
+		font-size: 0.8rem;
+	}
+	
+	table tbody td {
+		height: 2.8rem;
+		font-size: 0.7rem;
+	}
 }
