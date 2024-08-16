@@ -7,7 +7,6 @@ export class PongPlayer extends HTMLElement{
 
 	template = () => {
 		return `
-			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/PongPlayer.css">
 			
