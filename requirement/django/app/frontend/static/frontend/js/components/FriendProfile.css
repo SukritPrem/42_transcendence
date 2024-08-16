@@ -48,11 +48,9 @@
 	height: 2.5rem;
 }
 
-#detail i {
+#content i {
 	width: 2.0rem; 
 	height: 2.0rem; 
-	margin-left: 0.5rem;
-	position: relative;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -64,17 +62,13 @@
 	background-color: var(--gray-color-bg);
 }
 
-#detail a {
-	text-decoration: none;
-}
-
-#detail h3 {
+.text {
 	margin-bottom: 0;
 	margin-left: 0.5rem;
 	font-size: var(--font-size);
 	color: var(--primary-color);
 }
-#detail p {
+.amount {
 	margin-bottom: 0;
 	margin-left: 0.5rem;
 	font-size: var(--font-size);
