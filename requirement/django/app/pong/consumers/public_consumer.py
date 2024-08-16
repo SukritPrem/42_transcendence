@@ -196,6 +196,8 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			await self.tour_update(data)
 		elif data["action"] == 'playpong':
 			await self.tour_playpong(data)
+		elif data["action"] == 'sendkey':
+			await self.tour_sendkey(data)
 		elif data["action"] == 'finish':
 			await self.tour_finish(data)
 		else:
@@ -279,7 +281,6 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					'data': self.tournament.to_dict()
 				}
 			)
-			
 			return
 		
 		self.tournament.match_index += 1
@@ -312,11 +313,11 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		asyncio.create_task(self.wait_to_begin_pong(10))
 
 	async def tour_playpong(self, data: dict):
-		print(f'{GREEN} task pong should begin', file=sys.stderr)
+		print(f'{GREEN} task pong should begin{RESET}', file=sys.stderr)
 		#if found player quit in this stage do not create task then make winner of game
 		if self.tournament.channel_name not in self.tasks:
 			self.tasks[self.tournament.channel_name] = asyncio.create_task(self.send_game_data(self.tournament))
-			print(f'{GREEN} task pong created', file=sys.stderr)
+			print(f'{GREEN} task pong created{RESET}', file=sys.stderr)
 			self.tournament.action = 'playpong'
 			await self.channel_layer.group_send(
 			self.tournament.channel_name,
@@ -333,8 +334,16 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			del self.tasks[self.tournament.channel_name]
 			await self.tour_create_match(data)
 
+
+
+	async def tour_sendkey(self, data: dict):
+		# print(f'{RED}{data}{RESET}', file=sys.stderr)
+		username: str = self.scope['user'].username
+		self.tournament.player_update_direction(username, data['direction'])
+		pass
+
 	async def tour_quit(self, data: dict=None):
-		print(f'{RED} tour_quit work', file=sys.stderr)
+		print(f'{RED} tour_quit work{RESET}', file=sys.stderr)
 		username: str = self.scope['user'].username
 		player: Player = self.tournament.find_player(username)
 
@@ -342,7 +351,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			if self.tournament.action == 'update':
 				self.tournament.players.remove(player)
 			else:
-				print(f'{RED}{username} quit unexpected', file=sys.stderr)
+				print(f'{RED}{username} quit unexpected{RESET}', file=sys.stderr)
 				player.status = 'quit'
 
 				# check player is next or now game
@@ -422,3 +431,88 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def get_user(self, username: str):
 		return get_object_or_404(User, username=username)
+
+
+# data structure
+'''
+	{
+		'type': 'tournament',
+		'action': 'sendkey',
+		'players': 
+			[
+				{
+					'name': 'pnamnil',
+					'nickname': 'ton',
+					'status': 'ready',
+					'avatar': '/user-media/avatars/small_pnamnil.webp'
+				},
+				{
+					'name': 'spipitku',
+					'nickname': 'prem',
+					'status': 'ready',
+					'avatar': '/user-media/avatars/small_spipitku.webp'
+				},
+				{
+					'name': 'kburalek',
+					'nickname': 'gran',
+					'status': 'ready',
+					'avatar': '/user-media/avatars/small_kburalek.webp'
+				},
+				{
+					'name': 'plertsir',
+					'nickname': 'first',
+					'status': 'ready',
+					'avatar': '/user-media/avatars/small_plertsir.webp'
+				}
+			],
+		'game_datas': 
+			[
+				{
+					'table': 
+						{
+							'width': 200,
+							'height': 100
+						},
+					'ball':
+						{
+							'table': 
+								{
+									'width': 200,
+									'height': 100
+								},
+							'mx': 5,
+							'my': 2, 
+							'x': 145, 
+							'y': 68
+						},
+					'player_one': 
+						{
+							'name': 'pnamnil',
+							'nickname': 'ton',
+							'x': 0,
+							'y': 50,
+							'move': 'idle',
+							'score': 0
+						},
+					'player_two': 
+						{
+							'name': 'kburalek',
+							'nickname': 'gran',
+							'x': 200,
+							'y': 50,
+							'move': 'idle',
+							'score': 0
+						}, 
+					'player_radius': 10,
+					'ball_radius': 4,
+					'player_speed': 2,
+					'max_score': 3,
+					'game_loop': True,
+					'winner': None
+				}
+			],
+		'match_index': 0,
+		'channel_name': 'tournament_channel', 
+		'direction': 'right'}
+
+'''

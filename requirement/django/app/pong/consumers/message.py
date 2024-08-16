@@ -64,7 +64,7 @@ class PrivateMessageRoom(PrivateMessage):
 
 @dataclass
 class TournamentMessage(Message):
-	players: list # {nickname: Player()}
+	players: list
 	game_datas: list
 	match_index: int
 	channel_name: str
@@ -97,6 +97,13 @@ class TournamentMessage(Message):
 	def is_player_in_match(self, username: str):
 		game_data: GameData = self.game_datas[self.match_index]
 		return game_data.player_one.name == username or game_data.player_two.name == username
+	
+	def player_update_direction(self, username, direction):
+		game_data: GameData = self.game_datas[self.match_index]
+		if game_data.player_one.name == username:
+			game_data.player_one.set_move(direction)
+		elif game_data.player_two.name == username:
+			game_data.player_two.set_move(direction)
 
 	def is_all_ready(self):
 		for player in self.players:
@@ -108,9 +115,9 @@ class TournamentMessage(Message):
 		random.shuffle(self.players)
 
 	def cleanup(self):
-		self.actioin = 'update'
-		self.players: Player = []
-		self.game_datas: GameData = []
+		self.action = 'update'
+		self.players.clear()
+		self.game_datas.clear()
 		self.match_index = -1
 
 		

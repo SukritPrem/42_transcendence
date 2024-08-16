@@ -93,9 +93,9 @@ export class PublicPong extends HTMLElement {
 				}
 				else if(data.type == 'tournament'){
 					if (data.action == 'update') {
-						this.tourBoardcast.update()
 						const players = this.data.players
 						// console.log(players)
+						let isJoinBtn = true
 						for (const player of players) {
 							if (player.name == getUserName()) {
 								// console.log("I am in tournament")
@@ -105,8 +105,10 @@ export class PublicPong extends HTMLElement {
 									pongTourMatch = this.mainFrame.querySelector("#pongTourMatch")
 								}
 								pongTourMatch.update()
+								isJoinBtn = false
 							}
 						}
+						this.tourBoardcast.update(isJoinBtn)
 					}
 					else if (data.action == 'waitmatch') {
 						// const players = Object.values(data.players)
