@@ -47,16 +47,17 @@ export class Friend extends HTMLElement {
 			const obj = JSON.parse(event.data)
 
 			if (obj.type == "online_count_handler") {
+				console.log(obj)
 				const status = this.shadowRoot.getElementById("status")
 				const pongBtn = this.shadowRoot.getElementById("pongBtn")
 				if (obj.online_count > 0) {
 					status.innerText = 'Online'
 					status.classList = 'status-online'
-					// pongBtn.style = ""
+					pongBtn.style = ""
 				} else {
 					status.innerText = 'Offline'
 					status.classList = 'status-offline'
-					// pongBtn.style.display = "none"
+					pongBtn.style.display = "none"
 				}
 			}
 			else if (obj.type == "message_handler") {
