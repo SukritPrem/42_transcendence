@@ -3,24 +3,18 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 import json
 from .message import *
-import sys
+# import sys
 from channels.db import database_sync_to_async
 import asyncio
 
 User = get_user_model()
 
-RED = "\033[91m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-BLUE = "\033[94m"
-RESET = "\033[0m"
-
 class PublicConsumer(AsyncWebsocketConsumer):
 
-	available: str = [] # keep username
-	private_rooms: PrivateMessageRoom = {} # keep PrivateMessageRoom
+	available: list[str] = [] # keep username
+	private_rooms: dict[str, PrivateMessageRoom] = {} # keep PrivateMessageRoom
 	channel_public: str = 'pong_public_message'
-	tasks: asyncio.Task = {}
+	tasks: dict[str, asyncio.Task] = {}
 	tournament: TournamentMessage = TournamentMessage()
 
 	async def connect(self):
@@ -229,8 +223,6 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					'data': self.tournament.to_dict()
 				}
 			)
-			#debug
-			# print(self.tournament, file=sys.stderr)
 
 	async def tour_update(self, data: dict):
 		username: str = self.scope['user'].username
@@ -256,8 +248,14 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				# self.tournament.action = 'waitmatch'
 				await self.tour_create_match(data)
 
-	async def wait_to_begin_pong(self, sec: int):
-		await asyncio.sleep(sec)
+	async def wait_to_begin_pong(self, data: dict):
+		await asyncio.sleep(self.tournament.wait_match_time)
+
+		#check player quit when waitmatch
+		if not self.tournament.is_both_player_alive():
+			self.tournament.set_winner_without_competition()
+			return	await self.tour_create_match(data)
+
 		self.tournament.action = 'beginpong'
 		await self.channel_layer.group_send(
 			self.tournament.channel_name,
@@ -268,8 +266,11 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		)
 
 	async def tour_create_match(self, data: dict):
-		if self.tournament.match_index + 1 > 2:
+		# end tournament
+		if self.tournament.match_index == 2:
 			print (f'{GREEN}Tournament finished should save match to database{RESET}', file=sys.stderr)
+			for game_data in self.tournament.game_datas:
+				print (f'{GREEN}{game_data.player_one.name} {game_data.player_one.score}: {game_data.player_two.name} {game_data.player_two.score}, the winner is {game_data.winner.name if game_data.winner is not None else "None"}{RESET}', file=sys.stderr)
 			for player in self.tournament.players:
 				if player.status != 'quit':
 					self.available.append(player.name)
@@ -284,22 +285,32 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			return
 		
 		self.tournament.match_index += 1
-		game_data = GameData()
+		game_data: GameData = GameData()
 		self.tournament.game_datas.append(game_data)
 		if self.tournament.match_index < 2:
 			index = self.tournament.match_index
-			game_data.player_one.set_name(self.tournament.players[index].name)
-			game_data.player_one.set_nickname(self.tournament.players[index].nickname)
-			game_data.player_two.set_name(self.tournament.players[index + 2].name)
-			game_data.player_two.set_nickname(self.tournament.players[index + 2].nickname)
+			player_one = self.tournament.players[index]
+			player_two = self.tournament.players[index + 2]
+			game_data.player_one.set_name(player_one.name)
+			game_data.player_one.set_nickname(player_one.nickname)
+			game_data.player_two.set_name(player_two.name)
+			game_data.player_two.set_nickname(player_two.nickname)
+
 		else:
-			game_data.player_one.set_name(self.tournament.game_datas[0].winner.name)
-			game_data.player_one.set_nickname(self.tournament.game_datas[0].winner.nickname)
-			game_data.player_two.set_name(self.tournament.game_datas[1].winner.name)
-			game_data.player_two.set_nickname(self.tournament.game_datas[1].winner.nickname)
+			# expected index == 2
+			# set game data
+			if self.tournament.game_datas[0].winner is not None:
+				game_data.player_one.set_name(self.tournament.game_datas[0].winner.name)
+				game_data.player_one.set_nickname(self.tournament.game_datas[0].winner.nickname)
+			if self.tournament.game_datas[1].winner is not None:
+				game_data.player_two.set_name(self.tournament.game_datas[1].winner.name)
+				game_data.player_two.set_nickname(self.tournament.game_datas[1].winner.nickname)
+		
+		if not self.tournament.is_both_player_alive():
+			self.tournament.set_winner_without_competition()
+			return	await self.tour_create_match(data)
 
 		self.tournament.action = 'waitmatch'
-
 		#for update pongPublic
 		await self.channel_layer.group_send(
 			self.channel_public,
@@ -308,33 +319,20 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				'data': self.tournament.to_dict()
 			}
 		)
-
-		# await self.wait_to_begin_pong(10)
-		asyncio.create_task(self.wait_to_begin_pong(10))
+		asyncio.create_task(self.wait_to_begin_pong(data))
 
 	async def tour_playpong(self, data: dict):
-		print(f'{GREEN} task pong should begin{RESET}', file=sys.stderr)
-		#if found player quit in this stage do not create task then make winner of game
+		# print(f'{GREEN}task pong should begin{RESET}', file=sys.stderr)
 		if self.tournament.channel_name not in self.tasks:
-			self.tasks[self.tournament.channel_name] = asyncio.create_task(self.send_game_data(self.tournament))
-			print(f'{GREEN} task pong created{RESET}', file=sys.stderr)
 			self.tournament.action = 'playpong'
-			await self.channel_layer.group_send(
-			self.tournament.channel_name,
-			{
-				'type': self.channel_public,
-				'data': self.tournament.to_dict()
-			}
-		)
+			self.tasks[self.tournament.channel_name] = asyncio.create_task(self.send_game_data(self.tournament))
 
 	async def tour_finish(self, data:dict):
-		print (f'{GREEN} tournament finish should create new match', file=sys.stderr)
+		# print (f'{GREEN} tournament finish should create new match', file=sys.stderr)
 		if self.tournament.channel_name in self.tasks:
 			print (f'{RED} tournament finish should create new match', file=sys.stderr)
 			del self.tasks[self.tournament.channel_name]
 			await self.tour_create_match(data)
-
-
 
 	async def tour_sendkey(self, data: dict):
 		# print(f'{RED}{data}{RESET}', file=sys.stderr)
@@ -343,40 +341,36 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		pass
 
 	async def tour_quit(self, data: dict=None):
-		print(f'{RED} tour_quit work{RESET}', file=sys.stderr)
+		print(f'{RED}tour_quit work action: {self.tournament.action}{RESET}', file=sys.stderr)
 		username: str = self.scope['user'].username
 		player: Player = self.tournament.find_player(username)
 
 		if player is not None:
 			if self.tournament.action == 'update':
 				self.tournament.players.remove(player)
+				await self.channel_layer.group_send(
+					self.channel_public,
+					{
+						'type': self.channel_public,
+						'data': self.tournament.to_dict()
+					}
+				)
 			else:
 				print(f'{RED}{username} quit unexpected{RESET}', file=sys.stderr)
 				player.status = 'quit'
 
 				# check player is next or now game
 				if self.tournament.is_player_in_match(username):
-					# it sure the game was started, del game task and save match to database
+					# if game task is loop, stop it then delete it when tour_finish() work
+					# task.cancel() it raise error, handle by send action finish in task exception
 					if self.tournament.channel_name in self.tasks:
-						# await self.tasks[self.tournament.channel_name].cancel()
-						del self.tasks[self.tournament.channel_name]
-
-					print (f'{GREEN}{self.tournament.channel_name} should save on this stage{RESET}', file=sys.stderr)
+						self.tasks[self.tournament.channel_name].cancel()
+					else:
+						print (f'{GREEN}no task to cancel, it check again when create task{RESET}', file=sys.stderr)
 					self.tournament.set_another_player_win(username)
-					game_data: GameData = self.tournament.game_datas[self.tournament.match_index]
-					print (f'{GREEN}match [{game_data.player_one.name} : {game_data.player_two.name}] was end{RESET}', file=sys.stderr)
-					print (f'{GREEN}the winner is {game_data.winner.name}{RESET}', file=sys.stderr)
-					self.tournament.action == 'finish'
 				else:
-					print (f'{GREEN}{username} not in present match it will check when match create {RESET}', file=sys.stderr)
+					print (f'{GREEN}{username} not in present match it will check when next match create{RESET}', file=sys.stderr)
 		self.available.append(username)
-		await self.channel_layer.group_send(
-			self.channel_public,
-			{
-				'type': self.channel_public,
-				'data': self.tournament.to_dict()
-			}
-		)
 		await self.channel_layer.group_discard(self.tournament.channel_name, self.channel_name)
 
 ################## play pong ############################
@@ -425,6 +419,15 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					}
 				)
 			except asyncio.CancelledError:
+				room.action = 'finish'
+				await self.channel_layer.group_send(
+					self.tournament.channel_name,
+					{
+						'type': self.channel_public,
+						'data': self.tournament.to_dict()
+					}
+				)
+
 				pass
 
 # database

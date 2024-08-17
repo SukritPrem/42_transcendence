@@ -1,6 +1,13 @@
 from dataclasses import dataclass, asdict
 from .game_data import *
 import random
+import sys
+
+RED = "\033[91m"
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
 
 @dataclass
 class Message:
@@ -64,18 +71,17 @@ class PrivateMessageRoom(PrivateMessage):
 
 @dataclass
 class TournamentMessage(Message):
-	players: list
-	game_datas: list
+	players: list[Player]
+	game_datas: list[GameData] 
 	match_index: int
-	channel_name: str
-	# nicknames: str
+	channel_name: str = 'tournament_channel'
+	wait_match_time: int = 3
 
 	def __init__(self):
 		super().__init__(type='tournament', action='update')
-		self.players: Player = []
-		self.game_datas: GameData = []
+		self.players = []
+		self.game_datas = []
 		self.match_index = -1
-		self.channel_name = 'tournament_channel'
 
 	def is_nickname_exist(self, nickname: str):
 		for player in self.players:
@@ -91,7 +97,7 @@ class TournamentMessage(Message):
 
 	def set_another_player_win(self, username: str):
 		game_data: GameData = self.game_datas[self.match_index]
-		another_player = game_data.player_one if game_data.player_one.name == username else game_data.player_two
+		another_player = game_data.player_two if game_data.player_one.name == username else game_data.player_one
 		game_data.winner = another_player
 
 	def is_player_in_match(self, username: str):
@@ -111,6 +117,67 @@ class TournamentMessage(Message):
 				return False
 		return True
 
+	def is_both_player_alive(self):
+		# print (f'{RED}is_both_player_alive index: {self.match_index}{RESET}', file=sys.stderr)
+
+		if self.match_index < 2:
+			if self.players[self.match_index].status == 'quit' or self.players[self.match_index + 2].status == 'quit':
+				return False
+		elif self.match_index == 2:
+			if self.game_datas[0].winner is not None:
+				player = self.find_player(self.game_datas[0].winner.name)
+				if player.status == 'quit':
+					# print (f'{RED}is_both_player_alive: winner match 1 is quit{RESET}', file=sys.stderr)
+					return False
+			else:
+				# print (f'{RED}is_both_player_alive: no winner in match 1{RESET}', file=sys.stderr)
+				return False
+			if self.game_datas[1].winner is not None:
+				player = self.find_player(self.game_datas[1].winner.name)
+				if player.status == 'quit':
+					# print (f'{RED}is_both_player_alive: winner match 2 is quit{RESET}', file=sys.stderr)
+					return False
+			else:
+				# print (f'{RED}is_both_player_alive: no winner in match 2{RESET}', file=sys.stderr)
+				return False
+		return True
+
+	def set_winner_without_competition(self):
+		index = self.match_index
+		game_data = self.game_datas[index]
+		player_one: Player = None
+		player_two: Player = None
+		if index < 2:
+			player_one = self.find_player(self.players[index].name)
+			player_two = self.find_player(self.players[index + 2].name)
+		elif index == 2:
+			if self.game_datas[0].winner is not None:
+				player_one = self.find_player(self.game_datas[0].winner.name)
+				# print(f'{RED}{player_one}{RESET}', file=sys.stderr)
+			if self.game_datas[1].winner is not None:
+				player_two = self.find_player(self.game_datas[1].winner.name)
+				# print(f'{GREEN}{player_two}{RESET}', file=sys.stderr)
+
+		if player_one is not None and player_two is not None:
+			if player_one.status == 'quit' and player_two.status == 'quit':
+				game_data.winner = None
+			elif player_one.status == 'quit':
+				self.set_another_player_win(player_one.name)
+			elif player_two.status == 'quit':
+				self.set_another_player_win(player_two.name)
+		elif player_one is not None:
+			if player_one.status == 'quit':
+				game_data.winner = None
+			else:
+				game_data.winner = game_data.player_one
+		elif player_two is not None:
+			if player_two.status == 'quit':
+				game_data.winner = None
+			else:
+				game_data.winner = game_data.player_two
+		else:
+			game_data.winner = None
+
 	def shuffle_player(self):
 		random.shuffle(self.players)
 
@@ -119,8 +186,3 @@ class TournamentMessage(Message):
 		self.players.clear()
 		self.game_datas.clear()
 		self.match_index = -1
-
-		
-
-		
-

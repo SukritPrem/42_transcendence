@@ -111,10 +111,9 @@ export class PublicPong extends HTMLElement {
 						this.tourBoardcast.update(isJoinBtn)
 					}
 					else if (data.action == 'waitmatch') {
-						// const players = Object.values(data.players)
 						this.tourBoardcast.update()
 						for (const player of data.players) {
-							if (player.name == getUserName()) {
+							if (player.name == getUserName() && player.status != "quit") {
 								let pongTourMatch = this.mainFrame.querySelector("#waitMatch")
 								if (!pongTourMatch) {
 									this.mainFrame.innerHTML = '<wait-match-component id="waitMatch"></wait-match-component>'

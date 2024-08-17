@@ -42,15 +42,13 @@ class Table():
 @dataclass
 class Ball():
 	table: Table
-	mx: int
-	my: int
 	x: int
 	y: int
+	mx: int = 5
+	my: int = 2
 
 	def __init__(self, table: Table):
 		self.table = table
-		self.mx = 5
-		self.my = 2
 		self.reset()
 
 	def reset(self):
@@ -64,22 +62,18 @@ class GameData():
 	ball: Ball
 	player_one: GamePlayer
 	player_two: GamePlayer
-	player_radius: int
-	ball_radius: int
-	player_speed: int
-	max_score: int
 	game_loop: bool
 	winner: GamePlayer
+	player_radius: int = 10 #percent paddle/table_height
+	ball_radius: int = 4
+	player_speed: int = 2
+	max_score: int = 2
 
 	def __init__(self):
 		self.table = Table(200, 100)
 		self.ball = Ball(self.table)
 		self.player_one = GamePlayer(0, self.table.height / 2)
 		self.player_two = GamePlayer(self.table.width, self.table.height / 2)
-		self.player_radius = 10 #percent paddle/table_height
-		self.ball_radius = 4
-		self.player_speed = 2
-		self.max_score = 3
 		self.game_loop = False
 		self.winner = None
 
@@ -97,8 +91,8 @@ class GameData():
 				# print("player 2 lose", file=sys.stderr)
 				self.player_one.score += 1
 				self.game_loop = False
-			else:
-				print("player 2 hit ball", file=sys.stderr)
+			# else:
+			# 	print("player 2 hit ball", file=sys.stderr)
 			self.ball.mx *= -1
 
 		#player1
@@ -108,8 +102,8 @@ class GameData():
 				# print("player 1 lose", file=sys.stderr)
 				self.player_two.score += 1
 				self.game_loop = False
-			else:
-				print("player 1 hit ball", file=sys.stderr)
+			# else:
+			# 	print("player 1 hit ball", file=sys.stderr)
 			self.ball.mx *= -1
 
 		if ((self.ball.y + self.ball_radius) >= self.table.height) \
