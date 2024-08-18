@@ -50,7 +50,7 @@ class ChatroomConsumer(WebsocketConsumer):
 		)
 
 		# remove and update online users
-		if self.user in self.chatroom.users_online.all():
+		if self.user in self.user_online[self.chatroom_name]:
 			# self.chatroom.users_online.remove(self.user)
 			self.user_online[self.chatroom_name].remove(self.user.username)
 			self.update_online_count()

@@ -102,7 +102,14 @@ class TournamentMessage(Message):
 
 	def is_player_in_match(self, username: str):
 		game_data: GameData = self.game_datas[self.match_index]
-		return game_data.player_one.name == username or game_data.player_two.name == username
+		# return game_data.player_one.name == username or game_data.player_two.name == username
+		if game_data.player_one is not None:
+			if game_data.player_one.name == username:
+				return True
+		if game_data.player_two is not None:
+			if game_data.player_two.name == username:
+				return True
+		return False
 	
 	def player_update_direction(self, username, direction):
 		game_data: GameData = self.game_datas[self.match_index]

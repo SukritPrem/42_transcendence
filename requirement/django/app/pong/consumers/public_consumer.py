@@ -6,6 +6,7 @@ from .message import *
 # import sys
 from channels.db import database_sync_to_async
 import asyncio
+from pong.models import *
 
 User = get_user_model()
 
@@ -131,23 +132,26 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				await self.channel_layer.group_send(
 					channel_name,
 					{'type': self.channel_public,'data': room.to_dict()})
+					
 			# this is last player in room
 			else:
-				del self.private_rooms[channel_name]
-				
 				# it sure the game was started, del game task and save match to database
 				if channel_name in self.tasks:
 					#debug
 					# print (f'{room.channel_name} should save on this stage', file=sys.stderr)
 					
-					if not room.game_data.winner:
-						room.game_data.winner = room.game_data.player_one.name \
+					if room.game_data.winner is None:
+						room.game_data.winner = room.game_data.player_one \
 							if room.game_data.player_one.name == username else room.game_data.player_two
-					
+						
 					self.tasks[channel_name].cancel()
 
+					await self.private_save_database(room.game_data)
 					# print (f'the winner is {room.game_data.winner.name}', file=sys.stderr)
 					del self.tasks[channel_name]
+
+				del self.private_rooms[channel_name]
+
 
 			await self.channel_layer.group_discard(channel_name, self.channel_name)
 			self.available.append(self.username)
@@ -265,25 +269,43 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			}
 		)
 
+	async def tour_save(self):
+		print (f'{GREEN}Tournament finished should save match to database{RESET}', file=sys.stderr)
+		for game_data in self.tournament.game_datas:
+			player_one_name = game_data.player_one.name if game_data.player_one is not None else 'None'
+			player_one_score = game_data.player_one.score if game_data.player_one is not None else 0
+			player_two_name = game_data.player_two.name if game_data.player_two is not None else 'None'
+			player_two_score = game_data.player_two.score if game_data.player_two is not None else 0
+			winner_name = game_data.winner.name if game_data.winner is not None else "None"
+			print (f'{GREEN}{player_one_name} {player_one_score}: {player_two_name} {player_two_score}, the winner is {winner_name}{RESET}', file=sys.stderr)
+		
+		# save database
+		# await self.tour_save_database()
+		tournament:Tournament = await self.tour_save_database()
+		for index, game_data in enumerate(self.tournament.game_datas):
+			await self.private_save_database(game_data, match_type='tournament', \
+				tournament=tournament, match_index=index)
+			if index == 2 and self.tournament.game_datas[2].winner is not None:
+				tournament.is_finish = True
+
+		# clean up tournament
+		for player in self.tournament.players:
+			if player.status != 'quit':
+				self.available.append(player.name)
+		self.tournament.cleanup()
+		await self.channel_layer.group_send(
+			self.channel_public,
+			{
+				'type': self.channel_public,
+				'data': self.tournament.to_dict()
+			}
+		)
+
 	async def tour_create_match(self, data: dict):
 		# end tournament
 		if self.tournament.match_index == 2:
-			print (f'{GREEN}Tournament finished should save match to database{RESET}', file=sys.stderr)
-			for game_data in self.tournament.game_datas:
-				print (f'{GREEN}{game_data.player_one.name} {game_data.player_one.score}: {game_data.player_two.name} {game_data.player_two.score}, the winner is {game_data.winner.name if game_data.winner is not None else "None"}{RESET}', file=sys.stderr)
-			for player in self.tournament.players:
-				if player.status != 'quit':
-					self.available.append(player.name)
-			self.tournament.cleanup()
-			await self.channel_layer.group_send(
-				self.channel_public,
-				{
-					'type': self.channel_public,
-					'data': self.tournament.to_dict()
-				}
-			)
-			return
-		
+			return await self.tour_save()
+
 		self.tournament.match_index += 1
 		game_data: GameData = GameData()
 		self.tournament.game_datas.append(game_data)
@@ -295,17 +317,20 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			game_data.player_one.set_nickname(player_one.nickname)
 			game_data.player_two.set_name(player_two.name)
 			game_data.player_two.set_nickname(player_two.nickname)
-
 		else:
 			# expected index == 2
 			# set game data
 			if self.tournament.game_datas[0].winner is not None:
 				game_data.player_one.set_name(self.tournament.game_datas[0].winner.name)
 				game_data.player_one.set_nickname(self.tournament.game_datas[0].winner.nickname)
+			else:
+				game_data.player_one = None
 			if self.tournament.game_datas[1].winner is not None:
 				game_data.player_two.set_name(self.tournament.game_datas[1].winner.name)
 				game_data.player_two.set_nickname(self.tournament.game_datas[1].winner.nickname)
-		
+			else:
+				game_data.player_two = None
+	
 		if not self.tournament.is_both_player_alive():
 			self.tournament.set_winner_without_competition()
 			return	await self.tour_create_match(data)
@@ -435,6 +460,29 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	def get_user(self, username: str):
 		return get_object_or_404(User, username=username)
 
+	@database_sync_to_async
+	def tour_save_database(self):
+		return Tournament.objects.create()
+
+	@database_sync_to_async
+	def private_save_database(self, game_data: GameData, \
+		match_type: str='private', tournament: Tournament=None, match_index: int=0):
+		match: Match = Match()
+		match.match_type=match_type
+		if game_data.player_one is not None:
+			match.player_one = User.objects.get(username=game_data.player_one.name)
+			match.player_one_score = game_data.player_one.score
+		if game_data.player_two is not None:
+			match.player_two = User.objects.get(username=game_data.player_two.name)
+			match.player_two_score = game_data.player_two.score
+		if game_data.winner is not None:
+			match.winner = User.objects.get(username=game_data.winner.name)
+			match.is_finish = True
+		if match.match_type == 'tournament':
+			match.tournament = tournament
+			match.tour_match_round = match_index
+		match.save()
+		print (f'{GREEN}{match}{RESET}', file=sys.stderr)
 
 # data structure
 '''
