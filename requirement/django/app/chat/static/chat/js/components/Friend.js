@@ -47,7 +47,7 @@ export class Friend extends HTMLElement {
 			const obj = JSON.parse(event.data)
 
 			if (obj.type == "online_count_handler") {
-				console.log(obj)
+				// console.log(obj)
 				const status = this.shadowRoot.getElementById("status")
 				const pongBtn = this.shadowRoot.getElementById("pongBtn")
 				if (obj.online_count > 0) {

@@ -14,8 +14,13 @@ export function getUserAvatar() {
 }
 
 export function getUserName() {
-	const avatar = document.querySelector("[name=username]");
-	return avatar ? avatar.value : null;
+	const username = document.querySelector("[name=username]");
+	return username ? username.value : null;
+}
+
+export function getSessionID() {
+	const session_id = document.querySelector("[name=session_id]");
+	return session_id ? session_id.value : null;
 }
 
 /*

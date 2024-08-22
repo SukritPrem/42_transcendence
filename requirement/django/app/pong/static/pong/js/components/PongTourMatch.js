@@ -16,16 +16,20 @@ export class PongTourMatch extends HTMLElement {
 			
 			<div class="bg-white overflow-auto custom-bg">
 				<div id="header" class="fw-bold">
-					<p>Pong Tournament</p>
+					<p>${this.dataset.type}</p>
 				</div>
 				<div class="border-line"></div>
 				<div id="waitRoom"></div>
+				<div class="text-center p-5">
+					<button id="quitBtn" class="btn btn-danger border-0">QUIT</button>
+				</div>
 			</div>
 		`
 	}
 
 	templatePlayers = (players) => {
 		return players.map((player, index) => {
+			if (player.session_id)
 			return `
 				<pong-player-component id="${player.name}" data-index="${index}" 
 					data-name="${player.nickname}"
@@ -38,6 +42,7 @@ export class PongTourMatch extends HTMLElement {
 
 	btnClick = (e) => {
 		e.preventDefault()
+		if (this.pongPublic.data.action != 'update') return
 		for (const player of this.pongPublic.data.players) {
 			if (player.name == getUserName()){
 				player.status = player.status === 'wait' ? 'ready' : 'wait'
@@ -54,8 +59,19 @@ export class PongTourMatch extends HTMLElement {
 		btn.addEventListener("click", this.btnClick)
 	}
 
+	connectedCallback() {
+		// console.log(`pongTourMatch: ${this.pongPublic.data.players[0].name}`)
+		const quitBtn = this.shadowRoot.getElementById('quitBtn')
+		quitBtn.addEventListener('click', ()=>{
+			this.remove()
+		})
+	}
+
 	disconnectedCallback() {
-		if (this.pongPublic.data.action == 'update'){
+		console.log(this.pongPublic.data)
+		const quitAction = ['update', 'quit', 'inviter', 'reject']
+		if (quitAction.includes(this.pongPublic.data.action)){
+			console.log("shold sent action: quit")
 			this.pongPublic.data.action = 'quit'
 			this.pongPublic.socket.send(JSON.stringify(this.pongPublic.data))
 		}

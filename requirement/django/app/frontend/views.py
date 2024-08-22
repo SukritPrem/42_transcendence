@@ -24,7 +24,8 @@ def dashboard(request):
     context = {
         "id": request.user.id,
         "username": request.user.username,
-        "avatar": f'{settings.MEDIA_URL}{request.user.avatar}'
+        "avatar": f'{settings.MEDIA_URL}{request.user.avatar}',
+        "session_id": request.session.session_key
     }
     try:
         if (settings.ALLOW_API_WITHOUT_JWT == False):

@@ -2,11 +2,7 @@ module.exports = {
 	url: "http://localhost:8000",
 	timeWait: 300,
 	users: [
-		{
-			username: "pnamnil",
-			password: "tontonton",
-			avatar: `${__dirname}/images/small_pnamnil.webp`
-		},
+		 
 		{
 			username: "spipitku",
 			password: "premprem",

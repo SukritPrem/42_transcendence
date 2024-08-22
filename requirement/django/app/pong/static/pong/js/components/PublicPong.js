@@ -1,4 +1,4 @@
-import { getMainFrame, getUserName } from "/static/frontend/js/components/Utils.js";
+import { getMainFrame, getUserName, getSessionID } from "/static/frontend/js/components/Utils.js";
 
 export class PublicPong extends HTMLElement {
 	constructor() {
@@ -7,6 +7,7 @@ export class PublicPong extends HTMLElement {
 		this.shadowRoot.innerHTML = this.template();
 		this.username = getUserName()
 		this.mainFrame = getMainFrame()
+		this.session_id = getSessionID()
 		this.tourBoardcast = this.shadowRoot.querySelector("toutnament-broadcast-component")
 	}
 
@@ -17,143 +18,166 @@ export class PublicPong extends HTMLElement {
 		`;
 	};
 
-	// publicUpdatePlayers = (data) => {
-	// 	const tour = this.shadowRoot.querySelector("toutnament-broadcast-component")
-	// 	tour.publicUpdatePlayers(Object.keys(data.players).length)
-	// }
-
 	setupWebsocket = () => {
 		this.socket = new WebSocket(`${window.location.origin}/ws/pong/public`)
-
 		this.socket.addEventListener("message", (ws)=>{
 			const {type, data} = JSON.parse(ws.data)
-			
-			/** debug */
-			// console.log({type, data})
+			if (data.action != "error")
+				this.data = data
 
-			this.data = data
-
-			if (type == "pong_private_message") {
-				if (data.type == "private") {
-					if (data.action == "error") {
-						alert(data.message)
-					}
-				}
-				else{
-					// console.log(data)
-					if (data.type == "tournament" && data.action == "update") {
-						this.tourBoardcast.update()
-					}
+			if (type == 'pong_private_message') {
+				console.log(this.data)
+				switch (data.action) {
+					case 'error': return alert(data.message)
+					case 'update': 
+					case 'waitmatch': 
+					case 'playpong': return this.tourBoardcast.update()
+					default: return console.log(`Unknow action: ${data.action}`)
 				}
 			}
-			else if (type == "pong_public_message") {
-				if (data.type == "private") {
-					if (data.action == "inviter"){
-						if (this.username == data.invited.name) {
-							console.log(`${data.inviter.name} invited you to play game`)
-							data.action = "invited"
-							this.socket.send(JSON.stringify(data))
-						}
-					}
-					else if (data.action == 'quit') {
-						console.log(`recieve quit message`)
-						this.mainFrame.innerHTML = ""
-					}
-					else if (data.action == 'update') {
-						let pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
-						if (!pongPrivateMatch) {
-							this.mainFrame.innerHTML = '<pong-private-match-component id="pongPrivateMatch"></pong-private-match-component>'
-							pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
-						}
-						pongPrivateMatch.update(data)
-					}
-					else if (data.action == 'beginpong') {
-						const pongPrivateMatch = this.mainFrame.querySelector("#pongPrivateMatch")
-						pongPrivateMatch.update(data)
-						console.log("beginpong")
-						this.mainFrame.innerHTML = `
-							<pong-component id="pongComponent" 
-								data-player1="${data.game_data.player_one.name}" 
-								data-player2="${data.game_data.player_two.name}">
-							</pong-component>`
-						data.action = 'playpong'
-						this.socket.send(JSON.stringify(data))
-					}
-					else if (data.action == 'playpong') {
-						const pongComponent = this.mainFrame.querySelector("#pongComponent")
-						pongComponent.draw(data)
-					}
-					else if (data.action == 'finish') {
-						const pongComponent = this.mainFrame.querySelector("#pongComponent")
-						pongComponent.remove()
-					}
-					else {
-						console.log(data)
-					}
+			else if (type == 'pong_public_message') {
+				console.log(this.data)
+				
+				switch(data.action) {
+					case 'inviter': return this.inviter()
+					case 'invited': return this.invited()
+					case 'reject': return this.reject()
+					case 'update': return this.tourBoardcast.update()
+					case 'waitmatch': return this.tourBoardcast.update()
+					default: console.log(`unknow action: ${data.action}`)
 				}
-				else if(data.type == 'tournament'){
-					if (data.action == 'update') {
-						const players = this.data.players
-						// console.log(players)
-						let isJoinBtn = true
-						for (const player of players) {
-							if (player.name == getUserName()) {
-								// console.log("I am in tournament")
-								let pongTourMatch = this.mainFrame.querySelector("#pongTourMatch")
-								if (!pongTourMatch) {
-									this.mainFrame.innerHTML = '<pong-tour-match-component id="pongTourMatch"></pong-tour-match-component>'
-									pongTourMatch = this.mainFrame.querySelector("#pongTourMatch")
-								}
-								pongTourMatch.update()
-								isJoinBtn = false
-							}
-						}
-						this.tourBoardcast.update(isJoinBtn)
-					}
-					else if (data.action == 'waitmatch') {
-						this.tourBoardcast.update()
-						for (const player of data.players) {
-							if (player.name == getUserName() && player.status != "quit") {
-								let pongTourMatch = this.mainFrame.querySelector("#waitMatch")
-								if (!pongTourMatch) {
-									this.mainFrame.innerHTML = '<wait-match-component id="waitMatch"></wait-match-component>'
-									pongTourMatch = this.mainFrame.querySelector("#waitMatch")
-								}
-							}
-						}
-					}
-					else if (data.action == 'beginpong') {
-						console.log("beginpong")
-						console.log(data)
-						this.mainFrame.innerHTML = `
-							<pong-component id="pongComponent" 
-								data-player1="${data.game_datas[data.match_index].player_one.name}" 
-								data-player2="${data.game_datas[data.match_index].player_two.name}">
-							</pong-component>`
-						data.action = 'playpong'
-						this.socket.send(JSON.stringify(data))
-					}
-					else if (data.action == 'playpong') {
-						const pongComponent = this.mainFrame.querySelector("#pongComponent")
-						pongComponent.draw(data)
-					}
-					else if (data.action == 'finish') {
-						console.log("game finish should remove pong component")
-						// const pongComponent = this.mainFrame.querySelector("#pongComponent")
-						// pongComponent.remove()
-						this.mainFrame.innerHTML = ""
-					}
-					else {
-						console.log(data)
-					}
+			}
+			else if (type == 'pong_group_message') {
+				switch (data.action) {
+					// case 'inviter': return this.inviter()
+					// case 'invited': return this.invited()
+					case 'reject': return this.reject()
+					case 'update': return this.update()
+					case 'waitmatch': return this.waitmatch()
+					case 'beginpong': return this.beginpong()
+					case 'playpong': return this.playpong()
+					case 'finish': return this.finish()
+					case 'game_end': return this.gameEnd()
+					case 'quit': return this.quit()
+					default: console.log(`unknow action: ${data.action}`)
 				}
-				else {
-					console.log(data)
-				}
+			}
+			else {
+				console.log(`Unknow type: ${type}`)
 			}
 		})
 	}
 
+	/** acction ****************************************/
+	quit = () => {
+		console.log(this.data)
+		this.mainFrame.innerHTML = ""
+	}
+
+	inviter = () => {
+		this.tourBoardcast.privateInviteUpdate()
+	}
+
+	invited = () => {
+		this.tourBoardcast.privateInvited()
+	}
+
+	reject = () => {
+		if (this.is_player()) {
+			console.log('reject called')
+			if (this.mainFrame.querySelector('pong-tour-match-component')) {
+				this.mainFrame.innerHTML = ''
+			}
+			this.tourBoardcast.privateInvite = false
+			// this.data.action = 'quit'
+			// this.socket.send(JSON.stringify(this.data))
+			this.data.action = 'request_tour_message'
+			this.socket.send(JSON.stringify(this.data))
+		}
+	}
+
+	update = () => {
+		console.log(this.data)
+		if (this.is_player_active) this.updatePongTourMatch()
+	}
+
+	waitmatch = () => {
+		// this.data.type == 'tournament' && this.tourBoardcast.update()
+		this.mainFrame.innerHTML = `
+			<wait-match-component id="waitMatchComponent">
+			<wait-match-component>
+		`
+	}
+
+	beginpong = () => {
+		console.log('beginpong')
+		this.mainFrame.innerHTML = `
+			<pong-component id="pongComponent"
+			data-player1=${this.data.game_datas[this.data.match_index].player_one.name}
+			data-player2=${this.data.game_datas[this.data.match_index].player_two.name}
+			>
+			</pong-component>
+		`
+		this.data.action = 'playpong'
+		this.socket.send(JSON.stringify(this.data))
+	}
+
+	playpong = () => {
+		const pongComponent = this.mainFrame.querySelector("#pongComponent")
+		pongComponent.draw(this.data)
+	}
+
+	finish = () => {
+		this.mainFrame.innerHTML = ""
+	}
+
+	gameEnd = () => {
+		this.socket.send(JSON.stringify(this.data))
+	}
+
+	/** utility ******************************************/
+	is_tournament = () => {
+		return this.data.type == 'tournament'
+	}
+
+	is_session = () => {
+		for (const player of this.data.players)
+			if (player.session_id == this.session_id) return true
+		return false
+	}
+
+	is_player = () => {
+		for (const player of this.data.players)
+			if (player.name == this.username) return true
+		return false
+	}
+
+	is_player_active = () => {
+		for (const player of player) {
+			if (player.status == 'quit')
+				return false
+		}
+		return true
+	}
+
+	updatePongTourMatch = () => {
+		// console.log(this.mainFrame)
+		let pongTourMatch = this.mainFrame.querySelector("pong-tour-match-component")
+		if (pongTourMatch == null) {
+			console.log("new pongTourMatchComponent")
+			this.mainFrame.innerHTML = `
+				<pong-tour-match-component 
+					id="pongTourMatch"
+					data-type="Pong ${this.data.type == 'tournament' ? 'Tournament' : 'Private'}"
+					>
+				</pong-tour-match-component>`
+			pongTourMatch = this.mainFrame.querySelector("pong-tour-match-component")
+		}
+		// console.log(pongTourMatch)
+		pongTourMatch.update()
+	}
+
+	/** life cycle *****************************************/
 	connectedCallback() {
 		this.setupWebsocket()
 		// console.log("tournament was connected")

@@ -67,7 +67,7 @@ class GameData():
 	player_radius: int = 10 #percent paddle/table_height
 	ball_radius: int = 4
 	player_speed: int = 2
-	max_score: int = 2
+	max_score: int = 10
 
 	def __init__(self):
 		self.table = Table(200, 100)
@@ -81,6 +81,7 @@ class GameData():
 		self.ball.reset()
 
 	def ball_move(self):
+
 		self.ball.x += self.ball.mx
 		self.ball.y += self.ball.my
 
