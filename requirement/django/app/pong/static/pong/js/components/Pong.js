@@ -248,6 +248,5 @@ export class Pong extends PongBase {
 			this.pongPublic.data.action = 'quit'
 		}
 		this.pongPublic.socket.send(JSON.stringify(this.pongPublic.data))
-		console.log(JSON.stringify(this.pongPublic.data))
 	}
 }

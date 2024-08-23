@@ -5,5 +5,6 @@ app_name = "pong"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    # path("<player1>/<player2>/", views.game_view, name="game")
+    path("match_history/", views.match_history, name="match_history"),
+    path("statictis/", views.statictis, name="statistic")
 ]

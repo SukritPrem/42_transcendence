@@ -1,3 +1,5 @@
+import {fetchJson} from "./Utils.js"
+
 const Mock_hx = [
 	{
 		matchType: 'Tournament',
@@ -41,6 +43,7 @@ export class MatchHistory extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: "open" });
+		this.shadowRoot.innerHTML = this.template();
 	}
 
 	template = () => {
@@ -68,25 +71,48 @@ export class MatchHistory extends HTMLElement {
 		`;
 	};
 
-	connectedCallback() {
-		this.shadowRoot.innerHTML = this.template();
-		
-		const tbody = this.shadowRoot.querySelector('table tbody');
+	async fetchMatchHistory() {
+		const result = await fetchJson('fatchMatchHistory', 'GET', `${window.location.origin}/pong/match_history`)
+		if (result) {
+			// console.log(result)
+			const tbody = this.shadowRoot.querySelector('table tbody');
+			// const options = { day: 'numeric', month: 'short', year: 'numeric' }
+			result.forEach(mock => {
+				const date = new Date(mock.date)
+				const tr = document.createElement('tr');
+				const trContent = `
+					<td>${mock.matchType}</td>
+					<td>${date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+					<td>${mock.opponentPlayer}</td>
+					<td>${mock.outcome}</td>
+				`;
+				tr.innerHTML = trContent;
+				tbody.appendChild(tr);
+			});
+		}
+	}
 
-		Mock_hx.forEach(mock => {
-			const tr = document.createElement('tr');
-			const trContent = `
-				<td>${mock.matchType}</td>
-				<td>${mock.date}</td>
-				<td>${mock.opponentPlayer}</td>
-				<td>${mock.outcome}</td>
-			`;
-			tr.innerHTML = trContent;
-			tbody.appendChild(tr);
-		});
+	connectedCallback() {
+		// this.shadowRoot.innerHTML = this.template();
+		
+		// const tbody = this.shadowRoot.querySelector('table tbody');
+
+		// Mock_hx.forEach(mock => {
+		// 	const tr = document.createElement('tr');
+		// 	const trContent = `
+		// 		<td>${mock.matchType}</td>
+		// 		<td>${mock.date}</td>
+		// 		<td>${mock.opponentPlayer}</td>
+		// 		<td>${mock.outcome}</td>
+		// 	`;
+		// 	tr.innerHTML = trContent;
+		// 	tbody.appendChild(tr);
+		// });
+
+		this.fetchMatchHistory()
 	}
 
 	disconnectedCallback() {
-		console.log("delete match history components");
+		// console.log("delete match history components");
 	}
 }

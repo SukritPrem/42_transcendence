@@ -13,16 +13,12 @@ export class WaitMatch extends HTMLElement {
 	}
 
 	connectedCallback() {
-		// setTimeout(()=>{
-		// 	this.pongPublic.data.action = 'nextmatch'
-		// 	this.pongPublic.socket.send(this.pongPublic.data)
-		// }, 3000)
 	}
 
 	disconnectedCallback() {
-		console.log("disconnectedCallback")
-		console.log(this.pongPublic.data)
-		console.log(this.pongPublic.data.action)
+		// console.log("disconnectedCallback")
+		// console.log(this.pongPublic.data)
+		// console.log(this.pongPublic.data.action)
 		if (this.pongPublic.data.action == 'waitmatch') {
 			console.log("send quit to server")
 			this.pongPublic.data.action = 'quit'

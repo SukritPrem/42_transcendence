@@ -102,7 +102,6 @@ export class PublicPong extends HTMLElement {
 	}
 
 	waitmatch = () => {
-		// this.data.type == 'tournament' && this.tourBoardcast.update()
 		this.mainFrame.innerHTML = `
 			<wait-match-component id="waitMatchComponent">
 			<wait-match-component>

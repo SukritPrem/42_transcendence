@@ -43,7 +43,7 @@ export class TourBroadcast extends HTMLElement {
 		const game_data = this.pongPublic.data.game_datas[this.pongPublic.data.match_index]
 		return `
 			<div id="content">
-				<h4 class="m-0 text-white fw-bold">${game_data.player_one.nickname} VS ${game_data.player_two.nickname}</h4>
+				<h4 class="m-0 text-center text-white fw-bold">${game_data.player_one.nickname} VS ${game_data.player_two.nickname}</h4>
 			</div>
 		`
 	}
@@ -120,7 +120,7 @@ export class TourBroadcast extends HTMLElement {
 				joinBtn.style.display = 'None'
 			}
 		}
-		else if (this.pongPublic.data.action == "waitmatch") {
+		else if (this.pongPublic.data.action == "waitmatch" || this.pongPublic.data.action == "playpong") {
 			this.boardCast.innerHTML = this.waitmatchTemplate()
 		}
 	}

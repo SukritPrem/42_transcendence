@@ -1,11 +1,16 @@
 from django.db import models
 from backend.models import CustomUser as User
 from django.core.exceptions import ValidationError
+# from django.utils import timezone
 
 # Create your models here.
 
 class Tournament(models.Model):
 	is_finish = models.BooleanField(default=False)
+	created = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['-created']
 
 class Match(models.Model):
 	is_finish = models.BooleanField(default=False)
@@ -21,6 +26,10 @@ class Match(models.Model):
 	match_type = models.CharField(max_length=10, choices=MATCH_TYPE_CHOICES, default='private')
 	tournament = models.ForeignKey(Tournament, related_name="tournament", null=True, blank=True, on_delete=models.CASCADE)
 	tour_match_round = models.IntegerField(default=0)
+	created = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['-created']
 	
 	def save(self, *args, **kwargs):
 		if self.match_type == "private" and self.tournament:
