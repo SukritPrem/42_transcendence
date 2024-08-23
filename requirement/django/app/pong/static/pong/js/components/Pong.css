@@ -1,15 +1,16 @@
 .canvas-container {
+    padding: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
 }
 
 #canvas {
     width: 100%;
     max-width: 800px;
     aspect-ratio: 2 / 1;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
 }
 
 @media (max-width: 767px) {
