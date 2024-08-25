@@ -19,6 +19,11 @@ label {
 	color: var(--primary-color);
 }
 
+#userLabel,
+#passLabel {
+	width: 5rem;
+}
+
 .input-css {
 	margin-top: 5px;
 	margin-bottom: 5px;

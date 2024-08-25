@@ -37,7 +37,7 @@
 }
 
 #footer p {
-	font-size: var(--font-size);
+	font-size: 0.75rem;
 	color: var(--gray-color-light);
 	margin: 0;
 }
