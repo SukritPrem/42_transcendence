@@ -21,7 +21,7 @@ export class PongTourMatch extends HTMLElement {
 				<div class="border-line"></div>
 				<div id="waitRoom"></div>
 				<div class="text-center p-5">
-					<button id="quitBtn" class="btn btn-danger border-0">QUIT</button>
+					<button id="quitBtn" class="btn btn-danger border-0">Quit</button>
 				</div>
 			</div>
 		`

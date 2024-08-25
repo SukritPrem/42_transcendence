@@ -54,22 +54,11 @@ table tbody tr:first-child td {
 	background-color: var(--primary-color-darker);
 }
 
-.decline-btn {
-	margin-top: 0rem;
+.btn-danger {
 	width: 6rem;
 	height: 2rem;
-	color: white;
 	font-size: var(--font-size);
 	border-radius: var(--border-radius);
-	background-color: var(--red-color); 
-}
-
-.decline-btn:hover {
-	background-color: var(--red-color-dark); 
-}
-
-.decline-btn:active {
-	background-color: var(--red-color-darker);
 }
 
 i {

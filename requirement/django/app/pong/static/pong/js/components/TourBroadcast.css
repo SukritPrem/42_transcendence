@@ -19,17 +19,37 @@
 	border-radius:var(--border-radius);
 }
 
-#icon {
-	margin-right: 2vw;
+#acceptBtn,
+#rejectBtn {
+	width: auto;
+	height: 2rem;
+	font-size: var(--font-size);
+	border-radius: var(--border-radius);
 }
 
-i {
+.icon-main {
+	margin-right: 1vw;
+}
+
+.icon-main i {
 	width: 3rem; 
 	height: 3rem; 
 	font-size: 2.5rem; 
 	background-color: white;
 	color: var(--primary-color);
 	border-radius:var(--border-radius);
+}
+
+#inviteContent .icon-btn {
+	width: 1rem; 
+	height: 1rem; 
+	font-size: 1.3rem;
+	display: flex;
+	align-items: center;
+}
+
+#inviteContent .primary {
+	color: var(--primary-color);
 }
 
 h4 {
@@ -39,6 +59,13 @@ h4 {
 small {
 	color: white;
 	font-size: 0.7rem;
+}
+
+#content i {
+	width: 3rem; 
+	height: 3rem; 
+	font-size: 2rem; 
+	color: white;
 }
 
 @media screen and (max-width: 767px) {

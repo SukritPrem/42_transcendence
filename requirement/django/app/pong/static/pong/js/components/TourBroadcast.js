@@ -24,11 +24,11 @@ export class TourBroadcast extends HTMLElement {
 
 	joinTourTemplate = (number) => {
 		return `
-			<span id="icon" class="d-none d-lg-flex align-items-center">
+			<span class="icon-main d-none d-lg-flex align-items-center">
 				<i class="uil uil-check-circle position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
 			</span>
 			<div id="content" class="d-flex flex-column justify-content-center me-auto">
-				<h4 class="m-0 text-white fw-bold">TOURNAMENT is upcoming ...</h4>
+				<h4 class="m-0 text-white fw-bold">TOURNAMENT is upcoming</h4>
 				<small>
 					registered member (
 					<span id="amountPlayer">${number}</span>
@@ -42,8 +42,11 @@ export class TourBroadcast extends HTMLElement {
 	waitmatchTemplate = () => {
 		const game_data = this.pongPublic.data.game_datas[this.pongPublic.data.match_index]
 		return `
+			<span class="icon-main d-none d-lg-flex align-items-center">
+				<i class="uil uil-clock position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
+			</span>
 			<div id="content">
-				<h4 class="m-0 text-center text-white fw-bold">${game_data.player_one.nickname} VS ${game_data.player_two.nickname}</h4>
+				<h4 class="m-0 text-center text-white fw-bold">${game_data.player_one.nickname} <i class="uil uil-table-tennis"></i> ${game_data.player_two.nickname}</h4>
 			</div>
 		`
 	}
@@ -54,18 +57,30 @@ export class TourBroadcast extends HTMLElement {
 		if (this.username == inviter.name){
 			this.privateInvite = true
 			this.boardCast.innerHTML = `
+				<span class="icon-main d-none d-lg-flex align-items-center">
+					<i class="uil uil-clock position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
+				</span>
 				<div id="content">
-					<h4 class="m-0 text-white fw-bold">You invite game with ${invited.name}, wait for accept</h4>
+					<h4 class="m-0 text-white fs-4">You invite game with <span class="fw-bold">${invited.name}</span>, wait for accept</h4>
 				</div>
 			`
 		}
 		else if (this.username == invited.name){
 			this.privateInvite = true
 			this.boardCast.innerHTML = `
-				<div id="content">
-					<h4 class="m-0 text-white fw-bold">${inviter.name} invite you to play pong</h4>
-					<button class="btn btn-info" id="acceptBtn">ACCEPT</button>
-					<button class="btn btn-danger" id="rejectBtn">REJECT</button>
+				<span class="icon-main d-none d-lg-flex align-items-center">
+					<i class="uil uil-clock position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
+				</span>
+				<div id="inviteContent" class="d-flex flex-column flex-lg-row">
+					<h4 class="m-0 text-white fs-4 me-2 mb-2"><span class="fw-bold">${inviter.name}</span> invite you to play pong</h4>
+					<div class="d-flex flex-row gap-2 justify-content-center">
+						<button class="btn btn-light primary d-flex align-items-center justify-content-center gap-2 border-0" id="acceptBtn">
+							<i class="uil uil-check icon-btn primary"></i> Accept
+						</button>
+						<button class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0" id="rejectBtn">
+							<i class="uil uil-times icon-btn"></i> Decline
+						</button>
+					</div>
 				</div>
 			`
 			this.shadowRoot.getElementById('acceptBtn').addEventListener('click', ()=>{

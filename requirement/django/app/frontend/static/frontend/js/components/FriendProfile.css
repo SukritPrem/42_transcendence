@@ -75,22 +75,11 @@
 	color: var(--gray-color-medium);
 }
 
-#blockBtn {
-	margin-top: 0rem;
+.btn-danger {
 	width: 6rem;
 	height: 2rem;
-	color: white;
 	font-size: var(--font-size);
-	background-color: var(--red-color);
 	border-radius: var(--border-radius);
-}
-
-#blockBtn:hover {
-	background-color: var(--red-color-dark); 
-}
-
-#blockBtn:active {
-	background-color: var(--red-color-darker);
 }
 
 #blockBtn i {

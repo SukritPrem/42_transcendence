@@ -44,7 +44,7 @@ export class Notification extends HTMLElement{
 						<i class="uil uil-user-plus"></i> Accept
 					</button>
 					<button id="${user.username}FriendDecline" data-userid="${user.user_id}"
-						class="decline-btn d-flex align-items-center justify-content-center gap-2 border-0">
+						class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-minus"></i> Decline
 					</button>
 				</td>
