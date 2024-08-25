@@ -39,7 +39,7 @@ table tbody tr:first-child td {
 
 button {
 	margin: 0 auto;
-	width: 9rem;
+	width: 10rem;
 	height: 2rem;
 	color: white;
 	font-size: var(--font-size);

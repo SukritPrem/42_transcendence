@@ -51,7 +51,7 @@ export class DashBoardPage extends HTMLElement {
 				</div>
 			</div>
 
-			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0">
+			<div id="footer" class="d-none d-md-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0">
 				<p class="medium-gray fs-8 m-0">
 					@ 2024, Made with 
 					<i class="uil uil-heart-alt"></i> 
