@@ -17,26 +17,28 @@ export class Statistic extends HTMLElement {
 				<div id="header" class="fw-bold">
 					<p>Statistic</p>
 				</div>
-				<div class="w-100 d-flex flex-column align-items-center justify-content-center gap-3">
-					<div class="list-item">
-						<i class="uil uil-globe"></i>
-						<p class="text">MATCH</p>
-						<p id="match" class="fw-bold amount">11</p>
-					</div>
-					<div class="list-item">
-						<i class="uil uil-arrow-growth"></i>
-						<p class="text">WIN</p>
-						<p id="win" class="fw-bold amount">5</p>
-					</div>
-					<div class="list-item">
-						<i class="uil uil-chart-down"></i>
-						<p class="text">LOSE</p>
-						<p id="lose" class="fw-bold amount">2</p>
-					</div>
-					<div class="list-item">
-						<i class="uil uil-chart-down"></i>
-						<p class="text">DRAW</p>
-						<p id="draw" class="fw-bold amount">2</p>
+				<div class="w-100 d-flex align-items-center justify-content-center">
+					<div class="d-flex flex-column gap-3">
+						<div class="list-item">
+							<i class="uil uil-globe"></i>
+							<p class="text">MATCH</p>
+							<p id="match" class="fw-bold amount">11</p>
+						</div>
+						<div class="list-item">
+							<i class="uil uil-arrow-growth"></i>
+							<p class="text">WIN</p>
+							<p id="win" class="fw-bold amount">5</p>
+						</div>
+						<div class="list-item">
+							<i class="uil uil-arrows-h"></i>
+							<p class="text">DRAW</p>
+							<p id="draw" class="fw-bold amount">2</p>
+						</div>
+						<div class="list-item">
+							<i class="uil uil-chart-down"></i>
+							<p class="text">LOSE</p>
+							<p id="lose" class="fw-bold amount">2</p>
+						</div>
 					</div>
 				</div>
 			</div>
