@@ -73,7 +73,7 @@ export class TourBroadcast extends HTMLElement {
 				</span>
 				<div id="inviteContent" class="d-flex flex-column flex-lg-row">
 					<h4 class="m-0 text-white fs-4 me-2 mb-2"><span class="fw-bold">${inviter.name}</span> invite you to play pong</h4>
-					<div class="d-flex flex-row gap-2 justify-content-center">
+					<div class="d-flex flex-row gap-2 justify-content-center align-items-center">
 						<button class="btn btn-light primary d-flex align-items-center justify-content-center gap-2 border-0" id="acceptBtn">
 							<i class="uil uil-check icon-btn primary"></i> Accept
 						</button>
