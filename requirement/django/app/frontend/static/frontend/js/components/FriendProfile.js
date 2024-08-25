@@ -43,7 +43,7 @@ export class FriendProfile extends HTMLElement {
 					</div>
 				</div>
 				<div class="mt-3 d-flex justify-content-center">
-					<button id="blockBtn" class="d-flex align-items-center justify-content-center gap-2 border-0">
+					<button id="blockBtn" class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0">
 							<i class="uil uil-user-times"></i> Block
 					</button>
 				</div>

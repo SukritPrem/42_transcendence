@@ -17,7 +17,7 @@ export class Friends extends HTMLElement {
 			<div class="bg-white overflow-auto custom-bg">
 				<div id="header">
 					<p id="headerText">Friends</p>
-					<button id="friendRecommendBtn" data-url="recommend-friend" data-title="Baby cadet friend recommend" class="d-flex align-items-center justify-content-center gap-1 border-0">
+					<button id="friendRecommendBtn" data-url="recommend-friend" data-title="Baby cadet friend recommend" class="d-flex align-items-center justify-content-center gap-1 border-0 btn-pri">
 						<i class="uil uil-user-plus"></i> Find Friends
 					</button>
 				</div>
