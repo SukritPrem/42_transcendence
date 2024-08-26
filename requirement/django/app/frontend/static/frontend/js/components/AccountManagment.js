@@ -70,14 +70,22 @@ export class AccountManagment extends HTMLElement {
 			const form = e.target
 			const formData = new FormData(form)
 
-			const response = await fetch(`/api/users/update_avatar`, {
+			const request = {
 				method: 'POST',
 				credentials: "same-origin",
 				headers: {
 					"X-CSRFToken": csrfToken
 				},
 				body: formData,
-			});
+			}
+
+			const access_token = document.querySelector("[name=access_token]")
+			if (access_token){
+				console.log(access_token.value)
+				request.headers["Authorization"] = `Bearer ${access_token.value}`
+			}
+
+			const response = await fetch(`/api/users/update_avatar`, request);
 
 			const result = await response.json();
 			if (response.status == 201){
