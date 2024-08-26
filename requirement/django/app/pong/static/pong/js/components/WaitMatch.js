@@ -177,6 +177,20 @@ export class WaitMatchBase extends HTMLElement{
 						<img class="avatar player-two" id="playerFour" src="">
 					</div>
 				</div>
+				<div class="name-container">
+					<div class="name-tour">
+						<p id="nicknameOne"></p>
+					</div>
+					<div class="name-tour">
+						<p id="nicknameTwo"></p>
+					</div>
+					<div class="name-tour">
+						<p id="nicknameThree"></p>
+					</div>
+					<div class="name-tour">
+						<p id="nicknameFour"></p>
+					</div>
+				</div>
 			</div>  
 		`
 	}
@@ -214,6 +228,14 @@ export class WaitMatchBase extends HTMLElement{
 						<img class="avatar player-two" id="playerTwo" src="">
 					</div>
 				</div>
+				<div class="name-container">
+					<div class="name-private">
+						<p id="nicknameOne"></p>
+					</div>
+					<div class="name-private">
+						<p id="nicknameTwo"></p>
+					</div>
+				</div>
 			</div>  
 		`
 	}
@@ -232,12 +254,20 @@ export class WaitMatchBase extends HTMLElement{
 		image.src = avatar ? avatar : ''
 	}
 
+	setupNickname(id, player) {
+		const nicknameElement = this.shadowRoot.getElementById(id)
+		const playerNickname = player.nickname
+		nicknameElement.textContent = playerNickname;
+	}
+
 	drawMatch_0() {
 		const player_one = this.data.game_datas[0].player_one
 		const player_two = this.data.game_datas[0].player_two
 
 		this.setupAvatar('playerOne', player_one)
 		this.setupAvatar('playerTwo', player_two)
+		this.setupNickname('nicknameOne', player_one)
+		this.setupNickname('nicknameTwo', player_two)
 
 		const playerThree = this.shadowRoot.getElementById('playerThree')
 		const playerFour = this.shadowRoot.getElementById('playerFour')
@@ -254,6 +284,8 @@ export class WaitMatchBase extends HTMLElement{
 
 		this.setupAvatar('playerThree', player_three)
 		this.setupAvatar('playerFour', player_four)
+		this.setupNickname('nicknameThree', player_three)
+		this.setupNickname('nicknameFour', player_four)
 
 		const playerThree = this.shadowRoot.getElementById('playerThree')
 		const playerFour = this.shadowRoot.getElementById('playerFour')
@@ -312,6 +344,8 @@ export class WaitMatchBase extends HTMLElement{
 
 		this.setupAvatar('playerOne', player_one)
 		this.setupAvatar('playerTwo', player_two)
+		this.setupNickname('nicknameOne', player_one)
+		this.setupNickname('nicknameTwo', player_two)
 	}
 
 	connectedCallback(){
@@ -368,6 +402,11 @@ export class Final extends HTMLElement{
 						<img class="avatar" id="winner" src="">
 					</div>
 				</div>
+				<div class="name-container">
+					<div class="name-winner">
+						<p id="nickname"></p>
+					</div>
+				</div>
 			</div>  
 		`
 	}
@@ -388,5 +427,8 @@ export class Final extends HTMLElement{
 		const winnerAvatar = this.getWinnerAvatar(winnerName)
 		const winner = this.shadowRoot.getElementById('winner')
 		winner.src = winnerAvatar
+		const winnerNickname = this.pongPublic.data.game_datas[this.pongPublic.data.match_index].winner.nickname
+		const nicknameElement = this.shadowRoot.getElementById('nickname');
+		nicknameElement.textContent = winnerNickname;
 	}
 }
