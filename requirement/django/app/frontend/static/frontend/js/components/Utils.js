@@ -13,6 +13,12 @@ export function getUserAvatar() {
 	return avatar ? avatar.value : null;
 }
 
+export function setUserAvatar(avatarUrl) {
+	const avatar = document.querySelector("[name=avatar]");
+	if (avatar)
+		avatar.value = avatarUrl
+}
+
 export function getUserName() {
 	const username = document.querySelector("[name=username]");
 	return username ? username.value : null;

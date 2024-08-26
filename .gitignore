@@ -1,6 +1,8 @@
 .DS_Store
 .vscode/
 
+requirement/django/credentials
+
 # Ignore all files in uploads/avatars
 requirement/django/app/uploads/avatars/*
 

@@ -1,4 +1,4 @@
-import { getCSRFToken, getUserAvatar, getUserId } from "./Utils.js";
+import { getCSRFToken, getUserAvatar, getUserId, setUserAvatar } from "./Utils.js";
 export class AccountManagment extends HTMLElement {
 	constructor() {
 		super();
@@ -43,6 +43,16 @@ export class AccountManagment extends HTMLElement {
 		`;
 	};
 
+	updateAvatar(){
+		const dashBoardComponent = document.getElementById('dashBoardComponent')
+		let profileImg = dashBoardComponent.shadowRoot.getElementById('profileImg')
+		profileImg.src = getUserAvatar()
+
+		const profileComponent = dashBoardComponent.shadowRoot.getElementById('profileComponent')
+		profileImg = profileComponent.shadowRoot.getElementById('profileImg')
+		profileImg.src = getUserAvatar()
+	}
+
 	async uploadAvatar(e) {
 		e.preventDefault()
 		try {
@@ -72,6 +82,8 @@ export class AccountManagment extends HTMLElement {
 			const result = await response.json();
 			if (response.status == 201){
 				alert("Avatar changed!!")
+				setUserAvatar(result.avatar_url)
+				this.updateAvatar()
 				console.log(result)
 			}
 			else
