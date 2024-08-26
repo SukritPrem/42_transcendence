@@ -39,9 +39,12 @@
 
 button {
 	margin: 0 auto;
-	width: 9rem;
-	height: 2rem;
 	color: white;
+	width: auto;
+	height: auto;
+	min-height: 2rem;
+	padding-left: 10px;
+	padding-right: 10px;
 	font-size: var(--font-size);
 	border-radius: var(--border-radius);
 	background-color: var(--primary-color);

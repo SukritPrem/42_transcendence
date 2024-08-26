@@ -34,7 +34,7 @@ export class AccountManagment extends HTMLElement {
 						<div class="ms-0">
 							<button type="submit"
 								class="d-flex align-items-center justify-content-center gap-2 border-0" 
-								id="uploadBtn">Upload Image
+								id="uploadBtn">Confirm Change
 							</button>
 						</div>
 					</form>
@@ -58,7 +58,7 @@ export class AccountManagment extends HTMLElement {
 		try {
 			const avatarInput = this.shadowRoot.getElementById('avatarInput')
 			if (!avatarInput.value) {
-				alert('Click your avatar to choose new one before upload.')
+				alert('Click your avatar to choose new one before confirm change.')
 				return
 			}
 
