@@ -213,7 +213,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			self.available.remove(user.username)
 			player = Player(user.username)
 			player.nickname = data["nickname"]
-			player.avatar = user.avatar.url
+			player.avatar = user.get_avatar_url()
 			self.tournament.players.append(player)
 
 

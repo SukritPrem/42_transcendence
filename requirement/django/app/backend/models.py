@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 ############################## For Custom Auth User ##############################
 class CustomUserManager(BaseUserManager):
@@ -50,6 +51,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         
         Friendship.objects.create(from_user=self, to_user=friend_user)
         Friendship.objects.create(from_user=friend_user, to_user=self)
+    
+    def get_avatar_url(self):
+        avatar_path = str(self.avatar)
+        if avatar_path.startswith("http"):
+            return avatar_path
+        return f'{settings.MEDIA_URL}{avatar_path}'
 ############################## For Custom Auth User ##############################
 
 ############################## Notification ##############################

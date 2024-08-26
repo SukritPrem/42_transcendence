@@ -33,8 +33,6 @@ class CustomRefreshToken(RefreshToken):
         user = CustomUser.objects.get(id=self['user_id'])
         token['username'] = user.username
         token['score'] = user.score
-        token['is_online'] = user.is_online
-        token['avatar'] = user.avatar.url if user.avatar else None
 
         return token
 
@@ -46,8 +44,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['user_id'] = user.id
         token['username'] = user.username
         token['score'] = user.score
-        token['is_online'] = user.is_online
-        token['avatar'] = user.avatar.url if user.avatar else None
 
         print(token)
         return token
@@ -402,7 +398,7 @@ def UpdateUserAvatar(request):
                     user.save()
                     return JsonResponse({
                             'message': 'User update avatar success',
-                            'avatar_url': user.avatar.url
+                            'avatar_url': user.get_avatar_url()
                             }, status=201)
 
                 else:

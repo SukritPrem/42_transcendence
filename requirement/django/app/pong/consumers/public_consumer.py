@@ -107,7 +107,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		if len(room.players) >= 4:
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Join: Tournament is full").to_dict())
 
-		player: Player = Player(name=user.username, avatar=user.avatar.url, session_id=session_id, nickname=data['nickname'])
+		player: Player = Player(name=user.username, avatar=user.get_avatar_url(), session_id=session_id, nickname=data['nickname'])
 		room.players.append(player)
 
 		await self.channel_layer.group_add(room.channel_name, self.channel_name)
@@ -128,7 +128,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			inviter_player: Player = Player(
 				name=inviter, 
 				session_id=session_id, 
-				avatar=user.avatar.url)
+				avatar=user.get_avatar_url())
 			room.players.append(inviter_player)
 			invited_player: Player = Player(name=invited)
 			room.players.append(invited_player)
@@ -156,7 +156,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			print(f'{RED}Invite: can not get_player_by_name: {user.username}{RESET}', file=sys.stderr)
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Invited: Player not found").to_dict())
 
-		invited.avatar = user.avatar.url
+		invited.avatar = user.get_avatar_url()
 		invited.session_id = session_id
 
 		room.action = "invited"
