@@ -60,6 +60,11 @@ export class ModalLogin extends HTMLElement {
 				window.location.replace(window.location.origin + "/dashboard")
 			}
 		}
+		else {
+			alert("something wrong try again")
+			this.shadowRoot.querySelector("#username").value = ""
+			this.shadowRoot.querySelector("#password").value = ""
+		}
 	}
 	
 	login42 = (e) => {
