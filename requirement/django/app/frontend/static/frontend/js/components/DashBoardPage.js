@@ -28,7 +28,7 @@ export class DashBoardPage extends HTMLElement {
 						${getUserName()}
 					</div>
 					<div id="navProfileAvatar">
-						<img src="${window.location.origin + getUserAvatar()}" 
+						<img src="${getUserAvatar()}" 
 							alt="Profile Photo" id="profileImg"
 							class="rounded"
 							onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
@@ -42,6 +42,7 @@ export class DashBoardPage extends HTMLElement {
 					<public-pong-component id="pongPublic"></public-pong-component>
 					<div id="mainFrame">
 						<!--notification-component></notification-component-->
+						<account-management-component></account-management-component>
 					</div>
 
 				</div>

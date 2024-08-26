@@ -20,19 +20,52 @@ export class AccountManagment extends HTMLElement {
 				</div>
 				<div id="content" class="d-flex align-items-center justify-content-center">
 					<div id="avatarCon" class="d-flex position-relative">
-						<img id="profileImg" src="${window.location.origin+getUserAvatar()}" alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"
+						<img id="profileImg" src="${getUserAvatar()}" 
+							alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"
+							role="button"
 							onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
 					</div>
+					<form id="formAvatar">
+					<input id="avatarUpload" class="input-img d-none"
+						type="file" value=""
+						name="avatar" accept="image/*">
 					<div class="ms-0">
-						<button class="d-flex align-items-center justify-content-center gap-2 border-0">Upload Image</button>
+						<button type="submit"
+							class="d-flex align-items-center justify-content-center gap-2 border-0" 
+							id="uploadBtn">Upload Image
+						</button>
 					</div>
+					</form>
 				<div>
 			</div>
 		`;
 	};
 
-	connectedCallback() {
+	async uploadAvatar(e) {
+		e.preventDefault()
+		if (avatarInput.value) {
+			alert('should upload')
+		}
+		else {
+			alert('Click your avatar to choose new one before upload.')
+		}
+	}
 
+	connectedCallback() {
+		const profileImg = this.shadowRoot.getElementById("profileImg")
+		const avatarInput = this.shadowRoot.getElementById('avatarUpload')
+		const formAvatar = this.shadowRoot.getElementById('formAvatar')
+		profileImg.addEventListener('click', ()=>{
+			avatarInput.click()
+		})
+		avatarInput.addEventListener('change', ()=>{
+			console.log(avatarInput.value)
+			if (avatarInput.value)
+				profileImg.src = URL.createObjectURL(avatarInput.files[0]);
+			else
+				profileImg.src = getUserAvatar()
+		})
+		formAvatar.addEventListener('submit', this.uploadAvatar)
 	}
 
 	disconnectedCallback() {

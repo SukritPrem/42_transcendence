@@ -14,7 +14,7 @@ export class Profile extends HTMLElement {
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/profile.css">
 			
 			<div id="avatarCon" class="d-none d-md-flex position-relative w-100">
-				<img id="profileImg" src="${window.location.origin+getUserAvatar()}" alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"
+				<img id="profileImg" src="${getUserAvatar()}" alt="Profile Photo"  class="position-absolute top-0 start-0 w-100 h-100"
 					onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
 			</div>
 			<div id="profileName" class="d-none d-md-flex position-relative p-2 bg-white rounded-3 align-items-center justify-content-center my-3 w-100">

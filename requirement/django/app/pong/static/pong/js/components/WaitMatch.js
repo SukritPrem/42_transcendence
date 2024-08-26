@@ -134,7 +134,7 @@ export class WaitMatchBase extends HTMLElement{
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/WaitMatch.css" >
 			<div class="waitmatch-container">
 				<div style="text-align: center">
-					<img src="${window.location.origin}/static/pong/images/pic-trophy.png"/>
+					<img src="/static/pong/images/pic-trophy.png"/>
 				</div>
 				<div class="winner">
 					<div class="b-rigth"></div>
@@ -183,7 +183,7 @@ export class WaitMatchBase extends HTMLElement{
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/WaitMatch.css" >
 			<div class="waitmatch-container">
 				<div style="text-align: center">
-					<img src="${window.location.origin}/static/pong/images/pic-trophy.png"/>
+					<img src="/static/pong/images/pic-trophy.png"/>
 				</div>
 				<div class="winner">
 					<div class="b-rigth"></div>
@@ -348,7 +348,7 @@ export class Final extends HTMLElement{
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/WaitMatch.css" >
 			<div class="waitmatch-container">
 				<div style="text-align: center">
-					<img src="${window.location.origin}/static/pong/images/pic-trophy.png"/>
+					<img src="/static/pong/images/pic-trophy.png"/>
 				</div>
 				<div class="winner">
 					<div class="b-rigth winner-line"></div>
