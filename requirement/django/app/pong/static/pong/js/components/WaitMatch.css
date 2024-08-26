@@ -1,0 +1,106 @@
+:host {
+    --primary: #4FD1C5;
+    --secondary: #2D3748;
+    --border-w: 5px;
+    --border-s: solid;
+    --border-r: 15px;
+    /* height: 600px; */
+}
+
+/* body{
+    height: 100vh;
+} */
+
+.waitmatch-container{
+    height: 500px;
+    width: 100%;
+    /* display: flex; */
+}
+
+.winner{
+    height: 10%;
+    display: flex;
+}
+
+.winner div{
+    flex-grow: 1;
+}
+
+.semi{
+    height: 10%;
+    display: flex;
+}
+
+.semi div{
+    flex-grow: 1;
+}
+
+.first-round{
+    height: 10%;
+    display: flex;
+}
+
+.first-round div{
+    flex-grow: 1;
+}
+
+.b-top{
+    border-top: var(--border-w) var(--border-s) var(--secondary);
+}
+
+.b-rigth{
+    height: 100%;
+    border-right-width: var(--border-w);
+    border-right-style:  var(--border-s);
+    border-right-color:  var(--secondary);
+}
+
+.b-left{
+    height: 100%;
+    border-left: var(--border-w) var(--border-s) var(--secondary);
+}
+
+.b-top-right-round{
+    border-top-right-radius: var(--border-r);
+}
+
+.b-top-left-round{
+    border-top-left-radius: var(--border-r);
+}
+
+.avatar-container {
+    display: flex;
+    height: 20%;
+}
+
+.image-container {
+    display: flex;
+    width: 25%;
+    justify-content: center;
+    padding: 5px;
+}
+
+.image-round {
+    border-style: dashed;
+    border-width: var(--border-w);
+    border-color: var(--secondary);
+}
+
+.avatar {
+    max-width: 100px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-r);
+    object-fit: cover;
+}
+
+.drop-color {
+    opacity: 30%;
+}
+
+.winner-line{
+    border-color: var(--primary);
+}
+
+.loser-line{
+    border-width: 0px;
+}

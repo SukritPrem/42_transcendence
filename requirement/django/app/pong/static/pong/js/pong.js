@@ -5,7 +5,7 @@ import { PongTourMatch } from "./components/PongTourMatch.js";
 import { Pong } from "./components/Pong.js"
 import { PongBase } from "./components/Pong.js";
 import { PongPlayer } from "./components/PongPlayer.js"
-import { WaitMatch } from "./components/WaitMatch.js"
+import { WaitMatchBase, WaitMatch, Final } from "./components/WaitMatch.js"
 
 customElements.define('public-pong-component', PublicPong)
 customElements.define("toutnament-broadcast-component", TourBroadcast)
@@ -15,3 +15,5 @@ customElements.define("pong-component", Pong)
 customElements.define("pong-base-component", PongBase)
 customElements.define("pong-player-component", PongPlayer)
 customElements.define("wait-match-component", WaitMatch)
+customElements.define("wait-match-base-component", WaitMatchBase)
+customElements.define("final-component", Final)

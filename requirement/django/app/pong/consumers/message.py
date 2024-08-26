@@ -53,7 +53,7 @@ class GameMessage(Message):
 	game_datas: list[GameData]
 	match_index: int
 	channel_name: str
-	wait_match_time: int = 3
+	wait_match_time: int = 10
 
 	def __init__(self, type: str, action: str):
 		super().__init__(type=type, action=action)
@@ -186,6 +186,9 @@ class GameMessage(Message):
 				game_data.winner = game_data.player_two
 		else:
 			game_data.winner = None
+
+	def shuffle_player(self):
+		random.shuffle(self.players)
 
 	def cleanup(self):
 		self.action = 'update'

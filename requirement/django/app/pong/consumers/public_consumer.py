@@ -219,8 +219,8 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			return await self.create_match(data)
 
 		if room.type == TOURNAMENT and room.is_tournament_ready():
+			room.shuffle_player()
 			return await self.create_match(data)
-		
 
 	async def create_match(self, data: dict):
 

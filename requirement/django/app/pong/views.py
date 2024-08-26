@@ -11,6 +11,9 @@ User = get_user_model()
 # Create your views here.
 def index(request):
     return render(request, "pong/test.html")
+
+def waitmatch(request):
+	return render(request, "pong/waitmatch.html")
     
 def match_history(request):
 	user: User = request.user

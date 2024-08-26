@@ -131,6 +131,7 @@ export class PublicPong extends HTMLElement {
 	}
 
 	gameEnd = () => {
+		this.mainFrame.innerHTML = "<final-component></final-component>"
 		this.socket.send(JSON.stringify(this.data))
 	}
 
