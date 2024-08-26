@@ -391,7 +391,10 @@ def UpdateUserAvatar(request):
                         os.remove(f'{settings.MEDIA_ROOT}/{old_avatar_path}')
                     user.avatar = avatar
                     user.save()
-                    return JsonResponse({'message': 'User update avatar success'}, status=200)
+                    return JsonResponse({
+                            'message': 'User update avatar success',
+                            'avatar_url': user.avatar.url
+                            }, status=201)
 
                 else:
                     return JsonResponse({'error': 'Not Found the avatar file'}, status=404) 
