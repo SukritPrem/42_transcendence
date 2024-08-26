@@ -86,10 +86,13 @@ def getUserProfile(User, user, owner, func):
                 return
     except BlockedList.DoesNotExist:
         pass
+    avatar_url = str(user.avatar)
+    if not avatar_url.startswith("https://cdn.intra.42.fr"):
+        avatar_url = f'{settings.MEDIA_URL}{user.avatar}'
     return( {
         'id': user.id,
         'username': user.username,
-        'avatar': user.avatar.url,
+        'avatar': avatar_url,
         'is_online': user.is_online
     })
 
@@ -103,11 +106,14 @@ def getUserNotification(User, noti, request):
         pass 
     except User.DoesNotExist:
         return ({'error': 'User not found'})
+    avatar_url = str(user.avatar)
+    if not avatar_url.startswith("https://cdn.intra.42.fr"):
+        avatar_url = f'{settings.MEDIA_URL}{user.avatar}'
     return( {
         'noti_id': noti.id,
         'user_id': user.id,
         'username': user.username, 
-        'avatar': user.avatar.url,
+        'avatar': avatar_url,
         'is_online': user.is_online
     })
 
@@ -321,13 +327,14 @@ def callback(request):
     user_info = client.get(settings.PROFILE_URL).json()
     username = user_info['login']
     user_id = user_info['id']
+    avatar = user_info['image']['link']
     hash_password = make_password(f'{username}{user_id}')
 
     if User.objects.filter(username=username).exists():
         user = User.objects.get(username=username)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
     else:
-        user = User.objects.create_user(username=username, password=hash_password)
+        user = User.objects.create_user(username=username, password=hash_password, avatar=avatar)
     if settings.ALLOW_API_WITHOUT_JWT == False:
         login(request, user)
         user.save()
@@ -355,13 +362,15 @@ def UserProfile(request, user_id, owner_id):
                         owner = User.objects.get(id = owner_id)
                     except User.DoesNotExist:
                         return JsonResponse({'error': 'User not found'}, status=404)     
-                    avatar_url = f'{settings.MEDIA_ROOT}/{user.avatar}'
-                    if avatar_url and os.path.exists(avatar_url):
-                        payload = getUserProfile(User=User, user=user, owner=owner, func='general')
-                        if payload is None:
-                            return JsonResponse({'error': 'User was blocked'}, status=401)
-                    else:
-                        return JsonResponse({'error': 'Not Found the avatar file'}, status=404) 
+                    # avatar_url = f'{settings.MEDIA_ROOT}/{user.avatar}'
+                    avatar_url = str(request.user.avatar)
+                    if not avatar_url.startswith("https://cdn.intra.42.fr"):
+                        avatar_url = f'{settings.MEDIA_URL}{request.user.avatar}'
+                        if not (avatar_url and os.path.exists(avatar_url)):
+                            return JsonResponse({'error': 'Not Found the avatar file'}, status=404) 
+                    payload = getUserProfile(User=User, user=user, owner=owner, func='general')
+                    if payload is None:
+                        return JsonResponse({'error': 'User was blocked'}, status=401)
                     return JsonResponse(payload, status=200, safe=False)
             else:
                 return JsonResponse({'error': 'User is not logged in'}, status=401)  

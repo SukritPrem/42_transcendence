@@ -21,10 +21,13 @@ def index(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('frontend:index')
+    avatar_url = str(request.user.avatar)
+    if not avatar_url.startswith("https://cdn.intra.42.fr"):
+        avatar_url = f'{settings.MEDIA_URL}{request.user.avatar}'
     context = {
         "id": request.user.id,
         "username": request.user.username,
-        "avatar": f'{settings.MEDIA_URL}{request.user.avatar}',
+        "avatar": avatar_url,
         "session_id": request.session.session_key
     }
     try:
