@@ -17,7 +17,7 @@ export class AccountManagment extends HTMLElement {
 					<p>Account Managment</p>
 				</div>
 				<div id="topic" class="fw-bold">
-					<p>Profile</p>
+					<p>Update Profile</p>
 				</div>
 				<div id="content" class="d-flex align-items-center justify-content-center">
 					<div id="avatarCon" class="d-flex position-relative">
@@ -34,7 +34,7 @@ export class AccountManagment extends HTMLElement {
 						<div class="ms-0">
 							<button type="submit"
 								class="d-flex align-items-center justify-content-center gap-2 border-0" 
-								id="uploadBtn">Confirm Change
+								id="uploadBtn">Confirm Update
 							</button>
 						</div>
 					</form>
@@ -58,7 +58,7 @@ export class AccountManagment extends HTMLElement {
 		try {
 			const avatarInput = this.shadowRoot.getElementById('avatarInput')
 			if (!avatarInput.value) {
-				alert('Click your avatar to choose new one before confirm change.')
+				alert('Click your avatar to choose a new one before confirming the update.')
 				return
 			}
 
@@ -89,7 +89,7 @@ export class AccountManagment extends HTMLElement {
 
 			const result = await response.json();
 			if (response.status == 201){
-				alert("Avatar changed!!")
+				alert("Avatar Updated!")
 				setUserAvatar(result.avatar_url)
 				this.updateAvatar()
 				console.log(result)
