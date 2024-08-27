@@ -52,11 +52,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer  
 
 def index(request):   
-    # context = {
-    #     'access': request.session['access_token'],
-    #     'refresh': request.session['refresh_token']
-    # }
-    # return render(request, 'backend/login.html', {'token': context})
     return render(request, 'backend/login.html')
 
 
@@ -82,13 +77,10 @@ def getUserProfile(User, user, owner, func):
                 return
     except BlockedList.DoesNotExist:
         pass
-    avatar_url = str(user.avatar)
-    if not avatar_url.startswith("https://cdn.intra.42.fr"):
-        avatar_url = f'{settings.MEDIA_URL}{user.avatar}'
     return( {
         'id': user.id,
         'username': user.username,
-        'avatar': avatar_url,
+        'avatar': user.get_avatar_url(),
         'is_online': user.is_online
     })
 
@@ -102,14 +94,11 @@ def getUserNotification(User, noti, request):
         pass 
     except User.DoesNotExist:
         return ({'error': 'User not found'})
-    avatar_url = str(user.avatar)
-    if not avatar_url.startswith("https://cdn.intra.42.fr"):
-        avatar_url = f'{settings.MEDIA_URL}{user.avatar}'
     return( {
         'noti_id': noti.id,
         'user_id': user.id,
         'username': user.username, 
-        'avatar': avatar_url,
+        'avatar': user.get_avatar_url(),
         'is_online': user.is_online
     })
 
@@ -358,10 +347,9 @@ def UserProfile(request, user_id, owner_id):
                         owner = User.objects.get(id = owner_id)
                     except User.DoesNotExist:
                         return JsonResponse({'error': 'User not found'}, status=404)     
-                    # avatar_url = f'{settings.MEDIA_ROOT}/{user.avatar}'
-                    avatar_url = str(request.user.avatar)
+                    avatar_url = user.get_avatar_url()
                     if not avatar_url.startswith("https://cdn.intra.42.fr"):
-                        avatar_url = f'{settings.MEDIA_URL}{request.user.avatar}'
+                        avatar_url = f'{settings.MEDIA_ROOT}/{user.avatar}'
                         if not (avatar_url and os.path.exists(avatar_url)):
                             return JsonResponse({'error': 'Not Found the avatar file'}, status=404) 
                     payload = getUserProfile(User=User, user=user, owner=owner, func='general')
