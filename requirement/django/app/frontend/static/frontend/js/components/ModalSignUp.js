@@ -1,4 +1,4 @@
-import { getCSRFToken } from "./Utils.js"
+import { getCSRFToken, MAX_FILE_SIZE_MB } from "./Utils.js"
 
 export class ModalSignUp extends HTMLElement {
 	constructor() {
@@ -84,9 +84,18 @@ export class ModalSignUp extends HTMLElement {
 		this.shadowRoot.innerHTML = this.template();
 		var profilePic = this.shadowRoot.getElementById("profileImg");
 		var inputFile = this.shadowRoot.getElementById("avatarSignUp");
-		inputFile.onchange = function(){
-			profilePic.src = URL.createObjectURL(inputFile.files[0]);
-		}
+
+		inputFile.addEventListener('change', ()=>{
+			if (inputFile.value) {
+				const maxFileSize = MAX_FILE_SIZE_MB * 1024 * 1024
+				if (inputFile.files[0].size > maxFileSize) {
+					alert(`File size exceeds the limit of ${MAX_FILE_SIZE_MB}MB`)
+					inputFile.value = ""
+				} else {
+					profilePic.src = URL.createObjectURL(inputFile.files[0]);
+				}
+			}
+		})
 
 		this.shadowRoot.getElementById("signUpForm")
 			.addEventListener("submit", this.signUp)

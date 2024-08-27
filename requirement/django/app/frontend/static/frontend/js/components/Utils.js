@@ -1,3 +1,5 @@
+export const MAX_FILE_SIZE_MB = 1
+
 export function	getCSRFToken () {
 	const csrfTokenElement = document.querySelector("[name=csrfmiddlewaretoken]");
 	return csrfTokenElement ? csrfTokenElement.value : null;

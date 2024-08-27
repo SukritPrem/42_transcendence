@@ -1,4 +1,4 @@
-import { getCSRFToken, getUserAvatar, getUserId, setUserAvatar } from "./Utils.js";
+import { getCSRFToken, getUserAvatar, getUserId, setUserAvatar, MAX_FILE_SIZE_MB } from "./Utils.js";
 export class AccountManagment extends HTMLElement {
 	constructor() {
 		super();
@@ -112,8 +112,17 @@ export class AccountManagment extends HTMLElement {
 		})
 		avatarInput.addEventListener('change', ()=>{
 			// console.log(avatarInput.value)
-			if (avatarInput.value)
-				profileImg.src = URL.createObjectURL(avatarInput.files[0]);
+			if (avatarInput.value){
+				//check file size
+				const maxFileSize = MAX_FILE_SIZE_MB * 1024 * 1024
+				if (avatarInput.files[0].size > maxFileSize) {
+					
+					alert(`File size exceeds the limit of ${MAX_FILE_SIZE_MB}MB`)
+					avatarInput.value = ""
+				} else {
+					profileImg.src = URL.createObjectURL(avatarInput.files[0]);
+				}
+			}
 			else
 				profileImg.src = getUserAvatar()
 		})
