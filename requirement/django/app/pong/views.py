@@ -18,46 +18,50 @@ def index(request):
 def waitmatch(request):
 	return render(request, "pong/waitmatch.html")
     
-def match_history(request):
-	user: User = request.user
-	matches: list[Match] = Match.objects.filter(Q(player_one=user) | Q(player_two=user))[:5]
-	# print (f'{matches}', file=sys.stderr)
-	# data = serializers.serialize('json', matches)
-	data = []
-	for match in matches:
-		# print (f'{match}', file=sys.stderr)
-		outcome: str
-		if match.winner is None:
-			outcome = 'draw'
-		else:
-			outcome = 'win' if user.username == match.winner.username else 'lose'
-		opponentPlayer: str
-		if match.player_one is None or match.player_two is None:
-			opponentPlayer = 'None'
-		else:
-			opponentPlayer = match.player_two.username if match.player_one.username == user.username else match.player_one.username
-		
-		data.append({
-				'id': match.id,
-				'matchType': match.match_type,
-				'date': match.created,
-				'opponentPlayer': opponentPlayer,
-				'outcome': outcome
-		})
-	# return JsonResponse({'status': 'ok'}, safe=False,  status=200)
-	return JsonResponse(data, safe=False,  status=200)
+def match_history(request, user_id):
+	try:
+		user: User = User.objects.get(id=user_id)
+		matches: list[Match] = Match.objects.filter(Q(player_one=user) | Q(player_two=user))[:5]
+		data = []
+		for match in matches:
+			outcome: str
+			if match.winner is None:
+				outcome = 'draw'
+			else:
+				outcome = 'win' if user.username == match.winner.username else 'lose'
+			opponentPlayer: str
+			if match.player_one is None or match.player_two is None:
+				opponentPlayer = 'None'
+			else:
+				opponentPlayer = match.player_two.username if match.player_one.username == user.username else match.player_one.username
+			
+			data.append({
+					'id': match.id,
+					'matchType': match.match_type,
+					'date': match.created,
+					'opponentPlayer': opponentPlayer,
+					'outcome': outcome
+			})
+		return JsonResponse(data, safe=False,  status=200)
+	except User.DoesNotExist:
+		return JsonResponse({'error: User not found'}, safe=False, status=400)
 
-def statictis(request):
-	user: User = request.user
-	match_count = Match.objects.filter(Q(player_one=user) | Q(player_two=user)).count()
-	match_win = Match.objects.filter(winner=user).count()
-	match_draw = Match.objects.filter(Q(winner=None) & (Q(player_one=user) | Q(player_two=user))).count()
-	match_lose = match_count - match_win - match_draw
+def statictis(request, user_id):
+	try:
+		user: User = User.objects.get(id=user_id)
+		match_count = Match.objects.filter(Q(player_one=user) | Q(player_two=user)).count()
+		match_win = Match.objects.filter(winner=user).count()
+		match_draw = Match.objects.filter(Q(winner=None) & (Q(player_one=user) | Q(player_two=user))).count()
+		match_lose = match_count - match_win - match_draw
 
-	data = {
-		'match': match_count,
-		'win': match_win,
-		'draw': match_draw,
-		'lose': match_lose
-	}
-	return JsonResponse(data, safe=False,  status=200)
+		data = {
+			'id': user.id,
+			'username': user.username,
+			'match': match_count,
+			'win': match_win,
+			'draw': match_draw,
+			'lose': match_lose
+		}
+		return JsonResponse(data, safe=False,  status=200)
+	except User.DoesNotExist:
+		return JsonResponse({'error: User not found'}, safe=False, status=400)

@@ -25,21 +25,7 @@ export class FriendProfile extends HTMLElement {
 						<div id="username">
 							Unknow
 						</div>
-						<div class="d-flex align-items-center detail-height">
-							<i class="uil uil-globe"></i>
-							<p class="text">RANK</p>
-							<p class="amount">11</p>
-						</div>
-						<div class="d-flex align-items-center detail-height">
-							<i class="uil uil-arrow-growth"></i>
-							<p class="text">WIN</p>
-							<p class="amount">5</p>
-						</div>
-						<div class="d-flex align-items-center detail-height">
-							<i class="uil uil-chart-down"></i>
-							<p class="text">LOSE</p>
-							<p class="amount">2</p>
-						</div>
+						<statistic-base-component data-player_id=${this.dataset.user}></statistic-base-component>
 					</div>
 				</div>
 				<div class="mt-3 d-flex justify-content-center">
@@ -47,6 +33,7 @@ export class FriendProfile extends HTMLElement {
 							<i class="uil uil-user-times"></i> Block
 					</button>
 				</div>
+				<match-history-component data-player_id="${this.dataset.user}"></match-history-component>
 			</div>
 		`;
 	};
@@ -91,14 +78,12 @@ export class FriendProfile extends HTMLElement {
 	fetchUserProfile = async (userId) => {
 		const result = await fetchJson("fetchUserProfile", "GET", 
 			`/api/users/${userId}/${getUserId()}/profile`)
-		// console.log(result)
 		if (result) {
 			this.render(result)
 		}
 	}
 	
 	disconnectedCallback() {
-		// console.log("delete Friend Profile components");
 	}
 }
 

@@ -1,4 +1,4 @@
-import {fetchJson} from "./Utils.js"
+import {fetchJson, getUserId} from "./Utils.js"
 
 const Mock_hx = [
 	{
@@ -72,7 +72,9 @@ export class MatchHistory extends HTMLElement {
 	};
 
 	async fetchMatchHistory() {
-		const result = await fetchJson('fatchMatchHistory', 'GET', `${window.location.origin}/pong/match_history`)
+		const playerID = typeof this.dataset.player_id === 'undefined' ? getUserId() : this.dataset.player_id
+		const result = await fetchJson('fatchMatchHistory', 'GET', 
+			`${window.location.origin}/pong/players/${playerID}/match_history`)
 		if (result) {
 			// console.log(result)
 			const tbody = this.shadowRoot.querySelector('table tbody');
