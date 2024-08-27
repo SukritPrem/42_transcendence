@@ -13,7 +13,7 @@ export class StatisticBase extends HTMLElement {
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/Statistic.css">
 			
 			<div class="w-100 d-flex align-items-center justify-content-center">
-				<div class="d-flex flex-column gap-3">
+				<div class="d-flex flex-column gap-2">
 					<div class="list-item">
 						<i class="uil uil-globe"></i>
 						<p class="text">MATCH</p>

@@ -16,15 +16,12 @@ export class FriendProfile extends HTMLElement {
 			
 			<div class="bg-white overflow-auto custom-bg">
 				<div id="header" class="fw-bold">
-					<p>Friend Profile</p>
+					<p>Friend Profile : <span id="username"></span></p>
 				</div>
 				<div id="content" class="d-flex align-items-center justify-content-center">
 					<div id="photo" class="d-flex position-relative">
 					</div>
 					<div id="detail">
-						<div id="username">
-							Unknow
-						</div>
 						<statistic-base-component data-player_id=${this.dataset.user}></statistic-base-component>
 					</div>
 				</div>
