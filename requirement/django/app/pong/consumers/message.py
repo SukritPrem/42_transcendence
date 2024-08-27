@@ -39,12 +39,15 @@ class Player():
 	status: str
 	avatar: str
 	session_id: str
+	connection_id: str
 
-	def __init__(self, name: str, avatar: str=None, session_id: str=None, nickname: str=None):
+	def __init__(self, name: str, avatar: str=None, session_id: str=None, \
+		connection_id: str=None, nickname: str=None):
 		self.status = 'wait'
 		self.name = name
 		self.avatar = avatar
 		self.session_id = session_id
+		self.connection_id = connection_id
 		self.nickname = nickname if nickname is not None else name
 
 @dataclass
@@ -77,6 +80,12 @@ class GameMessage(Message):
 	def get_player_by_nickname(self, nickname: str):
 		for player in self.players:
 			if player.nickname == nickname:
+				return player
+		return None
+
+	def get_player_by_connection_id(self, connection_id: str):
+		for player in self.players:
+			if player.connection_id == connection_id:
 				return player
 		return None
 

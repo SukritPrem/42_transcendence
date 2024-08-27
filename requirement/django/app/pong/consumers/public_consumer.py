@@ -1,19 +1,14 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-# from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 import json
 from .message import *
 from channels.db import database_sync_to_async
 import asyncio
 from pong.models import *
-# from asgiref.sync import async_to_sync
 
 User = get_user_model()
 
-
 class PublicConsumer(AsyncWebsocketConsumer):
-
-	# available: list[str] = [] # keep username
 	players: list[str] = []
 	rooms: dict[str, GameMessage] = {} # keep PrivateMessageRoom
 	rooms[TOURNAMENT] = GameMessage(TOURNAMENT, 'update')
@@ -22,17 +17,18 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	tasks: dict[str, asyncio.Task] = {}
 
 	async def connect(self):
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
-		print(f'{GREEN}{user.username}: {session_id} connect{RESET}', file=sys.stderr)
+		self.user: User = self.scope['user']
+		self.session_id = self.scope['session'].session_key
+		self.connection_id = shortuuid.uuid()
+		print(f'{GREEN}{self.user.username}: {self.session_id} connect{RESET}', file=sys.stderr)
 
 		await self.accept()
 		await self.channel_layer.group_add(self.channel_public, self.channel_name)
 		await self.request_tour_message()
 
 	async def disconnect(self, close_code):
-		user: User = self.scope['user']
-		if self.is_player(user.username):
+		# user: User = self.scope['user']
+		if self.is_player(self.user.username):
 			await self.quit()
 		await self.channel_layer.group_discard(self.channel_public, self.channel_name)
 
@@ -86,10 +82,10 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					return True
 		return False
 
-###########################################################
+################### sequent action #############################
 	async def join(self, data: dict):
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
+		# user: User = self.scope['user']
+		# session_id = self.scope['session'].session_key
 		room: GameMessage = self.rooms.get(TOURNAMENT)
 		
 		if room is None:
@@ -98,7 +94,7 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		if 'nickname' not in data:
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Join: Tournament require nickname").to_dict())
 		
-		if self.is_player(user.username):
+		if self.is_player(self.user.username):
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Join: User unavailable").to_dict())
 
 		if room.get_player_by_nickname(data['nickname']) is not None:
@@ -107,7 +103,8 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		if len(room.players) >= 4:
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Join: Tournament is full").to_dict())
 
-		player: Player = Player(name=user.username, avatar=user.get_avatar_url(), session_id=session_id, nickname=data['nickname'])
+		player: Player = Player(name=self.user.username, avatar=self.user.get_avatar_url(), \
+			session_id=self.session_id, connection_id=self.connection_id, nickname=data['nickname'])
 		room.players.append(player)
 
 		await self.channel_layer.group_add(room.channel_name, self.channel_name)
@@ -116,9 +113,9 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	
 	async def inviter(self, data: dict):
 		# print(f'{GREEN}inviter work{RESET}', file=sys.stderr)
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
-		inviter: str = user.username
+		# user: User = self.scope['user']
+		# session_id = self.scope['session'].session_key
+		inviter: str = self.user.username
 		invited: str = data['invited']
 
 		if self.is_player(inviter) or self.is_player(invited):
@@ -127,8 +124,9 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			room: GameMessage = GameMessage(PRIVATE, "inviter")
 			inviter_player: Player = Player(
 				name=inviter, 
-				session_id=session_id, 
-				avatar=user.get_avatar_url())
+				session_id=self.session_id,
+				connection_id=self.connection_id,
+				avatar=self.user.get_avatar_url())
 			room.players.append(inviter_player)
 			invited_player: Player = Player(name=invited)
 			room.players.append(invited_player)
@@ -143,21 +141,22 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			await self.channel_layer.group_send(room.channel_name,{'type': self.group_message,'data': room.to_dict()})
 
 	async def invited(self, data: dict):
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
+		# user: User = self.scope['user']
+		# session_id = self.scope['session'].session_key
 		room: GameMessage = self.rooms.get(data['channel_name'])
 		
 		if room is None:
 			print(f'{RED}Invited: Room not found{RESET}', file=sys.stderr)
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Invited: Room not found").to_dict())
 		
-		invited: Player = room.get_player_by_name(user.username)
+		invited: Player = room.get_player_by_name(self.user.username)
 		if invited is None:
-			print(f'{RED}Invite: can not get_player_by_name: {user.username}{RESET}', file=sys.stderr)
+			print(f'{RED}Invite: can not get_player_by_name: {self.user.username}{RESET}', file=sys.stderr)
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Invited: Player not found").to_dict())
 
-		invited.avatar = user.get_avatar_url()
-		invited.session_id = session_id
+		invited.avatar = self.user.get_avatar_url()
+		invited.session_id = self.session_id
+		invited.connection_id = self.connection_id
 
 		room.action = "invited"
 		await self.channel_layer.group_send(self.channel_public, {'type': self.channel_public,'data': room.to_dict()})
@@ -165,14 +164,11 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		room.action = 'update'
 		await self.channel_layer.group_add(room.channel_name, self.channel_name)
 
-		# await self.channel_layer.group_send(room.channel_name,{'type': self.group_message,'data': room.to_dict()})
-
-
 	async def reject(self, data: dict):
-		user: User = self.scope['user']
+		# user: User = self.scope['user']
 		room = self.rooms.get(data['channel_name'])
 		room.action = 'reject'
-		player: Player = room.get_player_by_name(user.username)
+		player: Player = room.get_player_by_name(self.user.username)
 
 		if player is None:
 			return await self.pong_private_message(ErrorMessage(PRIVATE, "Reject: error player is none").to_dict())
@@ -190,8 +186,8 @@ class PublicConsumer(AsyncWebsocketConsumer):
 	async def update(self, data: dict):
 		# print(f'{GREEN}update work{RESET}', file=sys.stderr)
 
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
+		# user: User = self.scope['user']
+		# session_id = self.scope['session'].session_key
 
 		room: GameMessage = self.rooms.get(data['channel_name'])
 		if room is None:
@@ -202,9 +198,9 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			print(f'{RED}update: action is not update{RESET}', file=sys.stderr)
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Update: Action not update").to_dict())
 
-		player: Player = room.get_player_by_session(session_id)
+		player: Player = room.get_player_by_session(self.session_id)
 		if player is None:
-			print(f'{RED}update: {user.username} player not found{RESET}', file=sys.stderr)
+			print(f'{RED}update: {self.user.username} player not found{RESET}', file=sys.stderr)
 			return await self.pong_private_message(ErrorMessage(TOURNAMENT, "Update: Wrong session").to_dict())
 
 
@@ -312,12 +308,12 @@ class PublicConsumer(AsyncWebsocketConsumer):
 
 	async def sendkey(self, data: dict):
 		# print(f'{RED}{data}{RESET}', file=sys.stderr)
-		user: User = self.scope['user']
+		# user: User = self.scope['user']
 		room: GameMessage = self.rooms.get(data['channel_name'])
 		if room is None:
 			print(f'{RED}sendkey: Room not found{RESET}', file=sys.stderr)
 			return
-		room.player_update_direction(user.username, data['direction'])
+		room.player_update_direction(self.user.username, data['direction'])
 
 	async def finish(self, data:dict):
 		room: GameMessage = self.rooms.get(data['channel_name'])
@@ -385,40 +381,34 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			)
 
 	async def quit(self, data: dict=None):
-		user: User = self.scope['user']
-		session_id = self.scope['session'].session_key
+		# user: User = self.scope['user']
+		# session_id = self.scope['session'].session_key
 
 		room: GameMessage = None
 		if data is not None:
 			room = self.rooms.get(data['channel_name'])
 		else:
 			for key in self.rooms:
-				if self.rooms[key].get_player_by_session(session_id) is not None:
+				if self.rooms[key].get_player_by_connection_id(self.connection_id) is not None:
 					room = self.rooms[key]
 					break
 
 		if room is None:
-			# private pong on invited quit it can not get room by session
+			# private pong on invited quit it can not get room by session or connection_id
 			for key in self.rooms:
-				if self.rooms[key].get_player_by_name(user.username) is not None:
+				if self.rooms[key].get_player_by_name(self.user.username) is not None:
 					room = self.rooms[key]
 					break
-			if room is not None:	
+			if room is not None and room.action == "inviter":	
 				room.action = 'reject'
 				room.players[1].status = 'quit'
-				await self.channel_layer.group_send(
-				self.channel_public,
-				{
-					'type': self.channel_public,
-					'data': room.to_dict()
-				}
-			)
+				await self.channel_layer.group_send(self.channel_public, \
+					{'type': self.channel_public,'data': room.to_dict()})
 			else:
-				print(f'{RED}quit: can not get room{RESET}', file=sys.stderr)
-			
+				print(f'{RED}quit: can not get room{RESET}', file=sys.stderr)			
 			return
 			
-		player: Player = room.get_player_by_session(session_id)
+		player: Player = room.get_player_by_session(self.session_id)
 		if player is None:
 			print(f'{RED}quit: player not found{RESET}', file=sys.stderr)
 			return
@@ -426,9 +416,9 @@ class PublicConsumer(AsyncWebsocketConsumer):
 		player.status = 'quit'
 		
 		if room.type == PRIVATE:
-			await self.quit_private(room, session_id)
+			await self.quit_private(room, self.session_id)
 		else:		
-			await self.quit_tournament(room, player, user)
+			await self.quit_tournament(room, player, self.user)
 
 		await self.channel_layer.group_discard(room.channel_name, self.channel_name)
 
@@ -487,8 +477,6 @@ class PublicConsumer(AsyncWebsocketConsumer):
 				print (f'{GREEN}{user.username} not in present match it will check when next match create{RESET}', file=sys.stderr)
 
 ################## play pong ############################
-
-########## new feature
 	async def send_game_finish(self, room: GameMessage):
 		room.action = 'finish'
 		await self.channel_layer.group_send(room.channel_name, {'type': self.group_message, 'data': room.to_dict()})
@@ -522,10 +510,6 @@ class PublicConsumer(AsyncWebsocketConsumer):
 			await self.send_game_finish(room)
 
 ####################### database #####################################
-	# @database_sync_to_async
-	# def get_user(self, username: str):
-	# 	return get_object_or_404(User, username=username)
-
 	@database_sync_to_async
 	def tour_save_database(self):
 		return Tournament.objects.create()
