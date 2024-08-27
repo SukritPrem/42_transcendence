@@ -165,16 +165,20 @@ export class WaitMatchBase extends HTMLElement{
 				</div>
 				<div class="avatar-container">
 					<div class="image-container">
-						<img class="avatar player-one" id="playerOne" src="">
+						<img class="avatar player-one" id="playerOne" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 					<div class="image-container">
-						<img class="avatar player-two" id="playerTwo" src="">
+						<img class="avatar player-two" id="playerTwo" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 					<div class="image-container">
-						<img class="avatar player-one" id="playerThree" src="">
+						<img class="avatar player-one" id="playerThree" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 					<div class="image-container">
-						<img class="avatar player-two" id="playerFour" src="">
+						<img class="avatar player-two" id="playerFour" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 				</div>
 				<div class="name-container">
@@ -221,11 +225,13 @@ export class WaitMatchBase extends HTMLElement{
 				</div>
 				<div class="avatar-container">
 					<div class="image-container" style="width: 50%;">
-						<img class="avatar player-one" id="playerOne" src="">
+						<img class="avatar player-one" id="playerOne" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 
 					<div class="image-container" style="width: 50%;">
-						<img class="avatar player-two" id="playerTwo" src="">
+						<img class="avatar player-two" id="playerTwo" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 				</div>
 				<div class="name-container">
@@ -399,7 +405,8 @@ export class Final extends HTMLElement{
 				</div>
 				<div class="avatar-container">
 					<div class="image-container" style="width: 100%;">
-						<img class="avatar" id="winner" src="">
+						<img class="avatar" id="winner" src=""
+						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
 					</div>
 				</div>
 				<div class="name-container">

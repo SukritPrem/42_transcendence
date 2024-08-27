@@ -110,6 +110,7 @@ export class LiveChat extends HTMLElement {
 				.addEventListener('submit', this.sendMessage)
 			const avatar = document.createElement("img")
 			avatar.setAttribute("src", `${this.dataset.avatar}`)
+			avatar.setAttribute("onerror", "this.onerror=null; this.src='/user-media/avatars/default.png';")
 			this.shadowRoot.getElementById("avatar").innerHTML = avatar.outerHTML
 		}
 	}
