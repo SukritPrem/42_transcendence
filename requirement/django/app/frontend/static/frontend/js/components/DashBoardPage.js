@@ -7,35 +7,42 @@ export class DashBoardPage extends HTMLElement {
 		this.shadowRoot.innerHTML = this.template()
 	}
 
+	navBar(){
+		return `
+			<div class="position-sticky top-0 z-1">
+				<div id="nav" class=" d-flex justify-content-between align-items-center w-100 position-relative ps-3 pe-3 bg-default">				
+					<div class="d-flex align-items-center">
+						<div id="navMenu" class="rounded-0 align-items-center justify-content-center d-flex d-xl-none me-3">
+							<i class="uil uil-bars fs-4 dark-gray"></i>
+						</div>
+						<div id="navLogo" class="d-none d-xl-flex align-items-center">
+							<i class="uil uil-window-grid dark-gray fs-4"></i>
+							<p class="mb-0 ms-2 fw-bold fs-6 dark-gray">DASHBOARD</p>
+						</div>
+					</div>
+					<div id="navProfile" class="d-flex align-items-center">
+						<div id="navProfileName" class="me-2 fw-bold fs-7 dark-gray ">
+							${getUserName()}
+						</div>
+						<div id="navProfileAvatar">
+							<img src="${getUserAvatar()}" 
+								alt="Profile Photo" id="profileImg"
+								class="rounded"
+								onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
+						</div>
+					</div>
+				</div>
+			</div>	
+		`
+	}
+
 	template = () => {
 		return `
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/DashBoardPage.css">
-				
-			<div id="nav" class="d-flex justify-content-between align-items-center w-100 position-relative ps-3 pe-3 bg-default">
-				<div class="d-flex align-items-center">
-					<div id="navMenu" class="rounded-0 align-items-center justify-content-center d-flex d-xl-none me-3">
-						<i class="uil uil-bars fs-4 dark-gray"></i>
-					</div>
-					<div id="navLogo" class="d-none d-xl-flex align-items-center">
-						<i class="uil uil-window-grid dark-gray fs-4"></i>
-						<p class="mb-0 ms-2 fw-bold fs-6 dark-gray">DASHBOARD</p>
-					</div>
-				</div>
-				<div id="navProfile" class="d-flex align-items-center">
-					<div id="navProfileName" class="me-2 fw-bold fs-7 dark-gray ">
-						${getUserName()}
-					</div>
-					<div id="navProfileAvatar">
-						<img src="${getUserAvatar()}" 
-							alt="Profile Photo" id="profileImg"
-							class="rounded"
-							onerror="this.onerror=null; this.src='${window.location.origin+"/user-media/avatars/default.png"}';">
-					</div>
-				</div>
-			</div>
-
+			
+			${this.navBar()}
 			<div id="body" class="d-flex bg-default">
 				<profile-component id="profileComponent" class="body-left"></profile-component>
 				<div id="bodyMiddle" class="bg-default">
@@ -63,17 +70,19 @@ export class DashBoardPage extends HTMLElement {
 		`;
 	}
 
-	toggleProfileVisibility = () => {
-		const profile = this.shadowRoot.getElementById('profileComponent');
-		if (profile) {
-			profile.style.display = profile.style.display === 'block' ? 'none' : 'block';
-		}
-	}
-
 	connectedCallback() {
-		const menuIcon = this.shadowRoot.getElementById('navMenu');
-		if (menuIcon) {
-			menuIcon.addEventListener('click', this.toggleProfileVisibility);
-		}
+		const menuButton = this.shadowRoot.getElementById('navMenu');
+		const profile = this.shadowRoot.getElementById('profileComponent');
+
+		menuButton.addEventListener('click', function(event) {
+			profile.style.display = profile.style.display === 'block' ? 'none' : 'block';
+			event.stopPropagation(); // Prevent click event from bubbling up
+		});
+
+		document.addEventListener('click', function(event) {
+			if (!profile.contains(event.target) && event.target !== menuButton) {
+				profile.style.display = 'none';
+			}
+		});
 	}
 }
