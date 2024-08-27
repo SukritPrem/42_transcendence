@@ -379,9 +379,9 @@ def UpdateUserAvatar(request):
                     return JsonResponse({'error': 'User not found'}, status=404)
                 avatar = request.FILES.get('avatar')
                 if avatar:
-                    old_avatar_path = user.avatar
-                    if old_avatar_path != f'avatars/default.png' and os.path.isfile(f'{settings.MEDIA_ROOT}/{old_avatar_path}'):
-                        os.remove(f'{settings.MEDIA_ROOT}/{old_avatar_path}')
+                    old_avatar_path = f'{settings.MEDIA_ROOT}/{user.avatar}'
+                    if user.avatar != 'avatars/default.png' and os.path.isfile(old_avatar_path):
+                        os.remove(old_avatar_path)
                     user.avatar = avatar
                     user.save()
                     return JsonResponse({
@@ -552,7 +552,7 @@ def FindNewFriends(request, user_id):
                             if profile is not None:
                                 not_friends.append(profile)
                     if len(not_friends) == 0:
-                        return JsonResponse({'error': 'User was blocked by all users'}, status=401)
+                        return JsonResponse({'error': 'Not found other users'}, status=404)
                     return JsonResponse(not_friends, status=200 , safe=False)
             else:
                 return JsonResponse({'error': 'User is not logged in'}, status=401)
