@@ -18,7 +18,7 @@ export class TourBroadcast extends HTMLElement {
 			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/TourBroadcast.css">
 			
-			<div id="tourBroadcast" class="d-flex flex-column flex-md-row align-items-center"></div>
+			<div id="tourBroadcast" class="d-flex flex-column flex-lg-row align-items-center"></div>
 		`;
 	}
 
@@ -28,7 +28,7 @@ export class TourBroadcast extends HTMLElement {
 				<i class="uil uil-check-circle position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
 			</span>
 			<div id="content" class="d-flex flex-column justify-content-center me-auto">
-				<h4 class="m-0 text-white fw-bold">TOURNAMENT is upcoming</h4>
+				<h4 class="m-0 text-white fw-bold">TOURNAMENT is upcoming...</h4>
 				<small>
 					registered member (
 					<span id="amountPlayer">${number}</span>
@@ -45,8 +45,9 @@ export class TourBroadcast extends HTMLElement {
 			<span class="icon-main d-none d-lg-flex align-items-center">
 				<i class="uil uil-clock position-relative d-inline-flex justify-content-center align-items-center m-0"></i>
 			</span>
-			<div id="content">
-				<h4 class="m-0 text-center text-white fw-bold">${game_data.player_one.nickname} <i class="uil uil-table-tennis"></i> ${game_data.player_two.nickname}</h4>
+			<div id="content" class="d-flex flex-column justify-content-center">
+				<small>TOURNAMENT is ongoing...</small>
+				<h4 class="m-0 text-white fw-bold">Match : ${game_data.player_one.nickname} <i class="uil uil-table-tennis"></i> ${game_data.player_two.nickname}</h4>
 			</div>
 		`
 	}

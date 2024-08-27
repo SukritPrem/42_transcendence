@@ -6,8 +6,9 @@ requirement/django/credentials
 # Ignore all files in uploads/avatars
 requirement/django/app/uploads/avatars/*
 
-# Except for default.jpg
+# Except for default.jpg and default-white.png
 !requirement/django/app/uploads/avatars/default.png
+!requirement/django/app/uploads/avatars/default-white.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

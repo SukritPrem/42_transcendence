@@ -57,6 +57,8 @@ h4 {
 }
 
 small {
+	margin: 0;
+	padding: 0;
 	color: white;
 	font-size: 0.7rem;
 }
@@ -64,11 +66,11 @@ small {
 #content i {
 	width: 3rem; 
 	height: 3rem; 
-	font-size: 2rem; 
+	font-size: 1.75rem; 
 	color: white;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 991px) {
 	#tourBroadcast {
 		display: flex;
 		flex-direction: column;
@@ -82,6 +84,10 @@ small {
 	}
 	h4 {
 		font-size: 1rem;
+	}
+
+	#content i {
+		font-size: 1.5rem; 
 	}
 
 	#joinBtn {

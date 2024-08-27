@@ -174,11 +174,11 @@ export class WaitMatchBase extends HTMLElement{
 					</div>
 					<div class="image-container">
 						<img class="avatar player-one" id="playerThree" src=""
-						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
+						onerror="this.onerror=null; this.src='/user-media/avatars/default-white.png';">
 					</div>
 					<div class="image-container">
 						<img class="avatar player-two" id="playerFour" src=""
-						onerror="this.onerror=null; this.src='/user-media/avatars/default.png';">
+						onerror="this.onerror=null; this.src='/user-media/avatars/default-white.png';">
 					</div>
 				</div>
 				<div class="name-container">
@@ -204,7 +204,7 @@ export class WaitMatchBase extends HTMLElement{
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/WaitMatch.css" >
 			<div class="waitmatch-container">
 				<div id="header" class="fw-bold mt-0">
-					<p>Pong Game</p>
+					<p>Pong Private</p>
 				</div>
 				<div id="trophy" style="text-align: center">
 					<img src="/static/pong/images/pic-trophy.png"/>
