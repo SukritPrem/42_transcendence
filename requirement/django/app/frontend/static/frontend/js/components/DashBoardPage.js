@@ -81,8 +81,20 @@ export class DashBoardPage extends HTMLElement {
 
 		document.addEventListener('click', function(event) {
 			if (!profile.contains(event.target) && event.target !== menuButton) {
-				profile.style.display = 'none';
+				if (window.outerWidth < 1200)
+					profile.style.display = 'none';
 			}
 		});
+
+		const handleResize = () => {
+			if (window.outerWidth >= 1200) profile.style.display = 'block';
+			else profile.style.display = 'none';
+		}
+
+		window.addEventListener('resize', handleResize)
+	}
+
+	disconnectedCallback(){
+		window.removeEventListener('resize', handleResize)
 	}
 }
