@@ -1,9 +1,9 @@
 :host {
-    --primary: #4FD1C5;
-    --secondary: #2D3748;
     --border-w: 5px;
     --border-s: solid;
     --border-r: 15px;
+    --primary: var(--primary-color);
+    --secondary: var(--gray-color-dark);
 }
 
 .waitmatch-container{
@@ -15,9 +15,6 @@
     background-color: white;
     box-shadow: var(--box-shadow);
     border-radius:var(--border-radius);
-    /* height: 500px;
-    width: 100%;
-	background-color: red; */
 }
 
 #header {
@@ -123,6 +120,7 @@
 .avatar-container {
     display: flex;
     height: 20%;
+    max-height: 110px;
 }
 
 .image-container {
