@@ -398,9 +398,26 @@ class PublicConsumer(AsyncWebsocketConsumer):
 					break
 
 		if room is None:
-			print(f'{RED}quit: can not get room{RESET}', file=sys.stderr)
+			# private pong on invited quit it can not get room by session
+			for key in self.rooms:
+				if self.rooms[key].get_player_by_name(user.username) is not None:
+					room = self.rooms[key]
+					break
+			if room is not None:	
+				room.action = 'reject'
+				room.players[1].status = 'quit'
+				await self.channel_layer.group_send(
+				self.channel_public,
+				{
+					'type': self.channel_public,
+					'data': room.to_dict()
+				}
+			)
+			else:
+				print(f'{RED}quit: can not get room{RESET}', file=sys.stderr)
+			
 			return
-
+			
 		player: Player = room.get_player_by_session(session_id)
 		if player is None:
 			print(f'{RED}quit: player not found{RESET}', file=sys.stderr)
