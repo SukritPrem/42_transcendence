@@ -124,16 +124,25 @@ export class TourBroadcast extends HTMLElement {
 	// 	}
 	// }
 
-	update = (isJoinBtn=true) => {
+	isPlayerInTour(){
+		const username = getUserName()
+		for (const player of this.pongPublic.data.players) {
+			if (player.name == username) {
+				return true
+			}
+		}
+		return false
+	}
+
+	update = () => {
 		if (this.privateInvite) return
 		if (this.pongPublic.data.action == 'update') {
 			this.boardCast.innerHTML = this.joinTourTemplate(this.pongPublic.data.players.length)
 			const joinBtn = this.shadowRoot.getElementById('joinBtn');
-			if (isJoinBtn) {
-				joinBtn.style.display = ''
-				joinBtn.addEventListener('click', this.joinTour);
-			} else {
+			if (this.isPlayerInTour()){
 				joinBtn.style.display = 'None'
+			} else {	
+				joinBtn.addEventListener('click', this.joinTour)
 			}
 		}
 		else if (this.pongPublic.data.action == "waitmatch" || this.pongPublic.data.action == "playpong") {
