@@ -15,22 +15,28 @@ export class FriendProfile extends HTMLElement {
 			<link rel="stylesheet" href="${window.location.origin}/static/frontend/js/components/FriendProfile.css">
 			
 			<div class="bg-white overflow-auto custom-bg">
-				<div id="header" class="fw-bold">
-					<p>Friend Profile : <span id="username"></span></p>
+				<div id="header" class="fw-bold d-flex flex-row">
+					<p>Friend : <span id="username"></span></p>
+					<button id="blockBtn" class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0">
+							<i class="uil uil-user-times"></i> Block
+					</button>
 				</div>
-				<div id="content" class="d-flex align-items-center justify-content-center">
+				<div class="topic">
+					<p>Profile</p>
+				</div>
+				<div class="content d-flex align-items-center justify-content-center">
 					<div id="photo" class="d-flex position-relative">
 					</div>
 					<div id="detail">
 						<statistic-base-component data-player_id=${this.dataset.user}></statistic-base-component>
 					</div>
 				</div>
-				<div class="mt-3 d-flex justify-content-center">
-					<button id="blockBtn" class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0">
-							<i class="uil uil-user-times"></i> Block
-					</button>
+				<div class="topic">
+					<p>Match History</p>
 				</div>
-				<match-history-component data-player_id="${this.dataset.user}"></match-history-component>
+				<div class="content d-flex align-items-center justify-content-center">
+					<match-history-base-component data-player_id="${this.dataset.user}"></match-history-base-component>
+				</div>
 			</div>
 		`;
 	};
@@ -59,8 +65,6 @@ export class FriendProfile extends HTMLElement {
 		}
 		const result = await fetchJson("blockFriend", "POST", "/api/users/block", payload)
 		if (result){
-			// console.log(result)
-			// re render friendsComponent
 			const dashBoardComponent = document.getElementById("dashBoardComponent")
 			const friendsComponent = dashBoardComponent.shadowRoot.getElementById("friendsComponent")
 			friendsComponent.fetchFriends()
