@@ -6,21 +6,41 @@ export class PongBase extends HTMLElement {
 		this.user = getUserName()
 		this.attachShadow({mode: 'open'})
 		this.shadowRoot.innerHTML = this.template()
-		// this.keyDownHandler = this.keyDownHandler.bind(this)
-		// this.pongPublic = getPongPublic()
 	}
 
 	template() {
 		return `
 			<link rel="stylesheet" href="${window.location.origin}/static/pong/js/components/Pong.css" />
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+			<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
 			
 			<!--div style="text-align: center">Pong Game</div-->
 			<!--div class="canvas-container border border-danger"-->
 			<div class="canvas-container">
-				<canvas id="canvas"></canvas>
-			</div>
+				<canvas id="canvas"></canvas>			
+			${this.isMobile() 
+				? `
+						<div class="w-100" style="position: absolute; top: 70%; left: 0;">
+							<div class="d-flex w-100 justify-content-between">
+								<div class="w-50 text-center" role="button">
+									<i id="arrowLeft" class="uil uil-arrow-left" style="font-size: 2rem; role="button""></i>
+								</div>
+								<div class="w-50 text-center">
+									<i id="arrowRight" class="uil uil-arrow-right" style="font-size: 2rem; role="button""></i>
+								</div>
+							</div>
+						</div>
+					`
+				: "<div></div>"}
+				</div>
 		`
+	}
+
+	isMobile() {
+		if (navigator.userAgentData) {
+			return navigator.userAgentData.mobile;
+		}
+		return /Mobi|Android/i.test(navigator.userAgent);
 	}
 
 	drawBall(canvas, ctx, data, isPortrait){
@@ -194,7 +214,6 @@ export class PongBase extends HTMLElement {
 		this.drawPlayer(canvas, ctx, data, isPortrait)
 	}
 }
-
 export class Pong extends PongBase {
 	constructor(){
 		super()
@@ -236,8 +255,29 @@ export class Pong extends PongBase {
 	}
 
 	connectedCallback(){
-		if(this.user == this.dataset.player1 || this.user == this.dataset.player2)
-			document.addEventListener('keydown', this.keyDownHandler)
+		if(this.user == this.dataset.player1 || this.user == this.dataset.player2) {
+			let moveInterval
+			if(this.isMobile()){
+				this.shadowRoot.getElementById('arrowLeft').addEventListener('touchstart', () => {
+					moveInterval = setInterval( () => {
+						this.sendMoveMent("left")
+					}, 1000/12, )
+				})
+				this.shadowRoot.getElementById('arrowRight').addEventListener('touchstart', () => {
+					moveInterval = setInterval( () => {
+						this.sendMoveMent("right")
+					}, 1000/12, )
+				})
+				this.shadowRoot.getElementById('arrowLeft').addEventListener('touchend', () => {
+					clearInterval(moveInterval)
+				})
+				this.shadowRoot.getElementById('arrowRight').addEventListener('touchend', () => {
+					clearInterval(moveInterval)
+				})
+			} else {
+				document.addEventListener('keydown', this.keyDownHandler)
+			}
+		}
 	}
 
 	disconnectedCallback() {

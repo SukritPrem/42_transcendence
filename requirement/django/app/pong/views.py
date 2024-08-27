@@ -6,9 +6,12 @@ from django.http import Http404
 from .models import *
 from django.db.models import Q
 import sys
+from django.views.decorators.cache import cache_control
 
 User = get_user_model()
 # Create your views here.
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def index(request):
     return render(request, "pong/test.html")
 

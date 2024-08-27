@@ -46,8 +46,8 @@ ALLOWED_HOSTS = [
     'testserver', 
     '10.19.243.95', 
     '192.168.12.57', 
-    '9085-161-246-157-36.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS = ['https://9085-161-246-157-36.ngrok-free.app',]
+    '3b3f-58-11-39-116.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://3b3f-58-11-39-116.ngrok-free.app',]
 SESSION_COOKIE_AGE = 7200  #seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
