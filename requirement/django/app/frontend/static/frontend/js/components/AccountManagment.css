@@ -19,12 +19,6 @@
 	font-size: var(--header-font-size);
 }
 
-/* #topic p{
-	padding-left: 60px;
-	color: var(--gray-color-medium);
-} */
-
-
 #content {
 	gap: 20px;
 	margin: 0 4vw;

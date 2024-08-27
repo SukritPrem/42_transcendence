@@ -13,6 +13,13 @@
 	font-size: var(--header-font-size);
 }
 
+#content {
+	margin: 0 4vw;
+	padding: 10px;
+	border: var(--border-green);
+	border-radius: var(--border-radius);
+}
+
 .list-item {
 	display: flex;
 	align-items: center;

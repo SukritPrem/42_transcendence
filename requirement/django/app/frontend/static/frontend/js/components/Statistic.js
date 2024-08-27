@@ -78,7 +78,9 @@ export class Statistic extends HTMLElement {
 				<div id="header" class="fw-bold">
 					<p>Statistic</p>
 				</div>
-				<statistic-base-component data-player_id=${getUserId()}></statistic-base-component>
+				<div id="content">
+					<statistic-base-component data-player_id=${getUserId()}></statistic-base-component>	
+				</div>
 			</div>
 		`
 	}
