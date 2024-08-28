@@ -5,6 +5,9 @@ export class ModalSignUp extends HTMLElement {
 		super()
 		this.attachShadow({mode: 'open'})
 		this.shadowRoot.innerHTML = this.template()
+
+		// Set up the MutationObserver
+		this.observer = new MutationObserver(() => this.checkVisibilityAndFocus());
 	}
 
 	template = () => {
@@ -70,15 +73,27 @@ export class ModalSignUp extends HTMLElement {
 
 			if (response.status == 201) {
 				console.log(result)
+				alert(result.message)
 				window.location.replace(window.location.origin + "/dashboard")
 			} else {
-				alert ("something wrong try again")
+				alert (`something wrong try again\n${result.error}`)
 				throw new Error(`${response.status} ${response.statusText} ${result.error}`);
 			}
 		} catch (error) {
 			console.error('Error signUp:', error);
 		}
 	}
+
+	checkVisibilityAndFocus() {
+		const style = window.getComputedStyle(this);
+		if (style.display !== 'none' && style.visibility !== 'hidden') {
+			const username = this.shadowRoot.querySelector("input#usernameSignUp");
+			username.focus();
+		} 
+		// else {
+		// 	console.log('Component is not visible');
+		// }
+    }
 
 	connectedCallback(){
 		this.shadowRoot.innerHTML = this.template();
@@ -99,5 +114,11 @@ export class ModalSignUp extends HTMLElement {
 
 		this.shadowRoot.getElementById("signUpForm")
 			.addEventListener("submit", this.signUp)
+
+		this.observer.observe(this, { attributes: true, attributeFilter: ['style'] });
+	}
+
+	disconnectedCallback() {
+		this.observer.disconnect();
 	}
 }

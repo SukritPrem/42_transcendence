@@ -6,6 +6,10 @@ export class ModalLogin extends HTMLElement {
 		super();
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.innerHTML = this.template()
+
+		// Set up the MutationObserver
+		this.observer = new MutationObserver(() => this.checkVisibilityAndFocus());
+
 	}
 
 	template = () => {
@@ -18,7 +22,7 @@ export class ModalLogin extends HTMLElement {
 				<p class="text-gray d-none d-sm-flex text-center fw-bold d-flex justify-content-center align-items-center">Enter your username and password to sign in</p>
 				<div id="usernameCon" class="d-flex align-items-center justify-content-center">
 					<label for="username">Username</label>
-					<input class="input-css" type="text" 
+					<input class="input-css" type="text"
 						placeholder="Your username" id="username" 
 						autocomplete="username"
 						name="username" required>
@@ -47,23 +51,32 @@ export class ModalLogin extends HTMLElement {
 
 	login = async(e)=>{
 		e.preventDefault()
-		const data = {
-			username: this.shadowRoot.querySelector("#username").value,
-			password: this.shadowRoot.querySelector("#password").value
-		}
-		const result = await fetchJson("login", "POST", "api/auth/login", data)
-		// alert(JSON.stringify(result))
-		if (result) {
-			if(result.message === '2fa') {
-				window.location.replace(window.location.origin + "/api/2fa-page")
-			} else {
-				window.location.replace(window.location.origin + "/dashboard")
+
+		try {
+			const data = {
+				username: this.shadowRoot.querySelector("#username").value,
+				password: this.shadowRoot.querySelector("#password").value
+			}
+			const result = await fetchJson("login", "POST", "api/auth/login", data)
+			// alert(JSON.stringify(result))
+			// const result = await response.json()
+
+			if (result) {
+				if(result.message === '2fa') {
+					window.location.replace(window.location.origin + "/api/2fa-page")
+				} else {
+					window.location.replace(window.location.origin + "/dashboard")
+				}
+			}
+			else{
+				alert(`something wrong try again`)
+				this.shadowRoot.querySelector("#username").value = ""
+				this.shadowRoot.querySelector("#password").value = ""
 			}
 		}
-		else {
-			alert("something wrong try again")
-			this.shadowRoot.querySelector("#username").value = ""
-			this.shadowRoot.querySelector("#password").value = ""
+		catch (error) {
+			console.error('Error signIn:', error);
+
 		}
 	}
 	
@@ -72,12 +85,28 @@ export class ModalLogin extends HTMLElement {
 		window.location.replace(`${window.location.origin}/api/auth/login42`)	
 	}
 
+	checkVisibilityAndFocus() {
+		const style = window.getComputedStyle(this);
+		if (style.display !== 'none' && style.visibility !== 'hidden') {
+			const username = this.shadowRoot.querySelector("input#username");
+			username.focus();
+		} 
+		// else {
+		// 	console.log('Component is not visible');
+		// }
+    }
+
 	connectedCallback(){
 		this.shadowRoot.getElementById("signInForm").addEventListener('submit', this.login)
 		this.shadowRoot.getElementById("btn42").addEventListener('click', this.login42)
+
+		this.observer.observe(this, { attributes: true, attributeFilter: ['style'] });
 	}
 
 	disconnectedCallback(){
 		console.log("ModalLogin was gone")
+
+		// Disconnect the observer when the element is removed from the DOM
+		this.observer.disconnect();
 	}
 }
