@@ -1,17 +1,22 @@
 .canvas-container {
-    position: relative;
     padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100%;
+    display: flex;
+    overflow: auto;
+	margin-top: 2vh;
+    min-height: 70vh;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: var(--box-shadow);
+	border-radius:var(--border-radius);
 }
 
 #canvas {
     width: 100%;
     max-width: 800px;
     aspect-ratio: 2 / 1;
-    /* border: 1px solid blue; */
 }
 
 @media (max-width: 767px) {
