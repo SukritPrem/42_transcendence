@@ -60,7 +60,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -185,5 +185,5 @@ AUTH_USER_MODEL = 'backend.CustomUser'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = '/user-media/'
 
-ALLOW_API_WITHOUT_AUTH = True
-ALLOW_API_WITHOUT_JWT = True
+ALLOW_API_WITHOUT_AUTH = False
+ALLOW_API_WITHOUT_JWT = False

@@ -124,6 +124,18 @@ def get_token_for_authenticated_user(request):
             'access': str(refresh.access_token),
         })
 
+def update_token(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            data = json.loads(request.body)
+            new_token = data.get('access')
+            request.session['access_token'] = new_token
+            return JsonResponse({'message': 'Update success'}, status=201)
+        else:
+            return JsonResponse({'error': 'User is not logged in'}, status=401)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
 def jwt_manual_validate(request):
     try:
         auth = JWTAuthentication()

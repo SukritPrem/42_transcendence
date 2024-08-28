@@ -111,6 +111,7 @@ export async function fetchJson(name, method, url, payload = null){
 			},
 		}
 
+		/** playload: json */
 		if (payload) {
 			request.headers["Content-Type"] = "application/json"
 			request.body = JSON.stringify(payload)
@@ -122,11 +123,26 @@ export async function fetchJson(name, method, url, payload = null){
 			request.headers["Authorization"] = `Bearer ${access_token.value}`
 		}
 
-		const response = await fetch(url, request);
+		let response = await fetch(url, request);
 
-		const result = await response.json()
+		let result = await response.json()
 
 		if (!response.ok) {
+			if (result.error == 'Token has expired'){
+				console.log(result)
+				const refresh_token = document.querySelector("[name=refresh_token]")
+				if (refresh_token){
+					const newToken = await fetchJson(
+						'fetchRefreshToken', 'POST', '/api/token/refresh/', {'refresh': refresh_token.value})
+					console.log(JSON.stringify(newToken))
+
+					access_token.value = newToken.access
+					sessionStorage.setItem('access_token', newToken.access)
+
+					await fetchJson('fetchUpdateToken', 'POST', '/api/update-token', newToken)
+					return await fetchJson(name, method, url, payload)
+				}
+			}
 			throw new Error(`${response.status} ${response.statusText} ${result.error}`);
 		}
 		

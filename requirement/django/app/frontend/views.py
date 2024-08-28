@@ -2,7 +2,11 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from backend.views import jwt_manual_validate
 from django.contrib.auth import logout
+from backend import views
 from django.http import JsonResponse
+import sys
+import jwt
+from jwt.exceptions import ExpiredSignatureError
 
 # Create your views here.
 def index(request):
@@ -18,6 +22,14 @@ def index(request):
         return redirect('frontend:dashboard')
     return render(request, "index.html")
 
+def validate_token_life(request):
+    try:
+        raw_token = request.session['access_token']
+        jwt.decode(raw_token, settings.SECRET_KEY, algorithms=[settings.SIMPLE_JWT['ALGORITHM']])
+    except ExpiredSignatureError:
+        return ({'error': 'Token has expired'})
+    return ({'error': 'No error'})
+
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('frontend:index')
@@ -29,8 +41,19 @@ def dashboard(request):
     }
     try:
         if (settings.ALLOW_API_WITHOUT_JWT == False):
-            context['access_token'] = request.session['access_token']
-            context['refresh_token'] = request.session['refresh_token']
-    except KeyError:
+            err = validate_token_life(request)
+            if err['error'] == 'Token has expired':
+                print ('Token has expired', file=sys.stderr)
+                new_context = views.get_token_for_authenticated_user(request)
+
+                request.session['access_token'] = new_context['access']
+
+                context['access_token'] = new_context['access']
+                context['refresh_token'] = request.session['refresh_token']
+            else:
+                context['access_token'] = request.session['access_token']
+                context['refresh_token'] = request.session['refresh_token']
+    except KeyError as e:
+        print (e, file=sys.stderr)
         return redirect('frontend:index')
     return render(request, "dashboard.html", {"user": context})

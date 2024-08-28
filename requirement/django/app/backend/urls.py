@@ -26,5 +26,6 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), #for dev
     path('2fa', views.generate_totp_secret, name='generate_totp_secret'),
     path('verify_totp/', views.verify_totp, name='verify_totp'),
-    path('2fa-page', views.two_factor_auth, name='two_factor_auth')
+    path('2fa-page', views.two_factor_auth, name='two_factor_auth'),
+    path('update-token', views.update_token, name='update_token')
 ]
