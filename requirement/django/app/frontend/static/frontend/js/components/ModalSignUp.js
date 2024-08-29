@@ -73,7 +73,7 @@ export class ModalSignUp extends HTMLElement {
 
 			if (response.status == 201) {
 				console.log(result)
-				alert(result.message)
+				// alert(result.message)
 				window.location.replace(window.location.origin + "/dashboard")
 			} else {
 				alert (`something wrong try again\n${result.error}`)

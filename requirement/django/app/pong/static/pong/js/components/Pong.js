@@ -43,6 +43,7 @@ export class PongBase extends HTMLElement {
 		return /Mobi|Android/i.test(navigator.userAgent);
 	}
 
+	/** draw canvas */
 	drawBall(canvas, ctx, data, isPortrait){
 		let x, y, r
 		if (isPortrait){		
@@ -213,21 +214,43 @@ export class PongBase extends HTMLElement {
 		this.drawBall(canvas, ctx, data, isPortrait)
 		this.drawPlayer(canvas, ctx, data, isPortrait)
 	}
+
+	/** game control */
+	mobileEvent() {
+		let moveInterval
+		this.shadowRoot.getElementById('arrowLeft').addEventListener('touchstart', () => {
+			moveInterval = setInterval( () => {
+				this.sendMoveMent("left")
+			}, 1000/12, )
+		})
+		this.shadowRoot.getElementById('arrowRight').addEventListener('touchstart', () => {
+			moveInterval = setInterval( () => {
+				this.sendMoveMent("right")
+			}, 1000/12, )
+		})
+		this.shadowRoot.getElementById('arrowLeft').addEventListener('touchend', () => {
+			clearInterval(moveInterval)
+		})
+		this.shadowRoot.getElementById('arrowRight').addEventListener('touchend', () => {
+			clearInterval(moveInterval)
+		})
+	}
+
+	sendMoveMent(direction) {
+		console.log(direction)
+	}
 }
 export class Pong extends PongBase {
 	constructor(){
 		super()
-		this.keyDownHandler = this.keyDownHandler.bind(this)
 		this.pongPublic = getPongPublic()
+		this.keyDownHandler = this.keyDownHandler.bind(this)
 	}
 
 	sendMoveMent(direction){
-		const data = {
-			user: this.user,
-			type: "move",
-			move: direction
-		}
-		this.socket.send(JSON.stringify(data))
+		this.datas.action = 'sendkey'
+		this.datas.direction = direction
+		this.pongPublic.socket.send(JSON.stringify(this.datas))
 	}
 
 	keyDownHandler(e){
@@ -248,32 +271,10 @@ export class Pong extends PongBase {
 		}
 	}
 
-	sendMoveMent(direction){
-		this.datas.action = 'sendkey'
-		this.datas.direction = direction
-		this.pongPublic.socket.send(JSON.stringify(this.datas))
-	}
-
 	connectedCallback(){
 		if(this.user == this.dataset.player1 || this.user == this.dataset.player2) {
-			let moveInterval
 			if(this.isMobile()){
-				this.shadowRoot.getElementById('arrowLeft').addEventListener('touchstart', () => {
-					moveInterval = setInterval( () => {
-						this.sendMoveMent("left")
-					}, 1000/12, )
-				})
-				this.shadowRoot.getElementById('arrowRight').addEventListener('touchstart', () => {
-					moveInterval = setInterval( () => {
-						this.sendMoveMent("right")
-					}, 1000/12, )
-				})
-				this.shadowRoot.getElementById('arrowLeft').addEventListener('touchend', () => {
-					clearInterval(moveInterval)
-				})
-				this.shadowRoot.getElementById('arrowRight').addEventListener('touchend', () => {
-					clearInterval(moveInterval)
-				})
+				this.mobileEvent()
 			} else {
 				document.addEventListener('keydown', this.keyDownHandler)
 			}
@@ -288,5 +289,213 @@ export class Pong extends PongBase {
 			this.pongPublic.data.action = 'quit'
 		}
 		this.pongPublic.socket.send(JSON.stringify(this.pongPublic.data))
+	}
+}
+
+class Player {
+	constructor(x, y) {
+		this.x = x
+		this.y = y
+		this.move = "idle"
+		this.score = 0
+	}
+
+	set_move(direction){
+		this.move = direction
+	}
+
+	set_move_idle(){
+		this.move = 'idle'
+	}
+}
+
+class Table {
+	constructor(width, height) {
+		this.width = width
+		this.height = height
+	}
+}
+
+class Ball {
+	constructor(table){
+		this.table = table
+		this.x = table.width / 2
+		this.y = table.height / 2
+		this.mx = -5
+		this.my = 2
+	}
+
+	reset() {
+		this.x = this.table.width / 2
+		this.y = this.table.height / 2
+	}
+}
+
+class GameData {
+	constructor(){
+		this.table = new Table(200, 100)
+		this.ball = new Ball(this.table)
+		this.player_one = new Player(0, this.table.height / 2)
+		this.player_two = new Player(this.table.width, this.table.height / 2)
+		this.game_loop = false
+		this.ball_radius = 4
+		this.player_radius = 10
+		this.player_speed = 2
+		this.max_score = 5
+	}
+
+	init_game(){
+		this.ball.reset()
+	}
+
+	ball_move(){
+		this.ball.x += this.ball.mx
+		this.ball.y += this.ball.my
+
+		/** player2 */
+		if ((this.ball.x + this.ball_radius) >= this.table.width) {
+			if (this.ball.y < (this.player_two.y - this.player_radius)
+			|| this.ball.y > (this.player_two.y + this.player_radius)) {
+				this.player_one.score += 1
+				this.game_loop = false
+			}
+			this.ball.mx *= -1
+		}
+
+		/** player1 */
+		if ((this.ball.x - this.ball_radius) <= 0) {
+			if (this.ball.y < (this.player_one.y - this.player_radius)
+			|| this.ball.y > (this.player_one.y + this.player_radius)) {
+				this.player_two.score += 1
+				this.game_loop = false
+			}
+			this.ball.mx *= -1
+		}
+
+		if ((this.ball.y + this.ball_radius) >= this.table.height
+		|| (this.ball.y - this.ball_radius) <= 0) {
+			this.ball.my *= -1
+		}
+	}
+
+	player_move() {
+		if (this.player_one.move == 'right') {
+			const new_pos = this.player_one.y + this.player_speed
+			if (new_pos + this.player_radius <= this.table.height) {
+				this.player_one.y += this.player_speed
+			}
+		}
+		if (this.player_one.move == 'left') {
+			const new_pos = this.player_one.y + this.player_speed
+			if (new_pos + this.player_radius > this.player_speed) {
+				this.player_one.y -= this.player_speed
+			}
+		}
+		if (this.player_two.move == 'right') {
+			const new_pos = this.player_two.y + this.player_speed
+			if (new_pos - this.player_radius > this.player_speed) {
+				this.player_two.y -= this.player_speed
+			}
+		}
+		if (this.player_two.move == 'left') {
+			const new_pos = this.player_two.y + this.player_speed
+			if (new_pos + this.player_radius <= this.table.height) {
+				this.player_two.y += this.player_speed
+			}
+		}
+	}
+
+	player_idle(){
+		this.player_one.set_move_idle()
+		this.player_two.set_move_idle()
+	}
+
+	end_game(){
+		return this.player_one.score >= this.max_score || this.player_two.score >= this.max_score
+	}
+}
+class Datas {
+	constructor () {
+		this.players = [
+			{name: "player1"},
+			{name: "player2"}
+		]
+		this.game_datas = []
+		this.match_index = 0
+		this.game_datas.push(new GameData())
+		this.fps = 12
+	}
+}
+
+export class PongOffline extends PongBase {
+	constructor() {
+		super()
+		this.datas = new Datas()
+		this.keyDownHandler = this.keyDownHandler.bind(this)
+		this.shadowRoot.innerHTML += `
+			<style>
+				@media (max-width: 767px) {
+					#canvas {
+						max-width: 800px;
+						aspect-ratio: 2 / 1;
+					}
+				}
+			</style>
+		`
+	}
+
+	draw(){
+		super.draw(this.datas, false)
+	}
+
+	keyDownHandler(e) {
+		switch(e.key){
+			case "a": return this.datas.game_datas[0].player_one.set_move('left');
+			case "d": return this.datas.game_datas[0].player_one.set_move('right');
+			case "ArrowLeft": return this.datas.game_datas[0].player_two.set_move('left');
+			case "ArrowRight": return this.datas.game_datas[0].player_two.set_move('right');
+			default: break
+		}
+	}
+
+	async gameTask() {
+		const game_data = this.datas.game_datas[0]
+		let wait_task = false
+		game_data.game_loop = true
+
+		const new_turn = async() => {
+			wait_task = true
+			game_data.ball.reset()
+			await sleep(5000)
+			game_data.game_loop = true
+			wait_task = false
+		}
+
+		const sleep = async(ms) => {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		while (!game_data.end_game()) {
+			if (game_data.game_loop) game_data.ball_move()
+			else if (!wait_task) new_turn()
+
+			game_data.player_move()
+
+			this.draw()
+
+			game_data.player_idle()
+			await sleep(1000 / this.datas.fps)
+		}
+		console.log("game end")
+	}
+
+	connectedCallback(){
+		this.draw()
+		this.gameTask()
+		document.addEventListener('keydown', this.keyDownHandler)
+	}
+
+	disconnectedCallback() {
+
 	}
 }
