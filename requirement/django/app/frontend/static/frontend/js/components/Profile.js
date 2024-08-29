@@ -1,4 +1,4 @@
-import { addNavigate, fetchJson, getUserAvatar, getUserName } from "./Utils.js";
+import { addNavigate, fetchJson, getMainFrame, getUserAvatar, getUserName } from "./Utils.js";
 
 export class Profile extends HTMLElement {
 	constructor() {
@@ -52,7 +52,7 @@ export class Profile extends HTMLElement {
 					<h3 class="d-flex fw-bold text-white fs-7 mt-2 mb-0">Need Practice?</h3>
 					<small class="text-white fs-8">Play with friend!</small>
 				</div>
-				<button class="btn btn-light dark-text w-100">Play OFFLINE</button>
+				<button id="playOffline" class="btn btn-light dark-text w-100">Play OFFLINE</button>
 			</div>
 		`;
 	};
@@ -71,5 +71,10 @@ export class Profile extends HTMLElement {
 
 			this.shadowRoot.querySelectorAll('.link-target').forEach(item => addNavigate(item, mainFrame));
 		});
+
+		this.shadowRoot.getElementById("playOffline").addEventListener('click', ()=>{
+			const mainFrame = getMainFrame()
+			mainFrame.innerHTML = '<pong-all-offline-component></pong-all-offline-component>'
+		})
 	}
 }

@@ -80,6 +80,7 @@ export class PongBase extends HTMLElement {
 			let upper = this.scaleX * data.player_two.y - paddingRadius
 			// let upper = canvas.width - (this.scaleX * data.player_two_y) - paddingRadius
 			if (this.user == data.player_two.name) {
+				console.log(data.player_two.name)
 				lower = canvas.width - (this.scaleX * data.player_two.y) - paddingRadius
 				// upper = canvas.width - (this.scaleX * data.player_one_y - paddingRadius)
 				upper = canvas.width - (this.scaleX * data.player_one.y)- paddingRadius
@@ -309,6 +310,72 @@ class Player {
 	}
 }
 
+class AIPlayer extends Player {
+	constructor(x, y) {
+		super(x, y);
+	}
+
+	moveToPosition(ball, player){
+		if (player == 'player_two') {
+			if (this.y > ball.table.height / 2) {
+				this.set_move('right')
+			}
+			else if (this.y < ball.table.height / 2) {
+				this.set_move('left')
+			}
+			else {
+				this.set_move_idle()
+			}
+		}
+		if (player == 'player_one') {
+			if (this.y > ball.table.height / 2) {
+				this.set_move('left')
+			}
+			else if (this.y < ball.table.height / 2) {
+				this.set_move('right')
+			}
+			else {
+				this.set_move_idle()
+			}
+		}
+	}
+
+	moveTowards(ball, player , player_radius) {
+
+		const randomRadius = (player_radius) => {
+			if (Math.floor(Math.random() * 10) >= 5)
+				return Math.floor(Math.random() * (player_radius))
+			return 0
+		}
+
+		if (player == 'player_two') {
+			if (ball.mx < 0) {
+				return this.moveToPosition(ball, player)
+			}
+			if (ball.y > this.y - randomRadius(player_radius)) {
+				this.set_move('left');
+			} else if (ball.y < this.y + randomRadius(player_radius)) {
+				this.set_move('right');
+			} else {
+				this.set_move_idle();
+			}
+		}
+
+		if (player == 'player_one') {
+			if (ball.mx > 0) {
+				return this.moveToPosition(ball, player)
+			}
+			if (ball.y > this.y - randomRadius(player_radius)) {
+				this.set_move('right');
+			} else if (ball.y < this.y + randomRadius(player_radius)) {
+				this.set_move('left');
+			} else {
+				this.set_move_idle();
+			}
+		}
+	}
+}
+
 class Table {
 	constructor(width, height) {
 		this.width = width
@@ -376,6 +443,14 @@ class GameData {
 		|| (this.ball.y - this.ball_radius) <= 0) {
 			this.ball.my *= -1
 		}
+		
+		if (this.player_one instanceof AIPlayer) {
+			this.player_one.moveTowards(this.ball, 'player_one', this.player_radius)
+		}
+		if (this.player_two instanceof AIPlayer) {
+			this.player_two.moveTowards(this.ball, 'player_two', this.player_radius)
+		}
+	
 	}
 
 	player_move() {
@@ -424,6 +499,7 @@ class Datas {
 		this.match_index = 0
 		this.game_datas.push(new GameData())
 		this.fps = 12
+		this.time_wait = 5000 //ms
 	}
 }
 
@@ -461,12 +537,11 @@ export class PongOffline extends PongBase {
 	async gameTask() {
 		const game_data = this.datas.game_datas[0]
 		let wait_task = false
-		game_data.game_loop = true
 
 		const new_turn = async() => {
 			wait_task = true
 			game_data.ball.reset()
-			await sleep(5000)
+			await sleep(this.datas.time_wait)
 			game_data.game_loop = true
 			wait_task = false
 		}
@@ -475,6 +550,7 @@ export class PongOffline extends PongBase {
 			return new Promise(resolve => setTimeout(resolve, ms));
 		}
 
+		new_turn()
 		while (!game_data.end_game()) {
 			if (game_data.game_loop) game_data.ball_move()
 			else if (!wait_task) new_turn()
@@ -486,7 +562,7 @@ export class PongOffline extends PongBase {
 			game_data.player_idle()
 			await sleep(1000 / this.datas.fps)
 		}
-		console.log("game end")
+		// console.log("game end")
 	}
 
 	connectedCallback(){
@@ -496,6 +572,118 @@ export class PongOffline extends PongBase {
 	}
 
 	disconnectedCallback() {
+		document.removeEventListener('keydown', this.keyDownHandler)
+	}
+}
 
+export class PongAllAI extends PongOffline {
+	constructor () {
+		super()
+		this.datas.game_datas[0].player_one.name = this.datas.players[0].name
+		this.user = this.datas.players[0].name
+		super.isOffline = true
+		this.datas.game_datas[0].player_one = 
+			new AIPlayer(
+				0, 
+				this.datas.game_datas[0].table.height / 2)
+		this.datas.game_datas[0].player_two = 
+			new AIPlayer(
+				this.datas.game_datas[0].table.width, 
+				this.datas.game_datas[0].table.height / 2)
+	}
+
+	connectedCallback(){
+		this.draw()
+		this.gameTask()
+	}
+}
+
+export class PongAI extends PongOffline {
+	constructor() {
+		super()
+		this.datas.game_datas[0].player_one.name = this.datas.players[0].name
+		this.user = this.datas.players[0].name
+
+		this.datas.game_datas[0].player_two = 
+			new AIPlayer(
+				this.datas.game_datas[0].table.width, 
+				this.datas.game_datas[0].table.height / 2)
+
+		this.shadowRoot.innerHTML += `
+			<style>
+				#canvas {
+					width: 300px;
+					max-width: 800px;
+					aspect-ratio: 1 / 2;
+				}
+			</style>
+		`
+	}
+
+	keyDownHandler(e) {
+		switch(e.key){
+			case "a": return this.datas.game_datas[0].player_one.set_move('left');
+			case "d": return this.datas.game_datas[0].player_one.set_move('right');
+			default: break
+		}
+	}
+
+	sendMoveMent(direction) {
+		this.datas.game_datas[0].player_one.set_move(direction)
+	}
+
+	connectedCallback(){
+		this.draw()
+		this.gameTask()
+		if(this.isMobile()){
+			this.mobileEvent()
+		} else {
+			document.addEventListener('keydown', this.keyDownHandler)
+		}
+	}
+}
+
+export class PongAllOffline extends HTMLElement{
+	constructor () {
+		super()
+		this.attachShadow({mode: 'open'})
+		this.shadowRoot.innerHTML = this.template()
+		this.pong = this.shadowRoot.getElementById('pong')
+	}
+
+	template(){
+		return `
+			<div>
+				<ul>
+					<li id="allAI">all AI</li>
+					<li id="twoPlayer">two player</li>
+					<li id="onePlayer">one player</li>
+				</ul>
+			</div>
+			<div id="pong"></div>
+		`
+	}
+
+	isMobile = () => {
+		if (navigator.userAgentData) {
+			return navigator.userAgentData.mobile;
+		}
+		return /Mobi|Android/i.test(navigator.userAgent);
+	}
+
+	connectedCallback(){
+		this.pong.innerHTML = `<pong-all-ai-component></pong-all-ai-component>`
+		this.shadowRoot.getElementById('allAI').addEventListener('click', ()=>{
+			this.pong.innerHTML = `<pong-all-ai-component></pong-all-ai-component>`
+		})
+		this.shadowRoot.getElementById('twoPlayer').addEventListener('click', ()=>{
+			if (this.isMobile())
+			this.pong.innerHTML = `<div>Two Player not support on mobile</div>`
+			else
+			this.pong.innerHTML = `<pong-offline-component></pong-offline-component>`
+		})
+		this.shadowRoot.getElementById('onePlayer').addEventListener('click', ()=>{
+			this.pong.innerHTML = `<pong-ai-component></pong-ai-component>`
+		})
 	}
 }

@@ -25,7 +25,8 @@ export class FirstPage extends HTMLElement {
 			</div>
 			
 			<div id="gameTag" class="container-fluid mb-0">
-				<pong-offline-component></pong-offline-component>
+				<!--pong-offline-component></pong-offline-component-->
+				<pong-all-offline-component></pong-all-offline-component>
 			</div>
 			
 			<div id="footer" class="d-flex align-items-center justify-content-center container-fluid position-fixed bottom-0 start-0 bg-transparent">
