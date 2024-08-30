@@ -462,7 +462,7 @@ class GameData {
 		}
 		if (this.player_one.move == 'left') {
 			const new_pos = this.player_one.y + this.player_speed
-			if (new_pos + this.player_radius > this.player_speed) {
+			if (new_pos - this.player_radius > this.player_speed) {
 				this.player_one.y -= this.player_speed
 			}
 		}
@@ -504,10 +504,13 @@ class Datas {
 }
 
 export class PongOffline extends PongBase {
+	
 	constructor() {
 		super()
 		this.datas = new Datas()
 		this.keyDownHandler = this.keyDownHandler.bind(this)
+		this.keyUpHandler = this.keyUpHandler.bind(this)
+		this.keyPressed = {}
 		this.shadowRoot.innerHTML += `
 			<style>
 				@media (max-width: 767px) {
@@ -525,13 +528,18 @@ export class PongOffline extends PongBase {
 	}
 
 	keyDownHandler(e) {
-		switch(e.key){
-			case "a": return this.datas.game_datas[0].player_one.set_move('left');
-			case "d": return this.datas.game_datas[0].player_one.set_move('right');
-			case "ArrowLeft": return this.datas.game_datas[0].player_two.set_move('left');
-			case "ArrowRight": return this.datas.game_datas[0].player_two.set_move('right');
-			default: break
+		const keys = ['a', 'd', 'ArrowLeft', 'ArrowRight']
+		if (keys.includes(e.key)){
+			this.keyPressed[e.key] = true
 		}
+		if (this.keyPressed['a']) this.datas.game_datas[0].player_one.set_move('left')
+		if (this.keyPressed['d']) this.datas.game_datas[0].player_one.set_move('right')
+		if (this.keyPressed['ArrowLeft']) this.datas.game_datas[0].player_two.set_move('left')
+		if (this.keyPressed['ArrowRight']) this.datas.game_datas[0].player_two.set_move('right')
+	}
+
+	keyUpHandler(e){
+		this.keyPressed[e.key] = false
 	}
 
 	async gameTask() {
@@ -569,10 +577,12 @@ export class PongOffline extends PongBase {
 		this.draw()
 		this.gameTask()
 		document.addEventListener('keydown', this.keyDownHandler)
+		document.addEventListener('keyup' , this.keyUpHandler)
 	}
 
 	disconnectedCallback() {
 		document.removeEventListener('keydown', this.keyDownHandler)
+		document.removeEventListener('keyup', this.keyUpHandler)
 	}
 }
 
