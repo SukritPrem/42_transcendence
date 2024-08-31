@@ -591,7 +591,6 @@ export class PongAllAI extends PongOffline {
 		super()
 		this.datas.game_datas[0].player_one.name = this.datas.players[0].name
 		this.user = this.datas.players[0].name
-		super.isOffline = true
 		this.datas.game_datas[0].player_one = 
 			new AIPlayer(
 				0, 

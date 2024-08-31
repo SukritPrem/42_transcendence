@@ -90,3 +90,31 @@ class ChatroomConsumer(WebsocketConsumer):
 
 	def online_count_handler(self, event):
 		self.send(text_data=json.dumps(event))
+
+
+class ChatPublicComsumer(WebsocketConsumer):
+
+	public_chat = "public_chat"
+	def connect(self):
+		async_to_sync(self.channel_layer.group_add)(
+			self.public_chat, self.channel_name
+		)
+		self.accept()
+
+	def disconnect(self, close_code):
+		async_to_sync(self.channel_layer.group_discard)(
+			self.public_chat, self.channel_name
+		)
+
+	def receive(self, text_data):
+		text_data_json = json.loads(text_data)
+		event = {
+			"type": "send_public",
+			"data": text_data_json
+		}
+		async_to_sync(self.channel_layer.group_send)(
+			self.public_chat, event
+		)
+
+	def send_public(self, event):
+		self.send(text_data=json.dumps(event["data"]))

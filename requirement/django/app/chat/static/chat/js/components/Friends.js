@@ -1,4 +1,4 @@
-import { getUserId, addNavigate, fetchJson } from "/static/frontend/js/components/Utils.js";
+import { getUserId, addNavigate, fetchJson, getMainFrame, getUserName } from "/static/frontend/js/components/Utils.js";
 
 export class Friends extends HTMLElement {
 	constructor() {
@@ -6,6 +6,7 @@ export class Friends extends HTMLElement {
 		this.attachShadow({ mode: "open" });
 		this.friends = []
 		this.shadowRoot.innerHTML = this.template()
+		this.username = getUserName()
 	}
 
 	template = () => {
@@ -72,18 +73,29 @@ export class Friends extends HTMLElement {
 			.innerHTML = this.generateRows(friends)
 	}
 
+	setupWebsocket(){
+		this.socket = new WebSocket(`${window.location.origin}/ws/chatroom/public_chat`)
+
+		this.socket.addEventListener("message", (event) => {
+			const obj = JSON.parse(event.data)
+			if (obj.type = "new_friend" && 
+				(obj.accepter == this.username || obj.requester == this.username)) {
+				this.fetchFriends()
+			}
+		})
+	}
+
 	connectedCallback() {
+		this.setupWebsocket()
 		this.fetchFriends()
+		const mainFrame = getMainFrame()
 
-		// JavaScript to handle navigation and content loading
-		// document.addEventListener('DOMContentLoaded', () => {
-			// console.log('DOMContentLoaded')
-			const parent = this.parentNode.parentNode.parentNode
-			const mainFrame = parent.getElementById("mainFrame")
+		// Attach click event listener to navigation items
+		const friendRecommendBtn = this.shadowRoot.querySelector('#friendRecommendBtn')
+		addNavigate(friendRecommendBtn, mainFrame)
+	}
 
-			// Attach click event listener to navigation items
-			const friendRecommendBtn = this.shadowRoot.querySelector('#friendRecommendBtn')
-			addNavigate(friendRecommendBtn, mainFrame)
-		// })
+	disconnectedCallback(){
+		this.socket.close()
 	}
 }

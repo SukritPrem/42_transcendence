@@ -1,10 +1,11 @@
-import { fetchJson, getUserId } from "./Utils.js";
+import { fetchJson, getUserId, getUserName } from "./Utils.js";
 
 export class Notification extends HTMLElement{
 	constructor(){
 		super();
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.innerHTML = this.template();
+		this.username = getUserName()
 	}
 
 	template = () => {
@@ -43,7 +44,7 @@ export class Notification extends HTMLElement{
 						class="accept-btn d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-plus"></i> Accept
 					</button>
-					<button id="${user.username}FriendDecline" data-userid="${user.user_id}"
+					<button id="${user.username}FriendDecline" data-userid="${user.user_id}" data-username="${user.username}"
 						class="btn btn-danger d-flex align-items-center justify-content-center gap-2 border-0">
 						<i class="uil uil-user-minus"></i> Decline
 					</button>
@@ -72,6 +73,12 @@ export class Notification extends HTMLElement{
 			"owner_id": getUserId(),
 			"user_id": e.target.dataset.userid
 		}
+		const message = {
+			'type': 'new_friend', 
+			'requester': e.target.dataset.username,
+			'accepter': this.username, 
+		}
+
 		const result = await fetchJson("friendAccept", "POST", 
 		`${window.location.origin}/api/users/friends/accept`, payload)
 		if (result) {
@@ -81,9 +88,7 @@ export class Notification extends HTMLElement{
 			//update friendsComponent
 			const dashBoard = document.getElementById("dashBoardComponent").shadowRoot
 			const friends = dashBoard.getElementById("friendsComponent")
-			friends.fetchFriends()
-			// console.log(userid, username, avatar)
-			// friends.append(userid, username, avatar)
+			friends.socket.send(JSON.stringify(message))
 		}
 		
 	}
